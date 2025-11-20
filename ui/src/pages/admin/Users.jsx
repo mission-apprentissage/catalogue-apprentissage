@@ -30,6 +30,8 @@ import {
   TabList,
   Tabs,
   TabPanel,
+  Select,
+  FormErrorMessage,
 } from "@chakra-ui/react";
 import { Breadcrumb } from "../../common/components/Breadcrumb";
 import { setTitle } from "../../common/utils/pageUtils";
@@ -40,6 +42,7 @@ import { ACADEMIES } from "../../constants/academies";
 import { PasswordInput } from "../../common/components/PasswordInput";
 import { useUserSearch } from "../../common/hooks/useUserSearch";
 import SearchUser from "../../common/components/Search/SearchUser";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const academies = new Map(Object.entries(ACADEMIES));
 
@@ -76,6 +79,16 @@ export const CardListUser = ({ user, roles }) => {
                 {user.tag && (
                   <Tag borderRadius="full" variant="subtle" colorScheme="orange" ml="2">
                     {user.tag}
+                  </Tag>
+                )}
+                {user.tag_1 && (
+                  <Tag borderRadius="full" variant="subtle" colorScheme="yellow" ml="2">
+                    {user.tag_1}
+                  </Tag>
+                )}
+                {user.tag_2 && (
+                  <Tag borderRadius="full" variant="subtle" colorScheme="yellow" ml="2">
+                    {user.tag_2}
                   </Tag>
                 )}
                 {user.isAdmin && (
@@ -120,7 +133,6 @@ export const CardListUser = ({ user, roles }) => {
 };
 
 export const UserLine = ({ user, roles }) => {
-  console.log(user);
   const toast = useToast();
   const [rolesAcl, setRolesAcl] = useState(buildRolesAcl(user?.roles || [], roles));
 
@@ -139,7 +151,7 @@ export const UserLine = ({ user, roles }) => {
     strict: true,
   });
 
-  const { values, handleSubmit, handleChange, setFieldValue } = useFormik({
+  const { values, touched, errors, isValid, handleSubmit, handleBlur, handleChange, setFieldValue } = useFormik({
     initialValues: {
       accessAllCheckbox: user?.isAdmin ? ["on"] : [],
       roles: user?.roles || [],
@@ -147,10 +159,52 @@ export const UserLine = ({ user, roles }) => {
       accessAcademieList: user ? user.academie.split(",") : ["-1"],
       newUsername: user?.username || "",
       newEmail: user?.email || "",
-      newTag: user?.tag || "",
+      newTag1: user?.tag_1 || "",
+      newTag2: user?.tag_2 || "",
       newFonction: user?.fonction || "",
       newTmpPassword,
     },
+    validateOnMount: true,
+    validateOnBlur: true,
+    validateOnChange: true,
+    validate: (values) => {
+      const errors = {};
+
+      if (!values.newUsername?.trim()?.length) {
+        errors.newUsername = "Le nom d'utilisateur est obligatoire.";
+      }
+
+      if (
+        !values.newEmail?.match(
+          /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+        )
+      ) {
+        errors.newEmail = "L'adresse email n'est pas valide.";
+      }
+
+      if (!values.newEmail?.trim()?.length) {
+        errors.newEmail = "L'adresse email est obligatoire.";
+      }
+
+      if (!user && !values.newTmpPassword?.trim()?.length) {
+        errors.newTmpPassword = "Le mot de passe temporaire est obligatoire.";
+      }
+
+      if (
+        values.newTag1 !== "Autre" &&
+        ![
+          "SAIO / SRFD : adjoint chef de service",
+          "SAIO / SRFD : chef de service",
+          "SAIO / SRFD : chargé de mission ou assimilé",
+        ].includes(values.newFonction?.trim())
+      ) {
+        errors.newFonction =
+          'Pour le tag 1 sélectionné, la fonction est obligatoirement "SAIO / SRFD : adjoint chef de service", "SAIO / SRFD : chef de service" ou "SAIO / SRFD : chargé de mission ou assimilé".';
+      }
+
+      return errors;
+    },
+
     onSubmit: (
       {
         // apiKey,
@@ -159,12 +213,13 @@ export const UserLine = ({ user, roles }) => {
         newUsername,
         newEmail,
         newTmpPassword,
-        newTag,
+        newTag1,
+        newTag2,
         newFonction,
         roles,
         acl,
       },
-      { setSubmitting }
+      { setSubmitting, resetForm }
     ) => {
       return new Promise(async (resolve) => {
         const accessAcademie = accessAcademieList.join(",");
@@ -172,12 +227,13 @@ export const UserLine = ({ user, roles }) => {
         try {
           if (user) {
             const body = {
-              username: newUsername,
+              username: newUsername.trim(),
               options: {
                 academie: accessAcademie,
-                email: newEmail,
-                tag: newTag,
-                fonction: newFonction,
+                email: newEmail.trim(),
+                tag_1: newTag1.trim(),
+                tag_2: newTag2.trim(),
+                fonction: newFonction.trim(),
                 roles,
                 acl,
                 permissions: {
@@ -186,7 +242,14 @@ export const UserLine = ({ user, roles }) => {
               },
             };
             await _put(`/api/admin/user/${user.username}`, body);
-            document.location.reload(true);
+
+            toast({
+              title: "Succès",
+              description: "L'utilisateur a bien été mis à jour.",
+              status: "success",
+              duration: 10000,
+              isClosable: true,
+            });
           } else {
             const body = {
               username: newUsername,
@@ -194,7 +257,8 @@ export const UserLine = ({ user, roles }) => {
               options: {
                 academie: accessAcademie,
                 email: newEmail,
-                tag: newTag,
+                tag_1: newTag1,
+                tag_2: newTag2,
                 fonction: newFonction,
                 roles,
                 acl,
@@ -204,7 +268,16 @@ export const UserLine = ({ user, roles }) => {
               },
             };
             await _post(`/api/admin/user/`, body);
-            document.location.reload(true);
+
+            toast({
+              title: "Succès",
+              description: "L'utilisateur a bien été créé.",
+              status: "success",
+              duration: 10000,
+              isClosable: true,
+            });
+
+            resetForm();
           }
         } catch (e) {
           console.error(e);
@@ -230,8 +303,26 @@ export const UserLine = ({ user, roles }) => {
     e.preventDefault();
     // eslint-disable-next-line no-restricted-globals
     if (confirm("Supprimer l'utilisateur !?")) {
-      await _delete(`/api/admin/user/${user.username}`);
-      document.location.reload(true);
+      try {
+        await _delete(`/api/admin/user/${user.username}`);
+        toast({
+          title: "Succès",
+          description: "L'utilisateur a bien été supprimé.",
+          status: "success",
+          duration: 10000,
+          isClosable: true,
+        });
+
+        document.location.reload();
+      } catch (e) {
+        toast({
+          title: "Erreur",
+          description: "Une erreur est survenue lors de la suppression de l'utilisateur.",
+          status: "error",
+          duration: 10000,
+          isClosable: true,
+        });
+      }
     }
   };
 
@@ -280,59 +371,136 @@ export const UserLine = ({ user, roles }) => {
 
     setFieldValue("acl", customAcl);
     setFieldValue("roles", newRoles);
-
     setRolesAcl(newRolesAcl);
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <FormControl py={2}>
+    <form>
+      <FormControl py={2} isInvalid={touched.newUsername && errors.newUsername}>
         <FormLabel>Username</FormLabel>
-        <Input type="text" id="newUsername" name="newUsername" value={values.newUsername} onChange={handleChange} />
+        <Input
+          type="text"
+          id="newUsername"
+          name="newUsername"
+          value={values.newUsername}
+          onChange={handleChange}
+          onBlur={handleBlur}
+        />
+        <FormErrorMessage>{errors.newUsername}</FormErrorMessage>
       </FormControl>
 
-      <FormControl py={2}>
+      <FormControl py={2} isInvalid={touched.newEmail && errors.newEmail}>
         <FormLabel>Email</FormLabel>
-        <Input type="email" id="newEmail" name="newEmail" value={values.newEmail} onChange={handleChange} />
+        <Input
+          type="email"
+          id="newEmail"
+          name="newEmail"
+          value={values.newEmail}
+          onChange={handleChange}
+          onBlur={handleBlur}
+        />
+        <FormErrorMessage>{errors.newEmail}</FormErrorMessage>
       </FormControl>
 
       {!user && (
-        <FormControl py={2}>
+        <FormControl py={2} isInvalid={touched.newTmpPassword && errors.newTmpPassword}>
           <FormLabel>Mot de passe temporaire</FormLabel>
           <PasswordInput
             id="newTmpPassword"
             name="newTmpPassword"
             value={values.newTmpPassword}
             onChange={handleChange}
+            onBlur={handleBlur}
           />
+          <FormErrorMessage>{errors.newTmpPassword}</FormErrorMessage>
         </FormControl>
       )}
 
-      <FormControl py={2}>
-        <FormLabel>Tag</FormLabel>
-        <Input type="text" id="newTag" name="newTag" value={values.newTag} onChange={handleChange} />
+      <FormControl py={2} isInvalid={touched.newTag1 && errors.newTag1}>
+        <FormLabel>Tag 1</FormLabel>
+        <Select
+          type="text"
+          id="newTag1"
+          name="newTag1"
+          value={values.newTag1}
+          onChange={handleChange}
+          onBlur={handleBlur}
+        >
+          <option value={null} disabled>
+            Veuillez sélectionner une option...
+          </option>
+          <option value={"Sports"}>Sports</option>
+          <option value={"SAIO Education"}>SAIO Education</option>
+          <option value={"SRFD Agriculture"}>SRFD Agriculture</option>
+          <option value={"Autre"}>Autre</option>
+        </Select>
+        <FormErrorMessage>{errors.newTag1}</FormErrorMessage>
       </FormControl>
 
-      <FormControl py={2}>
+      {values.newTag1 === "Autre" && (
+        <FormControl py={2} isInvalid={touched.newTag2 && errors.newTag2}>
+          <FormLabel>Tag 2</FormLabel>
+          <Input
+            type="text"
+            id="newTag2"
+            name="newTag2"
+            value={values.newTag2}
+            onChange={handleChange}
+            onBlur={handleBlur}
+          />
+          <FormErrorMessage>{errors.newTag2}</FormErrorMessage>
+        </FormControl>
+      )}
+
+      <FormControl py={2} isInvalid={touched.newFonction && errors.newFonction}>
         <FormLabel>Fonction</FormLabel>
-        <Input type="text" id="newFonction" name="newFonction" value={values.newFonction} onChange={handleChange} />
+        {values.newTag1 === "Autre" ? (
+          <Input
+            type="text"
+            id="newFonction"
+            name="newFonction"
+            value={values.newFonction}
+            onChange={handleChange}
+            onBlur={handleBlur}
+          />
+        ) : (
+          <Select
+            type="text"
+            id="newFonction"
+            name="newFonction"
+            value={values.newFonction}
+            onChange={handleChange}
+            onBlur={handleBlur}
+          >
+            <option value={""}>Veuillez sélectionner une option...</option>
+            <option value={"SAIO / SRFD : adjoint chef de service"}>SAIO / SRFD : adjoint chef de service</option>
+            <option value={"SAIO / SRFD : chef de service"}>SAIO / SRFD : chef de service</option>
+            <option value={"SAIO / SRFD : chargé de mission ou assimilé"}>
+              SAIO / SRFD : chargé de mission ou assimilé
+            </option>
+          </Select>
+        )}
+
+        <FormErrorMessage>{errors.newFonction}</FormErrorMessage>
       </FormControl>
 
-      <FormControl py={2} mt={3}>
+      <FormControl py={2} mt={3} isInvalid={touched.accessAllCheckbox && errors.accessAllCheckbox}>
         <Checkbox
           name="accessAllCheckbox"
           id="accessAllCheckbox"
           isChecked={values.accessAllCheckbox.length > 0}
           onChange={handleChange}
+          onBlur={handleBlur}
           value="on"
           fontWeight={values.accessAllCheckbox.length > 0 ? "bold" : "normal"}
           color={"bluefrance"}
         >
           Admin
         </Checkbox>
+        <FormErrorMessage>{errors.accessAllCheckbox}</FormErrorMessage>
       </FormControl>
 
-      <FormControl py={2}>
+      <FormControl py={2} isInvalid={touched.roles && errors.roles}>
         <FormLabel>Rôles</FormLabel>
         <HStack wrap="wrap" spacing={"4%"}>
           {roles.map((role, i) => {
@@ -341,6 +509,7 @@ export const UserLine = ({ user, roles }) => {
                 name="roles"
                 key={i}
                 onChange={() => handleRoleChange(role.name)}
+                onBlur={handleBlur}
                 value={role.name}
                 isChecked={values.roles.includes(role.name)}
               >
@@ -349,6 +518,7 @@ export const UserLine = ({ user, roles }) => {
             );
           })}
         </HStack>
+        <FormErrorMessage>{errors.roles}</FormErrorMessage>
       </FormControl>
 
       <Accordion bg="white" mt={3} allowToggle>
@@ -368,6 +538,7 @@ export const UserLine = ({ user, roles }) => {
                       <Checkbox
                         name="acl"
                         onChange={handleChange}
+                        onBlur={handleBlur}
                         value={item.ref}
                         isChecked={
                           values.acl.includes(item.ref) ||
@@ -387,6 +558,7 @@ export const UserLine = ({ user, roles }) => {
                             <Checkbox
                               name="acl"
                               onChange={handleChange}
+                              onBlur={handleBlur}
                               value={subitem.ref}
                               isChecked={
                                 values.acl.includes(subitem.ref) ||
@@ -409,7 +581,7 @@ export const UserLine = ({ user, roles }) => {
         </AccordionItem>
       </Accordion>
 
-      <FormControl py={2}>
+      <FormControl py={2} isInvalid={touched.accessAcademieList && errors.accessAcademieList}>
         <FormLabel>Académies</FormLabel>
         <HStack wrap="wrap" spacing={5}>
           <Checkbox
@@ -430,6 +602,7 @@ export const UserLine = ({ user, roles }) => {
                   key={key}
                   name="accessAcademieList"
                   onChange={(event) => handleAcademieChange(event.target.value)}
+                  onBlur={handleBlur}
                   value={key}
                   isChecked={values.accessAcademieList.includes(key)}
                   mb={3}
@@ -439,11 +612,12 @@ export const UserLine = ({ user, roles }) => {
               );
             })}
         </HStack>
+        <FormErrorMessage>{errors.accessAcademieList}</FormErrorMessage>
       </FormControl>
 
       {user && (
         <Box>
-          <Button type="submit" variant="primary" mr={5}>
+          <Button type="submit" variant="primary" mr={5} isDisabled={!isValid} onClick={handleSubmit}>
             Enregistrer
           </Button>
           <Button variant="outline" colorScheme="red" borderRadius="none" onClick={onDeleteClicked}>
@@ -452,7 +626,7 @@ export const UserLine = ({ user, roles }) => {
         </Box>
       )}
       {!user && (
-        <Button type="submit" variant="primary">
+        <Button type="submit" variant="primary" isDisabled={!isValid} onClick={handleSubmit}>
           Créer l'utilisateur
         </Button>
       )}
@@ -461,18 +635,34 @@ export const UserLine = ({ user, roles }) => {
 };
 
 export default (props) => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const [tabIndex, setTabIndex] = useState(0);
+
   const { data: roles } = useQuery("roles", () => _get(`/api/admin/roles/`), {
     refetchOnWindowFocus: false,
   });
-
-  // const { data: users } = useQuery("users", () => _get(`/api/admin/users/`), {
-  //   refetchOnWindowFocus: false,
-  // });
 
   const searchState = useUserSearch();
 
   const title = "Gestion des utilisateurs";
   setTitle(title);
+
+  const tabs = [
+    { title: "Liste", anchor: null, component: <SearchUser {...props} searchState={searchState} roles={roles} /> },
+    { title: "Créer un utilisateur", anchor: "create", component: <UserLine user={null} roles={roles} /> },
+  ];
+
+  useEffect(() => {
+    if (location.hash === "#create") {
+      setTabIndex(1);
+    }
+  }, [location.hash]);
+
+  const handleTabsChange = (index) => {
+    navigate(tabs[index].anchor ? `#${tabs[index].anchor}` : "");
+    setTabIndex(index);
+  };
 
   return (
     <Layout>
@@ -493,18 +683,16 @@ export default (props) => {
             </Center>
           )}
           {searchState.loaded && (
-            <Tabs variant="search" mt={5} isLazy>
+            <Tabs variant="search" mt={5} isLazy tabIndex={tabIndex} onChange={handleTabsChange}>
               <TabList bg="white">
-                <Tab>Liste</Tab>
-                <Tab>Créer un utilisateur</Tab>
+                {tabs.map((tab, index) => (
+                  <Tab key={index}>{tab.title}</Tab>
+                ))}
               </TabList>
               <TabPanels>
-                <TabPanel>
-                  <SearchUser {...props} searchState={searchState} roles={roles} />
-                </TabPanel>
-                <TabPanel>
-                  <UserLine user={null} roles={roles} />
-                </TabPanel>
+                {tabs.map((tab, index) => (
+                  <TabPanel key={index}>{tab.component}</TabPanel>
+                ))}
               </TabPanels>
             </Tabs>
           )}
