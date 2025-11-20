@@ -127,6 +127,26 @@ export default React.memo(({ searchState, extraButtons = null, roles }) => {
                         dataField: "email.keyword",
                         sortBy: "desc",
                       },
+                      {
+                        label: "Date de création (asc)",
+                        dataField: "created_at",
+                        sortBy: "asc",
+                      },
+                      {
+                        label: "Date de création (desc)",
+                        dataField: "created_at",
+                        sortBy: "desc",
+                      },
+                      {
+                        label: "Date de dernière connection (asc)",
+                        dataField: "last_connection",
+                        sortBy: "asc",
+                      },
+                      {
+                        label: "Date de dernière connection (desc)",
+                        dataField: "last_connection",
+                        sortBy: "desc",
+                      },
                       // {
                       //   label: "Nom d'utilisateur",
                       //   dataField: "username.keyword",
