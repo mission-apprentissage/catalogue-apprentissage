@@ -431,6 +431,9 @@ const applyConversion = async (
           "last_updated_at",
           "lieu_formation_adresse_computed",
           "lieu_formation_geo_coordonnees_computed",
+          "lieu_formation_id",
+          "lieu_formation_published",
+          "variante_a_distance",
         ];
 
         // console.log(
