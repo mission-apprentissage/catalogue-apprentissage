@@ -19,7 +19,7 @@ import {
   Textarea,
 } from "@chakra-ui/react";
 import { StatusBadge } from "../StatusBadge";
-import { Form, useFormik } from "formik";
+import { useFormik } from "formik";
 import useAuth from "../../hooks/useAuth";
 import * as Yup from "yup";
 import { ArrowRightLine, Close } from "../../../theme/components/icons";
@@ -131,7 +131,7 @@ const depublicationOptions = [
                 affelnet: true,
                 tag: DEPUBLICATION_TAGS.SSA,
                 precision: {
-                  label: "Veuillez indiquer l'adresse attendue",
+                  label: "Veuillez indiquer []",
                   obligatoire: true,
                   type: "text",
                 },
@@ -196,8 +196,7 @@ const depublicationOptions = [
         },
 
         {
-          label:
-            "La durée déclarée et/ou l'année d'entrée en apprentissage est incorrecte, la formation n’est en réalité pas accessible aux élèves de 3e.",
+          label: "La durée déclarée et/ou l'année d'entrée en apprentissage est incorrecte.",
           statut: COMMON_STATUS.NON_PUBLIE,
           parcoursup: true,
           affelnet: true,
