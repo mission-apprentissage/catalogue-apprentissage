@@ -430,12 +430,7 @@ const run = async () => {
       $or: [
         {
           parcoursup_statut: {
-            $nin: [
-              PARCOURSUP_STATUS.PUBLIE,
-              PARCOURSUP_STATUS.FERME,
-              PARCOURSUP_STATUS.NON_PUBLIE,
-              PARCOURSUP_STATUS.EN_ATTENTE,
-            ],
+            $nin: [PARCOURSUP_STATUS.PUBLIE, PARCOURSUP_STATUS.FERME, PARCOURSUP_STATUS.NON_PUBLIE],
           },
           $or: [
             // Plus dans le flux
@@ -486,7 +481,7 @@ const run = async () => {
 
   await Formation.updateMany({}, [{ $set: { parcoursup_last_statut: "$parcoursup_statut" } }]);
 
-  /** 3. On réinitialise les statuts des formations our permettre le recalcule du périmètre */
+  /** 3. On réinitialise les statuts des formations pour permettre le recalcule du périmètre */
   logger.debug({ type: "job" }, "Etape 3. Réinitialisation des statuts");
 
   const filterStatus = {
@@ -498,6 +493,8 @@ const run = async () => {
         PARCOURSUP_STATUS.A_PUBLIER_VALIDATION_RECTEUR,
         PARCOURSUP_STATUS.A_PUBLIER,
         PARCOURSUP_STATUS.PRET_POUR_INTEGRATION,
+        PARCOURSUP_STATUS.EN_ATTENTE,
+        PARCOURSUP_STATUS.REJETE,
         // PARCOURSUP_STATUS.PUBLIE,
       ],
     },
@@ -603,7 +600,12 @@ const run = async () => {
                       case: {
                         $in: [
                           "$parcoursup_last_statut",
-                          [PARCOURSUP_STATUS.PRET_POUR_INTEGRATION, PARCOURSUP_STATUS.PUBLIE],
+                          [
+                            PARCOURSUP_STATUS.PRET_POUR_INTEGRATION,
+                            PARCOURSUP_STATUS.PUBLIE,
+                            PARCOURSUP_STATUS.EN_ATTENTE,
+                            PARCOURSUP_STATUS.REJETE,
+                          ],
                         ],
                       },
                       then: "$parcoursup_last_statut",
@@ -659,7 +661,12 @@ const run = async () => {
                       case: {
                         $in: [
                           "$parcoursup_last_statut",
-                          [PARCOURSUP_STATUS.PRET_POUR_INTEGRATION, PARCOURSUP_STATUS.PUBLIE],
+                          [
+                            PARCOURSUP_STATUS.PRET_POUR_INTEGRATION,
+                            PARCOURSUP_STATUS.PUBLIE,
+                            PARCOURSUP_STATUS.EN_ATTENTE,
+                            PARCOURSUP_STATUS.REJETE,
+                          ],
                         ],
                       },
                       then: "$parcoursup_last_statut",
@@ -732,7 +739,12 @@ const run = async () => {
                       case: {
                         $in: [
                           "$parcoursup_last_statut",
-                          [PARCOURSUP_STATUS.PUBLIE, PARCOURSUP_STATUS.PRET_POUR_INTEGRATION],
+                          [
+                            PARCOURSUP_STATUS.PRET_POUR_INTEGRATION,
+                            PARCOURSUP_STATUS.PUBLIE,
+                            PARCOURSUP_STATUS.EN_ATTENTE,
+                            PARCOURSUP_STATUS.REJETE,
+                          ],
                         ],
                       },
                       then: "$parcoursup_last_statut",

@@ -39,7 +39,7 @@ const run = async () => {
       $or: [
         {
           affelnet_statut: {
-            $nin: [AFFELNET_STATUS.PUBLIE, AFFELNET_STATUS.NON_PUBLIE, AFFELNET_STATUS.EN_ATTENTE],
+            $nin: [AFFELNET_STATUS.PUBLIE, AFFELNET_STATUS.NON_PUBLIE],
           },
           $or: [
             { cle_ministere_educatif: /#LAD$/ },
@@ -97,6 +97,7 @@ const run = async () => {
         AFFELNET_STATUS.A_PUBLIER_VALIDATION,
         AFFELNET_STATUS.A_PUBLIER,
         AFFELNET_STATUS.PRET_POUR_INTEGRATION,
+        AFFELNET_STATUS.EN_ATTENTE,
         AFFELNET_STATUS.PUBLIE,
       ],
     },
@@ -196,7 +197,10 @@ const run = async () => {
                   branches: [
                     {
                       case: {
-                        $in: ["$affelnet_last_statut", [AFFELNET_STATUS.PRET_POUR_INTEGRATION, AFFELNET_STATUS.PUBLIE]],
+                        $in: [
+                          "$affelnet_last_statut",
+                          [AFFELNET_STATUS.PUBLIE, AFFELNET_STATUS.PRET_POUR_INTEGRATION, AFFELNET_STATUS.EN_ATTENTE],
+                        ],
                       },
                       then: "$affelnet_last_statut",
                     },
@@ -251,7 +255,10 @@ const run = async () => {
                   branches: [
                     {
                       case: {
-                        $in: ["$affelnet_last_statut", [AFFELNET_STATUS.PRET_POUR_INTEGRATION, AFFELNET_STATUS.PUBLIE]],
+                        $in: [
+                          "$affelnet_last_statut",
+                          [AFFELNET_STATUS.PUBLIE, AFFELNET_STATUS.PRET_POUR_INTEGRATION, AFFELNET_STATUS.EN_ATTENTE],
+                        ],
                       },
                       then: "$affelnet_last_statut",
                     },
@@ -320,7 +327,10 @@ const run = async () => {
                     },
                     {
                       case: {
-                        $in: ["$affelnet_last_statut", [AFFELNET_STATUS.PUBLIE, AFFELNET_STATUS.PRET_POUR_INTEGRATION]],
+                        $in: [
+                          "$affelnet_last_statut",
+                          [AFFELNET_STATUS.PUBLIE, AFFELNET_STATUS.PRET_POUR_INTEGRATION, AFFELNET_STATUS.EN_ATTENTE],
+                        ],
                       },
                       then: "$affelnet_last_statut",
                     },
