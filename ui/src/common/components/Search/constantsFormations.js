@@ -1,7 +1,7 @@
 import { escapeDiacritics } from "../../utils/downloadUtils";
 import helpText from "../../../locales/helpText.json";
 import { CONTEXT } from "../../../constants/context";
-// import { departements } from "../../../constants/departements";
+import { DEPARTEMENTS } from "../../../constants/departements";
 import { ANNEES } from "../../../constants/annees";
 import { sortDescending } from "../../utils/historyUtils";
 import { AffelnetMissingSession } from "./components/AffelnetMissingSession";
@@ -42,10 +42,15 @@ export const allowedFilters = [
   "diplome",
   "duree",
   "etablissement_formateur_actif",
+  "etablissement_formateur_num_academie",
+  "etablissement_formateur_num_departement",
+  "etablissement_formateur_region",
   "etablissement_formateur_siret",
   "etablissement_formateur_uai",
   "etablissement_gestionnaire_actif",
   "etablissement_gestionnaire_num_academie",
+  "etablissement_gestionnaire_num_departement",
+  "etablissement_gestionnaire_region",
   "etablissement_gestionnaire_siren",
   "etablissement_gestionnaire_siret",
   "etablissement_gestionnaire_uai",
@@ -1120,6 +1125,31 @@ export const quickFiltersDefinition = [
     selectAllLabel: "Toutes les régions",
     sortBy: "asc",
   },
+
+  {
+    componentId: `num_departement`,
+    type: "facet",
+    dataField: "num_departement.keyword",
+    title: "Département",
+    filterLabel: "Département",
+    selectAllLabel: "Tous",
+    sortBy: "asc",
+    size: Object.values(DEPARTEMENTS).length,
+    transformData: (data) => data.map((d) => ({ ...d, key: `${d.key} - ${DEPARTEMENTS[d.key]}` })),
+    customQuery: (values) => ({
+      query:
+        values?.length && !values?.includes("Tous")
+          ? {
+              terms: {
+                "num_departement.keyword": values?.map((value) =>
+                  typeof value === "string" ? value?.split(" - ")[0] : value
+                ),
+              },
+            }
+          : {},
+    }),
+  },
+
   {
     componentId: `nom_academie`,
     type: "facet",
@@ -1718,27 +1748,6 @@ export const quickFiltersDefinition = [
     closeText: "Filtres avancés (niveau, durée, dates...)",
     acl: "page_catalogue/voir_filtres_avances_generaux",
     filters: [
-      // {
-      //   componentId: `num_departement`,
-      //   type: "facet",
-      //   dataField: "num_departement.keyword",
-      //   title: "Département",
-      //   filterLabel: "Département",
-      //   selectAllLabel: "Tous",
-      //   sortBy: "asc",
-      //   size: Object.values(departements).length,
-      //   transformData: (data) => data.map((d) => ({ ...d, key: `${d.key} - ${departements[d.key]}` })),
-      //   customQuery: (values) => ({
-      //     query: values?.length && {
-      //       terms: {
-      //         "num_departement.keyword": values?.map((value) =>
-      //           typeof value === "string" ? value?.split(" - ")[0] : value
-      //         ),
-      //       },
-      //     },
-      //   }),
-      // },
-
       {
         componentId: `tags`,
         type: "facet",
