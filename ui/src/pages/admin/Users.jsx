@@ -300,7 +300,7 @@ export const UserLine = ({ user, roles, refreshSearch }) => {
     async (e) => {
       e.preventDefault();
       // eslint-disable-next-line no-restricted-globals
-      if (confirm("Supprimer l'utilisateur !?")) {
+      if (confirm("Supprimer l'utilisateur ?")) {
         try {
           await _delete(`/api/admin/user/${user.username}`);
           toast({
@@ -323,19 +323,23 @@ export const UserLine = ({ user, roles, refreshSearch }) => {
         }
       }
     },
-    [toast, user.username]
+    [refreshSearch, toast, user.username]
   );
 
   const onGenerateNewPasswordClicked = useCallback(
     async (e) => {
       e.preventDefault();
-      // eslint-disable-next-line no-restricted-globals
-      if (confirm("Générer un nouveau mot de passe temporaire !?")) {
+      if (
+        // eslint-disable-next-line no-restricted-globals
+        confirm(
+          "Générer un nouveau mot de passe temporaire ? Un nouveau mot de passe provisoire sera envoyé par courriel à l’utilisateur, l’invitant à se connecter une première fois pour personnaliser son mot de passe."
+        )
+      ) {
         try {
           await _patch(`/api/admin/user/${user.username}/regenerate-password`);
           toast({
             title: "Succès",
-            description: "Un nouveau mot de passe temporaire a été généré.",
+            description: "Un nouveau mot de passe temporaire a été envoyé par courriel à l’utilisateur.",
             status: "success",
             duration: 9000,
             isClosable: true,
@@ -353,7 +357,7 @@ export const UserLine = ({ user, roles, refreshSearch }) => {
         }
       }
     },
-    [toast, user.username]
+    [refreshSearch, toast, user.username]
   );
 
   const handleAcademieChange = (academie) => {
