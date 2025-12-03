@@ -150,7 +150,20 @@ module.exports = ({ users, mailer, db: { db } }) => {
 
       await users.changePassword(username, password);
 
-      logger.info(`New temp password for ${username} : ${password}`);
+      const user = await users.getUser(username);
+
+      await mailer.sendEmail(
+        user.email,
+        `[${config.env} Catalogue apprentissage] Bienvenue`,
+        getEmailTemplate("grettings"),
+        {
+          username,
+          tmpPwd: password,
+          publicUrl: config.publicUrl,
+        }
+      );
+
+      // logger.info(`New temp password for ${username} : ${password}`);
 
       res.json({ message: `Utilisateur ${username} mis à jour !` });
     })
