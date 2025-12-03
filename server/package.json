@@ -91,7 +91,6 @@
     "nodemailer-html-to-text": "^3.1.0",
     "objects-to-csv": "1.3.6",
     "oleoduc": "0.8.0",
-    "omit-deep": "https://github.com/izigibran/omit-deep.git",
     "passport": "0.7.0",
     "passport-jwt": "4.0.1",
     "require-all": "3.0.0",
@@ -119,9 +118,6 @@
     "prettier": "3.6.2",
     "rewiremock": "3.14.5",
     "sinon": "^19"
-  },
-  "resolutions": {
-    "omit-deep": "https://github.com/izigibran/omit-deep.git"
   },
   "overrides": {
     "@mission-apprentissage/tco-service-node": {
