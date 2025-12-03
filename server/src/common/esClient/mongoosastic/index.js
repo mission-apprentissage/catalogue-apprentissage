@@ -12,6 +12,7 @@
 
 /**
  * @typedef {import("@elastic/elasticsearch").Client} Client
+ * @typedef {import("mongoose").Query} Query
  */
 
 const serialize = require("./serialize");
@@ -272,47 +273,70 @@ function Mongoosastic(schema, options) {
     });
   };
 
-  function postRemove(doc) {
+  const postDocumentRemove = (doc) => {
     if (isHooksPaused) return;
     if (doc) {
       const _doc = new doc.constructor(doc);
       return _doc.unIndex();
     }
-  }
+  };
 
-  function postSave(doc) {
+  const postDocumentSave = (doc) => {
     if (isHooksPaused) return;
     if (doc) {
       const _doc = new doc.constructor(doc);
       return _doc.index();
     }
-  }
+  };
 
-  function postSaveMany(docs) {
-    if (isHooksPaused) return;
-    return new Promise(async (resolve, reject) => {
-      for (let i = 0; i < docs.length; i++) {
-        try {
-          await postSave(docs[i]);
-        } catch (e) {}
-      }
-      resolve();
-    });
-  }
+  // async function postQuerySave(next) {
+  //   const doc = await this.model.findOne(this.getQuery());
+
+  //   if (doc) {
+  //     const _doc = new this.model(doc);
+
+  //     console.log(_doc);
+  //     return _doc.index();
+  //   }
+  // }
+
+  // async function postQuerySaveMany(query) {
+  //   console.log("postQuerySaveMany", { query, this: this });
+  // }
+
+  // async function postQueryRemove(query) {
+  //   console.log("postQueryRemove", { query, this: this });
+  // }
+
+  // async function postQueryRemoveMany(query) {
+  //   console.log("postQueryRemoveMany", { query, this: this });
+  // }
 
   /**
    * Use standard Mongoose Middleware hooks
    * to persist to Elasticsearch
+   *
+   * See https://mongoosejs.com/docs/7.x/docs/middleware.html#types-of-middleware
    */
   function setUpMiddlewareHooks(inSchema) {
-    inSchema.post("remove", postRemove);
-    inSchema.post("findOneAndRemove", postRemove);
-    inSchema.post("deleteOne", postRemove);
+    // Document middleware hooks
+    inSchema.post("save", { document: true, query: false }, postDocumentSave);
+    inSchema.post("updateOne", { document: true, query: false }, postDocumentSave);
+    inSchema.post("deleteOne", { document: true, query: false }, postDocumentRemove);
 
-    inSchema.post("save", postSave);
-    inSchema.post("findOneAndUpdate", postSave);
+    // // TODO: Query middleware hooks
+    // inSchema.post("updateOne", { document: false, query: true }, postQuerySave);
+    // inSchema.post("findOneAndUpdate", { document: false, query: true }, postQuerySave);
+    // inSchema.post("replaceOne", { document: false, query: true }, postQuerySave);
+    // inSchema.post("findOneAndReplace", { document: false, query: true }, postQuerySave);
 
-    inSchema.post("insertMany", postSaveMany);
+    // inSchema.post("insertMany", { document: false, query: true }, postQuerySaveMany);
+    // inSchema.post("updateMany", { document: false, query: true }, postQuerySaveMany);
+
+    // inSchema.post("deleteOne", { document: false, query: true }, postQueryRemove);
+    // inSchema.post("findOneAndDelete", { document: false, query: true }, postQueryRemove);
+
+    // inSchema.post("deleteMany", { document: false, query: true }, postQueryRemoveMany);
   }
   setUpMiddlewareHooks(schema);
 }

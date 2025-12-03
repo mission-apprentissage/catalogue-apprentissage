@@ -1,6 +1,8 @@
-import React, { useEffect, useState } from "react";
-import { _delete, _get, _post, _put } from "../../common/httpClient";
+import React, { useCallback, useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useQuery } from "react-query";
 import { useFormik } from "formik";
+import generator from "generate-password-browser";
 import Layout from "../layout/Layout";
 import {
   Accordion,
@@ -17,7 +19,6 @@ import {
   Text,
   HStack,
   Input,
-  Stack,
   Flex,
   useToast,
   Tag,
@@ -35,14 +36,12 @@ import {
 } from "@chakra-ui/react";
 import { Breadcrumb } from "../../common/components/Breadcrumb";
 import { setTitle } from "../../common/utils/pageUtils";
-import ACL from "./acl";
-import generator from "generate-password-browser";
-import { useQuery } from "react-query";
-import { ACADEMIES } from "../../constants/academies";
+import { _delete, _get, _patch, _post, _put } from "../../common/httpClient";
 import { PasswordInput } from "../../common/components/PasswordInput";
 import { useUserSearch } from "../../common/hooks/useUserSearch";
 import SearchUser from "../../common/components/Search/SearchUser";
-import { useLocation, useNavigate } from "react-router-dom";
+import { ACADEMIES } from "../../constants/academies";
+import ACL from "./acl";
 
 const academies = new Map(Object.entries(ACADEMIES));
 
@@ -59,7 +58,7 @@ const buildRolesAcl = (newRoles, roles) => {
   return acl;
 };
 
-export const CardListUser = ({ user, roles }) => {
+export const CardListUser = ({ user, roles, refreshSearch }) => {
   if (!user) {
     return;
   }
@@ -123,7 +122,7 @@ export const CardListUser = ({ user, roles }) => {
               <AccordionIcon />
             </AccordionButton>
             <AccordionPanel pb={4} border={"1px solid"} borderTop={0} borderColor={"bluefrance"}>
-              {isExpanded && <UserLine user={user} roles={roles} />}
+              {isExpanded && <UserLine user={user} roles={roles} refreshSearch={refreshSearch} />}
             </AccordionPanel>
           </>
         )}
@@ -132,7 +131,7 @@ export const CardListUser = ({ user, roles }) => {
   );
 };
 
-export const UserLine = ({ user, roles }) => {
+export const UserLine = ({ user, roles, refreshSearch }) => {
   const toast = useToast();
   const [rolesAcl, setRolesAcl] = useState(buildRolesAcl(user?.roles || [], roles));
 
@@ -242,14 +241,14 @@ export const UserLine = ({ user, roles }) => {
               },
             };
             await _put(`/api/admin/user/${user.username}`, body);
-
             toast({
               title: "Succès",
-              description: "L'utilisateur a bien été mis à jour.",
+              description: "L'utilisateur a été mis à jour.",
               status: "success",
-              duration: 10000,
+              duration: 9000,
               isClosable: true,
             });
+            refreshSearch();
           } else {
             const body = {
               username: newUsername,
@@ -268,15 +267,13 @@ export const UserLine = ({ user, roles }) => {
               },
             };
             await _post(`/api/admin/user/`, body);
-
             toast({
               title: "Succès",
-              description: "L'utilisateur a bien été créé.",
+              description: "L'utilisateur a été créé.",
               status: "success",
-              duration: 10000,
+              duration: 9000,
               isClosable: true,
             });
-
             resetForm();
           }
         } catch (e) {
@@ -299,32 +296,65 @@ export const UserLine = ({ user, roles }) => {
     },
   });
 
-  const onDeleteClicked = async (e) => {
-    e.preventDefault();
-    // eslint-disable-next-line no-restricted-globals
-    if (confirm("Supprimer l'utilisateur !?")) {
-      try {
-        await _delete(`/api/admin/user/${user.username}`);
-        toast({
-          title: "Succès",
-          description: "L'utilisateur a bien été supprimé.",
-          status: "success",
-          duration: 10000,
-          isClosable: true,
-        });
-
-        document.location.reload();
-      } catch (e) {
-        toast({
-          title: "Erreur",
-          description: "Une erreur est survenue lors de la suppression de l'utilisateur.",
-          status: "error",
-          duration: 10000,
-          isClosable: true,
-        });
+  const onDeleteClicked = useCallback(
+    async (e) => {
+      e.preventDefault();
+      // eslint-disable-next-line no-restricted-globals
+      if (confirm("Supprimer l'utilisateur !?")) {
+        try {
+          await _delete(`/api/admin/user/${user.username}`);
+          toast({
+            title: "Succès",
+            description: "L'utilisateur a été supprimé.",
+            status: "success",
+            duration: 9000,
+            isClosable: true,
+          });
+          refreshSearch();
+        } catch (e) {
+          toast({
+            title: "Erreur",
+            description: e.message,
+            status: "error",
+            duration: 9000,
+            isClosable: true,
+          });
+          return;
+        }
       }
-    }
-  };
+    },
+    [toast, user.username]
+  );
+
+  const onGenerateNewPasswordClicked = useCallback(
+    async (e) => {
+      e.preventDefault();
+      // eslint-disable-next-line no-restricted-globals
+      if (confirm("Générer un nouveau mot de passe temporaire !?")) {
+        try {
+          await _patch(`/api/admin/user/${user.username}/regenerate-password`);
+          toast({
+            title: "Succès",
+            description: "Un nouveau mot de passe temporaire a été généré.",
+            status: "success",
+            duration: 9000,
+            isClosable: true,
+          });
+          refreshSearch();
+        } catch (e) {
+          toast({
+            title: "Erreur",
+            description: e.message,
+            status: "error",
+            duration: 9000,
+            isClosable: true,
+          });
+          return;
+        }
+      }
+    },
+    [toast, user.username]
+  );
 
   const handleAcademieChange = (academie) => {
     let newAcademieList = [];
@@ -620,6 +650,17 @@ export const UserLine = ({ user, roles }) => {
           <Button type="submit" variant="primary" mr={5} isDisabled={!isValid} onClick={handleSubmit}>
             Enregistrer
           </Button>
+
+          <Button
+            variant="outline"
+            colorScheme="bluefrance"
+            borderRadius="none"
+            onClick={onGenerateNewPasswordClicked}
+            mr={5}
+          >
+            Générer un nouveau mot de passe
+          </Button>
+
           <Button variant="outline" colorScheme="red" borderRadius="none" onClick={onDeleteClicked}>
             Supprimer l'utilisateur
           </Button>
@@ -643,13 +684,23 @@ export default (props) => {
     refetchOnWindowFocus: false,
   });
 
-  const searchState = useUserSearch();
+  // const { data: users } = useQuery("users", () => _get(`/api/admin/users/`), {
+  //   refetchOnWindowFocus: false,
+  // });
+
+  const [searchState, refreshSearchCount] = useUserSearch();
 
   const title = "Gestion des utilisateurs";
   setTitle(title);
 
   const tabs = [
-    { title: "Liste", anchor: null, component: <SearchUser {...props} searchState={searchState} roles={roles} /> },
+    {
+      title: "Liste",
+      anchor: null,
+      component: (
+        <SearchUser {...props} searchState={searchState} roles={roles} refreshSearchCount={refreshSearchCount} />
+      ),
+    },
     { title: "Créer un utilisateur", anchor: "create", component: <UserLine user={null} roles={roles} /> },
   ];
 

@@ -8,12 +8,7 @@ module.exports.connectToMongo = (mongoUri = config.mongodb.uri, mongooseInst = n
 
     const mI = mongooseInst || mongooseInstance;
     // Set up default mongoose connection
-    mI.connect(mongoUri, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-      useFindAndModify: false,
-      keepAlive: true,
-    });
+    mI.connect(mongoUri, {});
 
     // Get Mongoose to use the global promise library
     mI.Promise = global.Promise; // Get the default connection

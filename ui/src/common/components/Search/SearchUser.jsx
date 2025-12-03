@@ -1,10 +1,9 @@
-import React from "react";
-import { DataSearch, ReactiveBase, ReactiveList, SelectedFilters } from "@appbaseio/reactivesearch";
+import React, { memo, useRef, useState, useCallback } from "react";
+import { DataSearch, ReactiveBase, ReactiveComponent, ReactiveList, SelectedFilters } from "@appbaseio/reactivesearch";
 import { Box, Container, Flex, Text } from "@chakra-ui/react";
 
 import useAuth from "../../hooks/useAuth";
 import { hasAccessTo, hasOneOfRoles, isUserAdmin } from "../../utils/rolesUtils";
-import { ExportButton, QueryBuilder, QuickFilters } from "./components";
 import {
   allowedFilters,
   quickFiltersDefinition,
@@ -15,14 +14,20 @@ import {
 import { CloseCircleLine } from "../../../theme/components/icons";
 import { SearchLine } from "../../../theme/components/icons/SearchLine";
 import { CardListUser } from "../../../pages/admin/Users";
+import { ExportButton, QueryBuilder, QuickFilters } from "./components";
 import { Pagination } from "./components/Pagination";
 
 import "./search.css";
 
-export default React.memo(({ searchState, extraButtons = null, roles }) => {
+export default memo(({ searchState, extraButtons = null, roles, refreshSearchCount }) => {
   const { base, countUsers, endpoint } = searchState;
-
+  const [lastRefreshTime, setLastRefreshTime] = useState(Date.now());
   const [auth] = useAuth();
+
+  const refreshSearch = useCallback(() => {
+    refreshSearchCount();
+    setLastRefreshTime(new Date());
+  }, [refreshSearchCount]);
 
   const filters = quickFiltersDefinition.filter(
     ({ acl, roles, isAuth }) =>
@@ -30,8 +35,6 @@ export default React.memo(({ searchState, extraButtons = null, roles }) => {
       (!roles || hasOneOfRoles(auth, roles)) &&
       (!isAuth || (isAuth && auth?.sub !== "anonymous"))
   );
-
-  // console.log(roles);
 
   return (
     <Box className="search-page">
@@ -69,6 +72,19 @@ export default React.memo(({ searchState, extraButtons = null, roles }) => {
                 />
               </Box>
             </Box>
+
+            <ReactiveComponent
+              componentId="refresher"
+              customQuery={() => ({
+                query: {
+                  bool: {
+                    must_not: {
+                      term: { dummy: String(lastRefreshTime) },
+                    },
+                  },
+                },
+              })}
+            />
 
             {/* <Box borderTop="1px solid #E7E7E7" w="full" my={4} /> */}
 
@@ -147,18 +163,15 @@ export default React.memo(({ searchState, extraButtons = null, roles }) => {
                         dataField: "last_connection",
                         sortBy: "desc",
                       },
-                      // {
-                      //   label: "Nom d'utilisateur",
-                      //   dataField: "username.keyword",
-                      //   sortBy: "asc",
-                      // },
                     ]}
                     defaultQuery={() => {
                       return {
                         _source: columnsDefinition.map(({ accessor }) => accessor),
                       };
                     }}
-                    renderItem={(data) => <CardListUser user={data} key={data._id} roles={roles} />}
+                    renderItem={(data) => (
+                      <CardListUser user={data} key={data._id} roles={roles} refreshSearch={refreshSearch} />
+                    )}
                     renderResultStats={(stats) => {
                       return (
                         <div className="summary-stats">
@@ -187,7 +200,7 @@ export default React.memo(({ searchState, extraButtons = null, roles }) => {
                         </div>
                       );
                     }}
-                    react={{ and: allowedFilters }}
+                    react={{ and: ["refresher", ...allowedFilters] }}
                     renderPagination={(props) => <Pagination {...props} />}
                   />
                 </Box>

@@ -64,7 +64,7 @@ const FacetFilter = ({ filter, injectedProps = {} }) => {
         };
       }}
       URLParams={true}
-      react={{ and: allowedFilters.filter((e) => e !== filter.componentId) }}
+      react={{ and: ["refresher", ...allowedFilters.filter((e) => e !== filter.componentId)] }}
       helpTextSection={filter.helpTextSection}
       transformData={filter.transformData ? (...args) => filter.transformData?.(...args, injectedProps) : undefined}
       customQuery={filter.customQuery ? (...args) => filter.customQuery?.(...args, injectedProps) : undefined}

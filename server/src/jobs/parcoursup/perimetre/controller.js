@@ -601,8 +601,8 @@ const run = async () => {
                         $in: [
                           "$parcoursup_last_statut",
                           [
-                            PARCOURSUP_STATUS.PRET_POUR_INTEGRATION,
                             PARCOURSUP_STATUS.PUBLIE,
+                            PARCOURSUP_STATUS.PRET_POUR_INTEGRATION,
                             PARCOURSUP_STATUS.EN_ATTENTE,
                             PARCOURSUP_STATUS.REJETE,
                           ],
@@ -662,8 +662,8 @@ const run = async () => {
                         $in: [
                           "$parcoursup_last_statut",
                           [
-                            PARCOURSUP_STATUS.PRET_POUR_INTEGRATION,
                             PARCOURSUP_STATUS.PUBLIE,
+                            PARCOURSUP_STATUS.PRET_POUR_INTEGRATION,
                             PARCOURSUP_STATUS.EN_ATTENTE,
                             PARCOURSUP_STATUS.REJETE,
                           ],
@@ -740,8 +740,8 @@ const run = async () => {
                         $in: [
                           "$parcoursup_last_statut",
                           [
-                            PARCOURSUP_STATUS.PRET_POUR_INTEGRATION,
                             PARCOURSUP_STATUS.PUBLIE,
+                            PARCOURSUP_STATUS.PRET_POUR_INTEGRATION,
                             PARCOURSUP_STATUS.EN_ATTENTE,
                             PARCOURSUP_STATUS.REJETE,
                           ],

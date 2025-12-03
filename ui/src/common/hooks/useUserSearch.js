@@ -50,15 +50,16 @@ export const useUserSearch = () => {
   const base = getEsBase();
 
   const endpoint = CATALOGUE_API;
+  const [iteration, setIteration] = useState(0);
   const [searchState, setSearchState] = useState({
     loaded: false,
     base,
     count: 0,
-
+    iteration,
     endpoint,
   });
-
   const [error, setError] = useState(null);
+
   useEffect(() => {
     const abortController = new AbortController();
 
@@ -82,11 +83,15 @@ export const useUserSearch = () => {
     return () => {
       abortController.abort();
     };
-  }, [base, endpoint]);
+  }, [base, endpoint, iteration]);
 
   if (error !== null) {
     throw error;
   }
 
-  return searchState;
+  const refreshSearchCount = () => {
+    setIteration((i) => i + 1);
+  };
+
+  return [searchState, refreshSearchCount];
 };
