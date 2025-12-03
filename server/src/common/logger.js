@@ -3,7 +3,7 @@ const util = require("util");
 const bunyan = require("bunyan");
 const PrettyStream = require("bunyan-prettystream");
 const BunyanSlack = require("bunyan-slack").default;
-const BunyanMongodbStream = require("bunyan-mongodb-stream");
+const BunyanMongooseStream = require("bunyan-mongoose-stream");
 const { Log } = require("./models/index");
 
 const createStreams = () => {
@@ -32,7 +32,7 @@ const createStreams = () => {
     return {
       name: "mongodb",
       level,
-      stream: BunyanMongodbStream({ model: Log }),
+      stream: BunyanMongooseStream({ model: Log }),
     };
   };
 

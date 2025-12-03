@@ -6,5 +6,5 @@ Puisque certaines formations ont été ajoutées à la main dans PSUP, que certa
 
 ## Processus
 
-- `importListeFormation.js` : Import du fichier fournit par Parcoursup 
+- `importListeFormation.js` : Import du fichier fournit par Parcoursup (transformer le xlsx en csv au préalable)
 - `clean.js` : Applique un clean des parcoursup_ids du catalogue à partir d'un fichier de l'offre de formation Parcoursup,

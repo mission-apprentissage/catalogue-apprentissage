@@ -2,7 +2,7 @@ module.exports = {
   async up(db) {
     const collection = db.collection("formations");
 
-    const uaiWithWhitespace = await collection.count({ uai_formation: / / });
+    const uaiWithWhitespace = await collection.countDocuments({ uai_formation: / / });
     console.log(`${uaiWithWhitespace} formations avec un espace dans l'UAI`);
 
     await collection.updateMany({ uai_formation: / / }, [

@@ -67,7 +67,7 @@ module.exports = async () => {
         throw new Error(`Unable to find user ${username}`);
       }
 
-      return await User.deleteOne({ _id: user._id });
+      return await user.deleteOne();
     },
     updateUser: async (username, data) => {
       let user = await User.findOne({ username });
@@ -79,13 +79,15 @@ module.exports = async () => {
 
       return result.toObject();
     },
-    changePassword: async (username, newPassword) => {
+    changePassword: async (username, newPassword, options) => {
       const user = await User.findOne({ username });
       if (!user) {
         throw new Error(`Unable to find user ${username}`);
       }
 
-      if (user.account_status === "FORCE_RESET_PASSWORD") {
+      if (options?.forceReset) {
+        user.account_status = "FORCE_RESET_PASSWORD";
+      } else if (user.account_status === "FORCE_RESET_PASSWORD") {
         user.account_status = "CONFIRMED";
       }
 

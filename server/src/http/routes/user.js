@@ -6,6 +6,8 @@ const path = require("path");
 const Boom = require("boom");
 const { User } = require("../../common/models");
 const { sanitize, SAFE_FIND_OPERATORS } = require("../../common/utils/sanitizeUtils");
+const { generate } = require("generate-password");
+const logger = require("../../common/logger");
 
 const userSchema = Joi.object({
   username: Joi.string().required(),
@@ -24,27 +26,21 @@ const getEmailTemplate = (type = "forgotten-password") => {
   return path.join(__dirname, `../../assets/templates/${type}.mjml.ejs`);
 };
 
-const closeSessionsOfThisUser = async (db, username) =>
-  new Promise((resolve, reject) => {
-    db.collection("sessions", function (err, collection) {
-      collection.find({}).toArray(function (err, data) {
-        const sessionIdToDelete = [];
-        for (let index = 0; index < data.length; index++) {
-          const element = data[index];
-          const session = JSON.parse(element.session);
-          if (session.passport.user.sub === username) {
-            sessionIdToDelete.push(element._id);
-          }
-        }
-        collection.deleteMany({ _id: { $in: sessionIdToDelete } }, function (err, r) {
-          if (err) {
-            return reject(err);
-          }
-          resolve(r);
-        });
-      });
-    });
+const closeSessionsOfThisUser = async (db, username) => {
+  const sessions = db.collection("sessions").find({});
+
+  const sessionIdToDelete = [];
+
+  sessions.forEach(({ id, session }) => {
+    const value = JSON.parse(session);
+
+    if (value.passport.user.sub === username) {
+      sessionIdToDelete.push(element._id);
+    }
   });
+
+  await db.collection("sessions").deleteMany({ _id: { $in: sessionIdToDelete } });
+};
 
 module.exports = ({ users, mailer, db: { db } }) => {
   const router = express.Router();
@@ -140,14 +136,34 @@ module.exports = ({ users, mailer, db: { db } }) => {
     })
   );
 
+  router.patch(
+    "/user/:username/regenerate-password",
+    tryCatch(async (req, res) => {
+      const username = req.params.username;
+
+      const password = generate({
+        length: 12,
+        numbers: true,
+      });
+
+      await closeSessionsOfThisUser(db, username);
+
+      await users.changePassword(username, password);
+
+      logger.info(`New temp password for ${username} : ${password}`);
+
+      res.json({ message: `Utilisateur ${username} mis à jour !` });
+    })
+  );
+
   router.delete(
     "/user/:username",
     tryCatch(async ({ params }, res) => {
       const username = params.username;
 
-      await users.removeUser(username);
-
       await closeSessionsOfThisUser(db, username);
+
+      await users.removeUser(username);
 
       res.json({ message: `Utilisateur ${username} supprimé !` });
     })

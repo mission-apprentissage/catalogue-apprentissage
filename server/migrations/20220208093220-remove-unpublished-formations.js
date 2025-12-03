@@ -2,7 +2,7 @@ module.exports = {
   async up(db) {
     const collection = db.collection("formations");
 
-    const count = await collection.count({ published: false });
+    const count = await collection.countDocuments({ published: false });
 
     console.log(`Suppression de ${count} formations archivées`);
 

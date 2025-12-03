@@ -23,6 +23,7 @@ httpTests(__filename, ({ startServer }) => {
 
     strictEqual(response.status, 200);
     let etablissements = response.data.etablissements;
+
     ok(etablissements);
     deepStrictEqual(etablissements[0].uai, "0010856A");
   });
