@@ -97,7 +97,7 @@ export const CardListFormation = ({ data }) => {
               )}
               {!data.catalogue_published && (
                 <>
-                  <QualiteBadge value={data.etablissement_gestionnaire_certifie_qualite} mt={2} mr={[0, 2]} />
+                  <QualiteBadge value={data.etablissement_reference_certifie_qualite} mt={2} mr={[0, 2]} />
                   {data.etablissement_reference_habilite_rncp !== null && (
                     <HabiliteBadge value={data.etablissement_reference_habilite_rncp} mt={2} mr={[0, 2]} />
                   )}

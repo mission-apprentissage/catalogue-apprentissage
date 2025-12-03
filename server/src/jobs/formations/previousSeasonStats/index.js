@@ -87,7 +87,7 @@ const comparePreviousSeasonFormations = async (plateforme) => {
         {
           affelnet_statut: 1,
           parcoursup_statut: 1,
-          etablissement_gestionnaire_certifie_qualite: 1,
+          etablissement_reference_certifie_qualite: 1,
           date_debut: 1,
           affelnet_perimetre: 1,
           parcoursup_perimetre: 1,
@@ -124,7 +124,7 @@ const comparePreviousSeasonFormations = async (plateforme) => {
     }
 
     // Si la formation existe mais n'est plus qualiopi : on incrémente "qualiopi_lost".
-    if (found && found.published && !found.etablissement_gestionnaire_certifie_qualite) {
+    if (found && found.published && !found.etablissement_reference_certifie_qualite) {
       academyCause.qualiopi_lost = academyCause.qualiopi_lost + 1;
       academyCauses.set(academyName, academyCause);
       continue;

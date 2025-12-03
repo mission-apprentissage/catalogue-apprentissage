@@ -674,7 +674,7 @@ export const columnsDefinition = [
   },
   {
     Header: "Paramètre réglementaire: certifié qualité ?",
-    accessor: "etablissement_gestionnaire_certifie_qualite",
+    accessor: "etablissement_reference_certifie_qualite",
     width: 200,
     exportable: true,
     formatter: booleanFormatter,
@@ -1629,20 +1629,20 @@ export const quickFiltersDefinition = [
   {
     componentId: `qualite`,
     type: "facet",
-    dataField: "etablissement_gestionnaire_certifie_qualite",
+    dataField: "etablissement_reference_certifie_qualite",
     title: "Certifié Qualité",
     filterLabel: "Certifié Qualité",
     sortBy: "desc",
     helpTextSection: helpText.search.qualite,
     showSearch: false,
-    displayInContext: [CONTEXT.CATALOGUE_NON_ELIGIBLE],
+    // displayInContext: [CONTEXT.CATALOGUE_NON_ELIGIBLE],
     transformData: (data) => data.map((d) => ({ ...d, key: d.key ? "Oui" : "Non" })),
     customQuery: (values) => {
       if (values.length === 1 && values[0] !== "Tous") {
         return {
           query: {
             match: {
-              etablissement_gestionnaire_certifie_qualite: values[0] === "Oui",
+              etablissement_reference_certifie_qualite: values[0] === "Oui",
             },
           },
         };

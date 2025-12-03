@@ -62,7 +62,7 @@ export const OrganismesBlock = ({ formation }) => {
             </Flex>
             <Box my={2}>
               <Flex>
-                <QualiteBadge value={formation.etablissement_gestionnaire_certifie_qualite} m="0" mr={[0, 2]} />
+                <QualiteBadge value={formation.etablissement_reference_certifie_qualite} m="0" mr={[0, 2]} />
                 {!formation.catalogue_published && formation.etablissement_reference_habilite_rncp !== null && (
                   <HabiliteBadge value={formation.etablissement_gestionnaire_habilite_rncp} m="0" mr={[0, 2]} />
                 )}

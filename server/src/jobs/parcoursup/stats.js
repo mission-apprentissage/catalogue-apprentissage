@@ -41,7 +41,7 @@ const computeStats = async (academie = null) => {
   };
   const filterPubliePerteQualiopi = {
     ...filterPublie,
-    etablissement_gestionnaire_certifie_qualite: false,
+    etablissement_reference_certifie_qualite: false,
   };
 
   const filterPublieSiretInactif = {
