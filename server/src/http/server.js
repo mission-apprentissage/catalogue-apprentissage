@@ -38,6 +38,7 @@ const reglePerimetre = require("./routes/reglePerimetre");
 const reglePerimetreSecure = require("./routes/reglePerimetreSecure");
 const swaggerSchema = require("../common/models/swaggerSchema");
 const rateLimit = require("express-rate-limit");
+const uaiAffelnet = require("./routes/uaiAffelnet");
 
 require("../common/passport-config");
 
@@ -193,6 +194,8 @@ module.exports = async (components, verbose = true) => {
       permissionsMiddleware({ isAdmin: true }, ["page_other/perimetre_prise_rdv"]),
       perimetrePriseRdv(),
     ],
+
+    ["/uai-affelnet", apiLimiter, permissionsMiddleware({ isAdmin: true }, ["page_other/uai-affelnet"]), uaiAffelnet()],
   ];
 
   prefixes.map((prefix) => {

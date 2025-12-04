@@ -157,6 +157,10 @@ export default [
         feature: "Prise de rendez-vous LBA",
         ref: "page_other/perimetre_prise_rdv",
       },
+      {
+        feature: "API UAI lieux périmètre Affelnet",
+        ref: "page_other/api-uai-affelnet",
+      },
     ],
   },
 ];
