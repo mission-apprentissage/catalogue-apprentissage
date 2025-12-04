@@ -384,6 +384,6 @@ export interface Etablissement {
    */
   opco_siren?: string | null;
   _id?: Types.ObjectId;
-  updated_at?: Date;
   created_at?: Date;
+  updated_at?: Date;
 }

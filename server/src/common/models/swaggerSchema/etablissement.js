@@ -403,11 +403,11 @@ module.exports = {
       _id: {
         type: "string",
       },
-      updated_at: {
+      created_at: {
         type: "string",
         format: "date-time",
       },
-      created_at: {
+      updated_at: {
         type: "string",
         format: "date-time",
       },

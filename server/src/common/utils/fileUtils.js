@@ -1,3 +1,6 @@
+const fs = require("fs-extra");
+const axios = require("axios");
+const logger = require("../../common/logger");
 const XLSX = require("xlsx");
 
 const readXLSXFile = (filePath) => {
@@ -34,4 +37,25 @@ const createXlsxFromJson = (data, filePath, tabName = "tab") => {
   });
 };
 
-module.exports = { createXlsxFromJson, getJsonFromXlsxFile };
+const downloadFile = async (url, to) => {
+  try {
+    const response = await axios({
+      url,
+      method: "GET",
+      responseType: "stream",
+    });
+
+    const writer = fs.createWriteStream(to);
+    response.data.pipe(writer);
+
+    return new Promise((resolve, reject) => {
+      writer.on("finish", resolve);
+      writer.on("error", reject);
+    });
+  } catch (e) {
+    logger.error({ type: "utils" }, `unable to download file ${url}`);
+    return null;
+  }
+};
+
+module.exports = { createXlsxFromJson, getJsonFromXlsxFile, downloadFile };

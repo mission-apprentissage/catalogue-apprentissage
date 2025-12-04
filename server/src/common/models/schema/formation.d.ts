@@ -66,6 +66,7 @@ export type RncpDetails = {
    * Type d'enregistrement (issue de FranceCompétences)
    */
   type_enregistrement?: string | null;
+  _id?: Types.ObjectId;
 } | null;
 /**
  * Cause du rejet de publication
@@ -91,6 +92,7 @@ export type Rejection = {
    * Date à laquelle le rejet de publication a été pris en charge
    */
   handled_date?: Date;
+  _id?: Types.ObjectId;
 } | null;
 /**
  * Parcoursup: Statut de réinitialisation forcée
@@ -108,6 +110,7 @@ export type ParcoursupStatutReinitialisation = {
    * Motif de la réinitialisation
    */
   comment?: string | null;
+  _id?: Types.ObjectId;
 } | null;
 
 export interface Formation {
@@ -705,6 +708,7 @@ export interface Formation {
     | "non publié"
     | "à publier"
     | "prêt pour intégration"
+    | "en attente de mise à jour"
     | "à publier (vérifier accès direct postbac)"
     | "à publier (soumis à validation Recteur)"
     | "à publier (sous condition habilitation)"
@@ -719,6 +723,7 @@ export interface Formation {
     | "non publié"
     | "à publier"
     | "prêt pour intégration"
+    | "en attente de mise à jour"
     | "à publier (vérifier accès direct postbac)"
     | "à publier (soumis à validation Recteur)"
     | "à publier (sous condition habilitation)"
@@ -733,6 +738,7 @@ export interface Formation {
     | "non publié"
     | "à publier"
     | "prêt pour intégration"
+    | "en attente de mise à jour"
     | "à publier (vérifier accès direct postbac)"
     | "à publier (soumis à validation Recteur)"
     | "à publier (sous condition habilitation)"
@@ -747,6 +753,7 @@ export interface Formation {
     | "non publié"
     | "à publier"
     | "prêt pour intégration"
+    | "en attente de mise à jour"
     | "à publier (vérifier accès direct postbac)"
     | "à publier (soumis à validation Recteur)"
     | "à publier (sous condition habilitation)"
@@ -780,6 +787,14 @@ export interface Formation {
    * Parcoursup : raison de dépublication
    */
   parcoursup_raison_depublication?: string | null;
+  /**
+   * Parcoursup : raison de dépublication (précision)
+   */
+  parcoursup_raison_depublication_precision?: string | null;
+  /**
+   * Parcoursup : raison de dépublication (catégorie)
+   */
+  parcoursup_raison_depublication_tag?: string | null;
   /**
    * Tableau de Code MEF 10 caractères et modalités (filtrés pour Parcoursup si applicable)
    */
@@ -818,6 +833,7 @@ export interface Formation {
     | "non publié"
     | "à publier"
     | "prêt pour intégration"
+    | "en attente de mise à jour"
     | "à définir"
     | "à publier (soumis à validation)";
   /**
@@ -829,6 +845,7 @@ export interface Formation {
     | "non publié"
     | "à publier"
     | "prêt pour intégration"
+    | "en attente de mise à jour"
     | "à définir"
     | "à publier (soumis à validation)";
   /**
@@ -844,6 +861,7 @@ export interface Formation {
     | "non publié"
     | "à publier"
     | "prêt pour intégration"
+    | "en attente de mise à jour"
     | "à définir"
     | "à publier (soumis à validation)";
   /**
@@ -855,6 +873,7 @@ export interface Formation {
     | "non publié"
     | "à publier"
     | "prêt pour intégration"
+    | "en attente de mise à jour"
     | "à définir"
     | "à publier (soumis à validation)";
   /**
@@ -898,6 +917,14 @@ export interface Formation {
    */
   affelnet_raison_depublication?: string | null;
   /**
+   * Affelnet : raison de dépublication (précision)
+   */
+  affelnet_raison_depublication_precision?: string | null;
+  /**
+   * Affelnet : raison de dépublication (catégorie)
+   */
+  affelnet_raison_depublication_tag?: string | null;
+  /**
    * Tableau de Code MEF 10 caractères et modalités (filtrés pour Affelnet si applicable)
    */
   affelnet_mefs_10?: ItemOfAffelnetMefs_10[];
@@ -914,8 +941,8 @@ export interface Formation {
    */
   affelnet_perimetre_prise_rdv?: boolean;
   _id?: Types.ObjectId;
-  updated_at?: Date;
   created_at?: Date;
+  updated_at?: Date;
 }
 export interface ItemOfVariantesEnPresentiel {
   /**
@@ -931,15 +958,18 @@ export interface ItemOfVariantesEnPresentiel {
 export interface ItemOfCertificateurs {
   certificateur?: string;
   siret_certificateur?: string;
+  _id?: Types.ObjectId;
 }
 export interface ItemOfRomes {
   rome?: string;
   libelle?: string;
+  _id?: Types.ObjectId;
 }
 export interface ItemOfPartenaires {
   Nom_Partenaire?: string;
   Siret_Partenaire?: string;
   Habilitation_Partenaire?: string;
+  _id?: Types.ObjectId;
 }
 export interface ItemOfUpdatesHistory {
   /**
@@ -960,29 +990,44 @@ export interface ItemOfBcnMefs_10 {
   mef10?: string;
   modalite?: Modalite;
   date_fermeture?: Date;
+  /**
+   * MEF périmé (fermeture avant le 31 août de l'année courante)
+   */
+  mef_outdated?: boolean;
   _id?: Types.ObjectId;
 }
 export interface Modalite {
   duree?: string;
   annee?: string;
+  _id?: Types.ObjectId;
 }
 export interface ItemOfParcoursupMefs_10 {
   mef10?: string;
   modalite?: Modalite1;
   date_fermeture?: Date;
+  /**
+   * MEF périmé (fermeture avant le 31 août de l'année courante)
+   */
+  mef_outdated?: boolean;
   _id?: Types.ObjectId;
 }
 export interface Modalite1 {
   duree?: string;
   annee?: string;
+  _id?: Types.ObjectId;
 }
 export interface ItemOfAffelnetMefs_10 {
   mef10?: string;
   modalite?: Modalite2;
   date_fermeture?: Date;
+  /**
+   * MEF périmé (fermeture avant le 31 août de l'année courante)
+   */
+  mef_outdated?: boolean;
   _id?: Types.ObjectId;
 }
 export interface Modalite2 {
   duree?: string;
   annee?: string;
+  _id?: Types.ObjectId;
 }

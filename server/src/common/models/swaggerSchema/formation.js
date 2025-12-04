@@ -250,6 +250,9 @@ module.exports = {
             type: "string",
             description: "Type d'enregistrement (issue de FranceCompétences)",
           },
+          _id: {
+            type: "string",
+          },
         },
       },
       rome_codes: {
@@ -311,6 +314,9 @@ module.exports = {
             type: "string",
             description: "Date à laquelle le rejet de publication a été pris en charge",
             format: "date-time",
+          },
+          _id: {
+            type: "string",
           },
         },
       },
@@ -462,6 +468,10 @@ module.exports = {
             date_fermeture: {
               type: "string",
               format: "date-time",
+            },
+            mef_outdated: {
+              type: "boolean",
+              description: "MEF périmé (fermeture avant le 31 août de l'année courante)",
             },
           },
           required: [],
@@ -845,6 +855,7 @@ module.exports = {
           "non publié",
           "à publier",
           "prêt pour intégration",
+          "en attente de mise à jour",
           "à publier (vérifier accès direct postbac)",
           "à publier (soumis à validation Recteur)",
           "à publier (sous condition habilitation)",
@@ -861,6 +872,7 @@ module.exports = {
           "non publié",
           "à publier",
           "prêt pour intégration",
+          "en attente de mise à jour",
           "à publier (vérifier accès direct postbac)",
           "à publier (soumis à validation Recteur)",
           "à publier (sous condition habilitation)",
@@ -877,6 +889,7 @@ module.exports = {
           "non publié",
           "à publier",
           "prêt pour intégration",
+          "en attente de mise à jour",
           "à publier (vérifier accès direct postbac)",
           "à publier (soumis à validation Recteur)",
           "à publier (sous condition habilitation)",
@@ -893,6 +906,7 @@ module.exports = {
           "non publié",
           "à publier",
           "prêt pour intégration",
+          "en attente de mise à jour",
           "à publier (vérifier accès direct postbac)",
           "à publier (soumis à validation Recteur)",
           "à publier (sous condition habilitation)",
@@ -936,6 +950,14 @@ module.exports = {
         type: "string",
         description: "Parcoursup : raison de dépublication",
       },
+      parcoursup_raison_depublication_precision: {
+        type: "string",
+        description: "Parcoursup : raison de dépublication (précision)",
+      },
+      parcoursup_raison_depublication_tag: {
+        type: "string",
+        description: "Parcoursup : raison de dépublication (catégorie)",
+      },
       parcoursup_mefs_10: {
         type: "array",
         description: "Tableau de Code MEF 10 caractères et modalités (filtrés pour Parcoursup si applicable)",
@@ -959,6 +981,10 @@ module.exports = {
             date_fermeture: {
               type: "string",
               format: "date-time",
+            },
+            mef_outdated: {
+              type: "boolean",
+              description: "MEF périmé (fermeture avant le 31 août de l'année courante)",
             },
           },
           required: [],
@@ -988,6 +1014,9 @@ module.exports = {
           comment: {
             type: "string",
             description: "Motif de la réinitialisation",
+          },
+          _id: {
+            type: "string",
           },
         },
       },
@@ -1019,6 +1048,7 @@ module.exports = {
           "non publié",
           "à publier",
           "prêt pour intégration",
+          "en attente de mise à jour",
           "à définir",
           "à publier (soumis à validation)",
         ],
@@ -1032,6 +1062,7 @@ module.exports = {
           "non publié",
           "à publier",
           "prêt pour intégration",
+          "en attente de mise à jour",
           "à définir",
           "à publier (soumis à validation)",
         ],
@@ -1049,6 +1080,7 @@ module.exports = {
           "non publié",
           "à publier",
           "prêt pour intégration",
+          "en attente de mise à jour",
           "à définir",
           "à publier (soumis à validation)",
         ],
@@ -1062,6 +1094,7 @@ module.exports = {
           "non publié",
           "à publier",
           "prêt pour intégration",
+          "en attente de mise à jour",
           "à définir",
           "à publier (soumis à validation)",
         ],
@@ -1114,6 +1147,14 @@ module.exports = {
         type: "string",
         description: "Affelnet : raison de dépublication",
       },
+      affelnet_raison_depublication_precision: {
+        type: "string",
+        description: "Affelnet : raison de dépublication (précision)",
+      },
+      affelnet_raison_depublication_tag: {
+        type: "string",
+        description: "Affelnet : raison de dépublication (catégorie)",
+      },
       affelnet_mefs_10: {
         type: "array",
         description: "Tableau de Code MEF 10 caractères et modalités (filtrés pour Affelnet si applicable)",
@@ -1138,6 +1179,10 @@ module.exports = {
               type: "string",
               format: "date-time",
             },
+            mef_outdated: {
+              type: "boolean",
+              description: "MEF périmé (fermeture avant le 31 août de l'année courante)",
+            },
           },
           required: [],
         },
@@ -1160,11 +1205,11 @@ module.exports = {
       _id: {
         type: "string",
       },
-      updated_at: {
+      created_at: {
         type: "string",
         format: "date-time",
       },
-      created_at: {
+      updated_at: {
         type: "string",
         format: "date-time",
       },

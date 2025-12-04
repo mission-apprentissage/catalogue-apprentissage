@@ -196,6 +196,6 @@ export interface AffelnetFormation {
    */
   matching_type?: string | null;
   _id?: Types.ObjectId;
-  updated_at?: Date;
   created_at?: Date;
+  updated_at?: Date;
 }

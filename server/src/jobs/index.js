@@ -1,9 +1,10 @@
 const path = require("path");
-const { tcoJobs, downloadBcnTables, importBcnTables, bcnImporter } = require("@mission-apprentissage/tco-service-node");
+
 const { runScript, enableAlertMessage, disableAlertMessage } = require("./scriptWrapper");
 const logger = require("../common/logger");
 const { Formation, Etablissement } = require("../common/models");
 const { rebuildEsIndex } = require("./esIndex/esIndex");
+const { bcnJobs } = require("./bcn");
 const { parcoursupJobs } = require("./parcoursup");
 const { affelnetJobs } = require("./affelnet");
 const { etablissementsJobs } = require("./etablissements");
@@ -16,8 +17,7 @@ runScript(async ({ db }) => {
   try {
     logger.info({ type: "job" }, `ALL JOBS ⏳`);
 
-    // TCO jobs
-    await bcnImporter();
+    await bcnJobs();
     await sleep(10000);
 
     Etablissement.pauseAllMongoosaticHooks();

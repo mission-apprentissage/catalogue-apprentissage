@@ -17,10 +17,22 @@ const roleSchema = require("./role");
 const statistiqueSchema = require("./statistique");
 const userSchema = require("./user");
 
+const bcnFormationDiplomesSchema = require("./bcnFormationDiplomes");
+const bcnLettreSpecialiteSchema = require("./bcnLettreSpecialite");
+const bcnNNiveauFormationDiplomeSchema = require("./bcnNNiveauFormationDiplome");
+const bcnNMefSchema = require("./bcnNMef");
+const bcnNDispositifFormationSchema = require("./bcnNDispositifFormation");
+
 const timestamps = { createdAt: "created_at", updatedAt: "updated_at" };
 
 const schemasMap = new Map(
   Object.entries({
+    bcnFormationDiplomes: [bcnFormationDiplomesSchema, {}],
+    bcnLettreSpecialite: [bcnLettreSpecialiteSchema, {}],
+    bcnNNiveauFormationDiplome: [bcnNNiveauFormationDiplomeSchema, {}],
+    bcnNMef: [bcnNMefSchema, {}],
+    bcnNDispositifFormation: [bcnNDispositifFormationSchema, {}],
+
     affelnetFormation: [affelnetFormationSchema, { timestamps }],
     alert: [alertSchema, { timestamps }],
     campagneStart: [campagneStartSchema, { timestamps }],

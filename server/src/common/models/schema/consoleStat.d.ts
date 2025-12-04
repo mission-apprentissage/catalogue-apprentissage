@@ -16,6 +16,7 @@ export interface ConsoleStat {
    */
   date: Date;
   academie?: string | null;
+  region?: string | null;
   formations_publiees?: number;
   formations_publiees_sans_session?: number;
   formations_publiees_sans_session_avec_remplacement?: number;

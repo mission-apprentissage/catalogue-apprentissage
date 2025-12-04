@@ -236,6 +236,6 @@ export interface ParcoursupFormation {
    */
   is_orphan?: boolean;
   _id?: Types.ObjectId;
-  updated_at?: Date;
   created_at?: Date;
+  updated_at?: Date;
 }
