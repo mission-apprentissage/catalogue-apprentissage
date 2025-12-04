@@ -148,7 +148,7 @@ module.exports = ({ users, mailer, db: { db } }) => {
 
       await closeSessionsOfThisUser(db, username);
 
-      await users.changePassword(username, password);
+      await users.changePassword(username, password, { forceReset: true });
 
       const user = await users.getUser(username);
 
