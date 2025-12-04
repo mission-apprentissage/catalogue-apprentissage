@@ -155,7 +155,7 @@ export const UserLine = ({ user, roles, refreshSearch }) => {
       accessAllCheckbox: user?.isAdmin ? ["on"] : [],
       roles: user?.roles || [],
       acl: user?.acl || [],
-      accessAcademieList: user ? user.academie.split(",") : ["-1"],
+      accessAcademieList: user ? user?.academie.split(",") : ["-1"],
       newUsername: user?.username || "",
       newEmail: user?.email || "",
       newTag1: user?.tag_1 || "",
@@ -240,7 +240,7 @@ export const UserLine = ({ user, roles, refreshSearch }) => {
                 },
               },
             };
-            await _put(`/api/admin/user/${user.username}`, body);
+            await _put(`/api/admin/user/${user?.username}`, body);
             toast({
               title: "Succès",
               description: "L'utilisateur a été mis à jour.",
@@ -302,7 +302,7 @@ export const UserLine = ({ user, roles, refreshSearch }) => {
       // eslint-disable-next-line no-restricted-globals
       if (confirm("Supprimer l'utilisateur ?")) {
         try {
-          await _delete(`/api/admin/user/${user.username}`);
+          await _delete(`/api/admin/user/${user?.username}`);
           toast({
             title: "Succès",
             description: "L'utilisateur a été supprimé.",
@@ -323,7 +323,7 @@ export const UserLine = ({ user, roles, refreshSearch }) => {
         }
       }
     },
-    [refreshSearch, toast, user.username]
+    [refreshSearch, toast, user?.username]
   );
 
   const onGenerateNewPasswordClicked = useCallback(
@@ -336,7 +336,7 @@ export const UserLine = ({ user, roles, refreshSearch }) => {
         )
       ) {
         try {
-          await _patch(`/api/admin/user/${user.username}/regenerate-password`);
+          await _patch(`/api/admin/user/${user?.username}/regenerate-password`);
           toast({
             title: "Succès",
             description: "Un nouveau mot de passe temporaire a été envoyé par courriel à l’utilisateur.",
@@ -357,7 +357,7 @@ export const UserLine = ({ user, roles, refreshSearch }) => {
         }
       }
     },
-    [refreshSearch, toast, user.username]
+    [refreshSearch, toast, user?.username]
   );
 
   const handleAcademieChange = (academie) => {
