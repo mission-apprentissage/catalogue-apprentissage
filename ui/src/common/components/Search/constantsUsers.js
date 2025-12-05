@@ -16,7 +16,6 @@ export const allowedFilters = [
   "acl-perimetre-affelnet",
   "acl-parcoursup",
   "acl-perimetre-parcoursup",
-  "tag",
   "tag_1",
   "tag_2",
   "fonction",
@@ -110,8 +109,14 @@ export const columnsDefinition = [
   },
 
   {
-    Header: "Tag",
-    accessor: "tag",
+    Header: "Tag 1",
+    accessor: "tag_1",
+    width: 200,
+    exportable: true,
+  },
+  {
+    Header: "Tag 2",
+    accessor: "tag_2",
     width: 200,
     exportable: true,
   },
@@ -236,8 +241,12 @@ export const queryBuilderField = [
   },
 
   {
-    text: "Tag",
-    value: "tag.keyword",
+    text: "Tag 1",
+    value: "tag_1.keyword",
+  },
+  {
+    text: "Tag 2",
+    value: "tag_2.keyword",
   },
   {
     text: "Fonction",
@@ -383,15 +392,6 @@ export const quickFiltersDefinition = [
     sortBy: "asc",
   },
 
-  {
-    componentId: `tag`,
-    type: "facet",
-    dataField: "tag.keyword",
-    title: "Tag",
-    filterLabel: "Tag",
-    selectAllLabel: "Tous les tags",
-    sortBy: "asc",
-  },
   {
     componentId: `tag_1`,
     type: "facet",
@@ -956,7 +956,7 @@ export const quickFiltersDefinition = [
 ];
 
 export const dataSearch = {
-  dataField: ["email", "username", "tag", "fonction"],
+  dataField: ["email", "username", "tag_1", "tag_2", "fonction"],
   placeholder: "Saisissez votre recherche",
   fieldWeights: [5, 4, 3, 2],
 };

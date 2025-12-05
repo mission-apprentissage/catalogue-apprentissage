@@ -76,11 +76,11 @@ export const CardListUser = ({ user, roles, refreshSearch }) => {
             >
               <Box flex="1" textAlign="left" fontSize={"delta"}>
                 {user.email}{" "}
-                {user.tag && (
+                {/* {user.tag && (
                   <Tag borderRadius="full" variant="subtle" colorScheme="orange" ml="2">
                     {user.tag}
                   </Tag>
-                )}
+                )} */}
                 {user.tag_1 && (
                   <Tag borderRadius="full" variant="subtle" colorScheme="yellow" ml="2">
                     {user.tag_1}
