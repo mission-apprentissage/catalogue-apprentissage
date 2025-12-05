@@ -289,16 +289,18 @@ function Mongoosastic(schema, options) {
     }
   };
 
-  // async function postQuerySave(next) {
-  //   const doc = await this.model.findOne(this.getQuery());
+  async function postQuerySave(next) {
+    const doc = await this.model.findOne(this.getQuery());
 
-  //   if (doc) {
-  //     const _doc = new this.model(doc);
+    console.log(doc);
 
-  //     console.log(_doc);
-  //     return _doc.index();
-  //   }
-  // }
+    if (doc) {
+      const _doc = new this.model(doc);
+
+      console.log(_doc);
+      return _doc.index();
+    }
+  }
 
   // async function postQuerySaveMany(query) {
   //   console.log("postQuerySaveMany", { query, this: this });
@@ -326,7 +328,7 @@ function Mongoosastic(schema, options) {
 
     // // TODO: Query middleware hooks
     // inSchema.post("updateOne", { document: false, query: true }, postQuerySave);
-    // inSchema.post("findOneAndUpdate", { document: false, query: true }, postQuerySave);
+    inSchema.post("findOneAndUpdate", { document: false, query: true }, postQuerySave);
     // inSchema.post("replaceOne", { document: false, query: true }, postQuerySave);
     // inSchema.post("findOneAndReplace", { document: false, query: true }, postQuerySave);
 

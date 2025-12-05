@@ -200,6 +200,7 @@ export const UserLine = ({ user, roles, refreshSearch }) => {
 
       if (
         values.newTag1 !== "Autre" &&
+        values.newFonction !== "" &&
         ![
           "SAIO / SRFD : adjoint chef de service",
           "SAIO / SRFD : chef de service",

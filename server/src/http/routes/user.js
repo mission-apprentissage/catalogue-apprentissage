@@ -61,6 +61,7 @@ module.exports = ({ users, mailer, db: { db } }) => {
       return res.json(usersList);
     })
   );
+
   /**
    * Get count users/count GET
    */
@@ -109,7 +110,7 @@ module.exports = ({ users, mailer, db: { db } }) => {
         }
       );
 
-      return res.json(user);
+      res.json({ message: `Utilisateur ${username} créé !`, user });
     })
   );
 
@@ -118,12 +119,13 @@ module.exports = ({ users, mailer, db: { db } }) => {
     tryCatch(async (req, res) => {
       const username = req.params.username;
 
-      await users.updateUser(username, {
+      const user = await users.updateUser(username, {
         isAdmin: req.body.options.permissions.isAdmin,
         email: req.body.options.email?.toLowerCase(),
         academie: req.body.options.academie,
         username: req.body.username?.toLowerCase(),
-        tag: req.body.options.tag,
+        tag_1: req.body.options.tag_1,
+        tag_2: req.body.options.tag_2,
         fonction: req.body.options.fonction,
         roles: req.body.options.roles,
         acl: req.body.options.acl,
@@ -132,7 +134,7 @@ module.exports = ({ users, mailer, db: { db } }) => {
 
       await closeSessionsOfThisUser(db, username);
 
-      res.json({ message: `Utilisateur ${username} mis à jour !` });
+      res.json({ message: `Utilisateur ${username} mis à jour !`, user });
     })
   );
 
@@ -148,9 +150,7 @@ module.exports = ({ users, mailer, db: { db } }) => {
 
       await closeSessionsOfThisUser(db, username);
 
-      await users.changePassword(username, password, { forceReset: true });
-
-      const user = await users.getUser(username);
+      const user = await users.changePassword(username, password, { forceReset: true });
 
       await mailer.sendEmail(
         user.email,
@@ -165,7 +165,7 @@ module.exports = ({ users, mailer, db: { db } }) => {
 
       // logger.info(`New temp password for ${username} : ${password}`);
 
-      res.json({ message: `Utilisateur ${username} mis à jour !` });
+      res.json({ message: `Utilisateur ${username} mis à jour !`, user });
     })
   );
 
@@ -182,27 +182,27 @@ module.exports = ({ users, mailer, db: { db } }) => {
     })
   );
 
-  router.post(
-    "/user/:username/tags",
-    tryCatch(async (req, res) => {
-      const username = req.params.username;
+  // router.post(
+  //   "/user/:username/tags",
+  //   tryCatch(async (req, res) => {
+  //     const username = req.params.username;
 
-      await users.addTag(username, req.body.tag);
+  //     await users.addTag(username, req.body.tag);
 
-      res.json({ message: `Utilisateur ${username} mis à jour !` });
-    })
-  );
+  //     res.json({ message: `Utilisateur ${username} mis à jour !` });
+  //   })
+  // );
 
-  router.delete(
-    "/user/:username/tags",
-    tryCatch(async (req, res) => {
-      const username = req.params.username;
+  // router.delete(
+  //   "/user/:username/tags",
+  //   tryCatch(async (req, res) => {
+  //     const username = req.params.username;
 
-      await users.removeTag(username, req.body.tag);
+  //     await users.removeTag(username, req.body.tag);
 
-      res.json({ message: `Utilisateur ${username} mis à jour !` });
-    })
-  );
+  //     res.json({ message: `Utilisateur ${username} mis à jour !` });
+  //   })
+  // );
 
   return router;
 };
