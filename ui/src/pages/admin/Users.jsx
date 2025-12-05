@@ -33,6 +33,7 @@ import {
   TabPanel,
   Select,
   FormErrorMessage,
+  FormHelperText,
 } from "@chakra-ui/react";
 import { Breadcrumb } from "../../common/components/Breadcrumb";
 import { setTitle } from "../../common/utils/pageUtils";
@@ -187,6 +188,14 @@ export const UserLine = ({ user, roles, refreshSearch }) => {
 
       if (!user && !values.newTmpPassword?.trim()?.length) {
         errors.newTmpPassword = "Le mot de passe temporaire est obligatoire.";
+      }
+
+      if (values.newTag1 === "") {
+        errors.newTag1 = "Le champs est obligatoire.";
+      }
+
+      if (values.newTag1 === "Autre" && errors.newTag2 === "") {
+        errors.newTag2 = "Le champs est obligatoire.";
       }
 
       if (
@@ -460,9 +469,7 @@ export const UserLine = ({ user, roles, refreshSearch }) => {
           onChange={handleChange}
           onBlur={handleBlur}
         >
-          <option value={null} disabled>
-            Veuillez sélectionner une option...
-          </option>
+          <option value={""}>Veuillez sélectionner une option...</option>
           <option value={"Sports"}>Sports</option>
           <option value={"SAIO Education"}>SAIO Education</option>
           <option value={"SRFD Agriculture"}>SRFD Agriculture</option>
@@ -483,6 +490,11 @@ export const UserLine = ({ user, roles, refreshSearch }) => {
             onBlur={handleBlur}
           />
           <FormErrorMessage>{errors.newTag2}</FormErrorMessage>
+
+          <FormHelperText>
+            Tags possibles (à renseigner à l’identique) : Dgesco/A1-4, DNE, DNE/Nancy, InserJeunes, DGEFP/LBA,
+            Dgesip/Moss, RCO, SCN/Parcoursup, autre.{" "}
+          </FormHelperText>
         </FormControl>
       )}
 
