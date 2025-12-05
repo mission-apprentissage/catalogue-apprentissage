@@ -195,7 +195,12 @@ module.exports = async (components, verbose = true) => {
       perimetrePriseRdv(),
     ],
 
-    ["/uai-affelnet", apiLimiter, permissionsMiddleware({ isAdmin: true }, ["page_other/uai-affelnet"]), uaiAffelnet()],
+    [
+      "/uai-affelnet",
+      apiLimiter,
+      permissionsMiddleware({ isAdmin: true }, ["page_other/api-uai-affelnet"]),
+      uaiAffelnet(),
+    ],
   ];
 
   prefixes.map((prefix) => {
