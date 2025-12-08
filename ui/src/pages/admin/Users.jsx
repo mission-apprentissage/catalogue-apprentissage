@@ -156,7 +156,7 @@ export const UserLine = ({ user, roles, refreshSearch }) => {
       accessAllCheckbox: user?.isAdmin ? ["on"] : [],
       roles: user?.roles || [],
       acl: user?.acl || [],
-      accessAcademieList: user ? user?.academie.split(",") : ["-1"],
+      accessAcademieList: user ? user?.academie.split(",") : [],
       newUsername: user?.username || "",
       newEmail: user?.email || "",
       newTag1: user?.tag_1 || "",
