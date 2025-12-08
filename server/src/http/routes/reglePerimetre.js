@@ -7,9 +7,10 @@ const {
   getPublishedRules,
   getSessionDateRules,
 } = require("../../common/utils/rulesUtils");
-const { getNiveauxDiplomesTree } = require("@mission-apprentissage/tco-service-node");
+
 const { ReglePerimetre, Formation } = require("../../common/models");
 const { sanitize } = require("../../common/utils/sanitizeUtils");
+const { getNiveauxDiplomesTree } = require("../../logic/handlers/bcnHandler");
 
 module.exports = () => {
   const router = express.Router();

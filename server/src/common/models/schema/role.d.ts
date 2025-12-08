@@ -16,6 +16,6 @@ export interface Role {
    */
   acl?: string[] | null;
   _id?: Types.ObjectId;
-  updated_at?: Date;
   created_at?: Date;
+  updated_at?: Date;
 }

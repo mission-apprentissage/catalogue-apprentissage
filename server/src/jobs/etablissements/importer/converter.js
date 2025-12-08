@@ -1,9 +1,9 @@
 const config = require("config");
 const { Etablissement, Formation, DualControlEtablissement } = require("../../../common/models/index");
 const { diff } = require("deep-object-diff");
-const { isValideUAI } = require("@mission-apprentissage/tco-service-node");
 const { cursor } = require("../../../common/utils/cursor");
 const logger = require("../../../common/logger");
+const { validateUAI } = require("../../../common/utils/uaiUtils");
 
 const updateRelationFields = async () => {
   logger.info({ type: "job" }, " == Updating relations for etablissements == ");
@@ -36,7 +36,7 @@ const computeRelationFields = async (fields) => {
 };
 
 const recomputeFields = async (fields) => {
-  const uai_valide = !fields.uai || (await isValideUAI(fields.uai));
+  const uai_valide = !fields.uai || (await validateUAI(fields.uai));
 
   const raison_sociale_enseigne = `${fields.entreprise_raison_sociale}${fields.enseigne ? ` (${fields.enseigne})` : ""}`;
 
@@ -117,7 +117,8 @@ const applyConversion = async () => {
 
       // Si l'établissement n'existe pas
       else {
-        console.warn(`${dcEtablissement.siret} not found`);
+        logger.debug({ type: "job" }, `Nouvel établissement : ${dcEtablissement.siret}`);
+        // console.warn(` ${dcEtablissement.siret} not found`);
         added++;
 
         await Etablissement.create(await recomputeFields({ ...dcEtablissement }));

@@ -1,4 +1,4 @@
-const { getCoordinatesFromAddressData } = require("@mission-apprentissage/tco-service-node");
+const { getCoordinatesFromAddressData } = require("../../../logic/handlers/geoHandler");
 const { distanceBetweenCoordinates } = require("../../../common/utils/distanceUtils");
 const { Formation } = require("../../../common/models");
 const { runScript } = require("../../scriptWrapper");

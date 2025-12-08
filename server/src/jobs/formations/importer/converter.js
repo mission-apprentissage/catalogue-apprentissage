@@ -1,9 +1,5 @@
 const config = require("config");
-const {
-  isValideUAI,
-  getCoordinatesFromAddressData,
-  getAddressFromCoordinates,
-} = require("@mission-apprentissage/tco-service-node");
+
 const { diff: objectDiff } = require("deep-object-diff");
 const { diff: arrayDiff } = require("deep-object-diff");
 const { Formation, DualControlFormation, Etablissement } = require("../../../common/models/index");
@@ -11,9 +7,11 @@ const { cursor } = require("../../../common/utils/cursor");
 const { distanceBetweenCoordinates } = require("../../../common/utils/distanceUtils");
 const logger = require("../../../common/logger");
 const { computeMefs } = require("../../../logic/finder/mefsFinder");
+const { getAddressDataFromCoordinates, getCoordinatesFromAddressData } = require("../../../logic/handlers/geoHandler");
 const { getCfdEntree, getCfdEntreeDateFermeture } = require("../../../logic/finder/cfdEntreeFinder");
 const { PARCOURSUP_STATUS, AFFELNET_STATUS } = require("../../../constants/status");
 const { getCampagneStartDate } = require("../../../common/utils/rulesUtils");
+const { validateUAI } = require("../../../common/utils/uaiUtils");
 
 const updateRelationFields = async ({ filter = {} }) => {
   logger.info({ type: "job" }, " == Updating relations for formations == ");
@@ -149,7 +147,7 @@ const recomputeFields = async (fields, oldFields, { forceRecompute = false } = {
     (fields?.code_commune_insee === fields?.etablissement_formateur_code_commune_insee
       ? (fields?.etablissement_formateur_uai ?? oldFields?.uai_formation ?? oldFields?.etablissement_formateur_uai)
       : undefined);
-  const uai_formation_valide = !!uai_formation && (await isValideUAI(uai_formation));
+  const uai_formation_valide = !!uai_formation && (await validateUAI(uai_formation));
 
   let lieu_formation_geo_coordonnees_computed = oldFields?.lieu_formation_geo_coordonnees_computed;
   let lieu_formation_adresse_computed = oldFields?.lieu_formation_adresse_computed;
@@ -163,7 +161,7 @@ const recomputeFields = async (fields, oldFields, { forceRecompute = false } = {
   ) {
     try {
       const [latitude, longitude] = fields.lieu_formation_geo_coordonnees.split("##")[0]?.split(",");
-      const { result } = (await getAddressFromCoordinates({ latitude, longitude })) ?? {};
+      const { result } = (await getAddressDataFromCoordinates({ latitude, longitude })) ?? {};
 
       lieu_formation_adresse_computed = result?.adresse
         ? `${result.adresse.numero_voie} ${result.adresse.type_voie} ${result.adresse.nom_voie} ${result.adresse.code_postal} ${result.adresse.commune}`

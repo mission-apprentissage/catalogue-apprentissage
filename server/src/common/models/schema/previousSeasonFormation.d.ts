@@ -28,6 +28,7 @@ export interface PreviousSeasonFormation {
     | "non publié"
     | "à publier"
     | "prêt pour intégration"
+    | "en attente de mise à jour"
     | "à publier (vérifier accès direct postbac)"
     | "à publier (soumis à validation Recteur)"
     | "à publier (sous condition habilitation)"
@@ -46,6 +47,7 @@ export interface PreviousSeasonFormation {
     | "non publié"
     | "à publier"
     | "prêt pour intégration"
+    | "en attente de mise à jour"
     | "à définir"
     | "à publier (soumis à validation)";
   _id?: Types.ObjectId;

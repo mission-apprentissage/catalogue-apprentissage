@@ -1,24 +1,18 @@
 const { showProgressBar } = require("../../src/common/utils/paginator");
-// mock TCO
-const rewiremock = require("rewiremock/node");
-const { mock } = require("@mission-apprentissage/tco-service-node");
-rewiremock("@mission-apprentissage/tco-service-node").with(mock);
 const { Etablissement, Formation } = require("../../src/common/models");
 
 const setupBeforeEach = () => {
   // console.debug(`${__filename} - beforeEach`);
-  return rewiremock.enable();
 };
 
 const setupAfterEach = () => {
   // console.debug(`${__filename} - afterEach`);
-  return rewiremock.disable();
 };
 
 const setupBefore = () => {
   // console.debug(`${__filename} - before`);
 
-  console.log = () => {};
+  // console.log = () => {};
 
   Formation.pauseAllMongoosaticHooks();
   Etablissement.pauseAllMongoosaticHooks();

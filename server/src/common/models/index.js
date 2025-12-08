@@ -2,6 +2,12 @@ const schemas = require("./schema");
 const { createModel } = require("./createModel");
 
 module.exports = {
+  BcnFormationDiplome: createModel("bcnformationdiplome", schemas.get("bcnFormationDiplomes")),
+  BcnLettreSpecialite: createModel("bcnlettrespecialite", schemas.get("bcnLettreSpecialite")),
+  BcnNNiveauFormationDiplome: createModel("bcnnniveauformationdiplome", schemas.get("bcnNNiveauFormationDiplome")),
+  BcnNMef: createModel("bcnnmef", schemas.get("bcnNMef")),
+  BcnNDispositifFormation: createModel("bcnndispositifformation", schemas.get("bcnNDispositifFormation")),
+
   User: createModel("user", schemas.get("user"), {
     elastic: {
       index: "users",

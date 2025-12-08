@@ -28,6 +28,7 @@ export interface ReglePerimetre {
     | "non publié"
     | "à publier"
     | "prêt pour intégration"
+    | "en attente de mise à jour"
     | "à publier (vérifier accès direct postbac)"
     | "à publier (soumis à validation Recteur)"
     | "à publier (sous condition habilitation)"
@@ -88,6 +89,6 @@ export interface ReglePerimetre {
    */
   annee?: string | null;
   _id?: Types.ObjectId;
-  updated_at?: Date;
   created_at?: Date;
+  updated_at?: Date;
 }

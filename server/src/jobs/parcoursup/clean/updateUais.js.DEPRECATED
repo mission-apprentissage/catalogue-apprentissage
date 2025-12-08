@@ -1,4 +1,3 @@
-const { isValideUAI } = require("@mission-apprentissage/tco-service-node");
 const { Formation } = require("../../../common/models");
 const { runScript } = require("../../scriptWrapper");
 
@@ -36,7 +35,7 @@ const updateFormationUais = async () => {
         throw `cle_ministere_educatif non transmise`;
       }
 
-      if (!isValideUAI(uai_formation)) {
+      if (!validateUAI(uai_formation)) {
         throw `UAI invalide : ${uai_formation}`;
       }
 

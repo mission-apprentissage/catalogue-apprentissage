@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const { isValideUAI } = require("@mission-apprentissage/tco-service-node");
 const etablissementFormateurInfo = require("./etablissement.formateur.sub");
 const etablissementGestionnaireInfo = require("./etablissement.gestionnaire.sub");
 const etablissementReferenceInfo = require("./etablissement.reference.sub");
@@ -8,6 +7,7 @@ const { parcoursupSchema } = require("./parcoursup");
 const { rncpFormat } = require("../../format");
 const { rncpDetailsSchema } = require("./rncpDetails/rncpDetails");
 const { mefSchema } = require("./mef");
+const { validateUAI } = require("../../../utils/uaiUtils");
 
 const updateHistorySchema = new mongoose.Schema(
   {
@@ -174,7 +174,7 @@ const formationSchema = {
     default: null,
     description: "UAI du lieu de la formation",
     // validate: {
-    //   validator: async (value) => !value || (await isValideUAI(value)),
+    //   validator: async (value) => !value || (await validateUAI(value)),
     //   message: (props) => `${props.value} n'est pas un code UAI valide.`,
     // },
   },
@@ -184,7 +184,7 @@ const formationSchema = {
     default: null,
     description: "UAI du lieu de la formation",
     validate: {
-      validator: async (value) => !value || (await isValideUAI(value)),
+      validator: async (value) => !value || (await validateUAI(value)),
       message: (props) => `${props.value} n'est pas un code UAI valide.`,
     },
   },

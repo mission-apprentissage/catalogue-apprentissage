@@ -66,6 +66,7 @@ export type RncpDetails = {
    * Type d'enregistrement (issue de FranceCompétences)
    */
   type_enregistrement?: string | null;
+  _id?: Types.ObjectId;
 } | null;
 
 export interface DualControlFormation {
@@ -296,7 +297,7 @@ export interface DualControlFormation {
    * Session en entrée / sortie permanente
    */
   modalites_entrees_sorties?: boolean[];
-  capacite_minimal?: string[];
+  effectif_minimal?: string[];
   capacite_simultanee?: string[];
   capacite_cumulee?: string[];
   /**
@@ -536,23 +537,31 @@ export interface DualControlFormation {
 export interface ItemOfCertificateurs {
   certificateur?: string;
   siret_certificateur?: string;
+  _id?: Types.ObjectId;
 }
 export interface ItemOfRomes {
   rome?: string;
   libelle?: string;
+  _id?: Types.ObjectId;
 }
 export interface ItemOfPartenaires {
   Nom_Partenaire?: string;
   Siret_Partenaire?: string;
   Habilitation_Partenaire?: string;
+  _id?: Types.ObjectId;
 }
 export interface ItemOfBcnMefs_10 {
   mef10?: string;
   modalite?: Modalite;
   date_fermeture?: Date;
+  /**
+   * MEF périmé (fermeture avant le 31 août de l'année courante)
+   */
+  mef_outdated?: boolean;
   _id?: Types.ObjectId;
 }
 export interface Modalite {
   duree?: string;
   annee?: string;
+  _id?: Types.ObjectId;
 }

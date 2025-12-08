@@ -5,7 +5,6 @@ const logger = require("../../common/logger");
 const Boom = require("boom");
 const { sanitize, SAFE_UPDATE_OPERATORS } = require("../../common/utils/sanitizeUtils");
 const { hasAccessTo, hasOneOfRoles } = require("../../common/utils/rolesUtils");
-const { isValideUAI } = require("@mission-apprentissage/tco-service-node");
 const { updateOneTagsHistory } = require("../../logic/updaters/tagsHistoryUpdater");
 const { rebuildEsIndex } = require("../../jobs/esIndex/esIndex");
 
@@ -36,7 +35,7 @@ module.exports = () => {
         `Updating uai_formation ${formation.uai_formation} to ${payload.uai_formation} for ${formation.cle_ministere_educatif}`
       );
 
-      if (!(await isValideUAI(payload.uai_formation))) {
+      if (!(await validateUAI(payload.uai_formation))) {
         throw Boom.badRequest(`${payload.uai_formation} n'est pas un code UAI valide.`);
       }
 
@@ -321,5 +320,24 @@ module.exports = () => {
 
   router.post("/formations/:id/reinit-parcoursup-statut", parcoursup_statut_reinitialisation);
 
+  /**
+   * Route spéciale pour futurepro (ex "c'est qui le pro")
+   * Retourne la liste des cle_ministere_educatif et des uai_formation associées sur le périmètre Affelnet
+   */
+  router.get(
+    "/future-pro",
+    tryCatch(async (req, res) => {
+      if (!hasAccessTo(req.user, "page_other/future-pro")) {
+        return Boom.unauthorized();
+      }
+
+      const results = await Formation.find(
+        { affelnet_perimetre: true },
+        { _id: 0, cle_ministere_educatif: 1, uai_formation: 1 }
+      );
+
+      res.json(results);
+    })
+  );
   return router;
 };

@@ -1,7 +1,7 @@
 const { Formation } = require("../../../common/models");
 const logger = require("../../../common/logger");
 const { cursor } = require("../../../common/utils/cursor");
-const { isValideUAI } = require("@mission-apprentissage/tco-service-node");
+const { validateUAI } = require("../../../common/utils/uaiUtils");
 
 const run = async () => {
   let updated = 0;
@@ -20,7 +20,7 @@ const run = async () => {
           uai_formation === etablissement_formateur_uai) ||
         !uai_formation ||
         !uai_formation.length ||
-        !isValideUAI(uai_formation)
+        !validateUAI(uai_formation)
       ) {
         await Formation.updateOne(
           { _id },

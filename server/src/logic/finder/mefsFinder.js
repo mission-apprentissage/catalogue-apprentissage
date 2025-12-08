@@ -1,5 +1,4 @@
-const { getModels } = require("@mission-apprentissage/tco-service-node");
-const { ReglePerimetre, SandboxFormation } = require("../../common/models");
+const { ReglePerimetre, SandboxFormation, BcnNMef } = require("../../common/models");
 const { asyncForEach } = require("../../common/utils/asyncUtils");
 const { findMefsForParcoursup } = require("../../common/utils/parcoursupUtils");
 const { getQueryFromRule, getSessionEndDate } = require("../../common/utils/rulesUtils");
@@ -11,11 +10,10 @@ const getInfosOffreLabel = (formation, mef) => {
 };
 
 const completeDateFermetureMefs = async (mefs) => {
-  const Models = await getModels();
   return await Promise.all(
     mefs.map(async (mef) => {
       try {
-        const { DATE_FERMETURE } = await Models.BcnNMef.findOne({ MEF: mef.mef10 });
+        const { DATE_FERMETURE } = await BcnNMef.findOne({ MEF: mef.mef10 });
         const sessionEndDate = await getSessionEndDate();
 
         const dateParts = DATE_FERMETURE?.split("/");
@@ -59,7 +57,6 @@ const findMefsForAffelnet = async (rules) => {
 };
 
 const computeMefs = async (fields, oldFields) => {
-  logger.debug({ type: "logic" }, `computeMefs`);
   let bcn_mefs_10 = fields.bcn_mefs_10;
   let affelnet_mefs_10 = [];
   let affelnet_infos_offre = oldFields?.affelnet_infos_offre;

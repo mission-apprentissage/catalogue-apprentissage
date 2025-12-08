@@ -1,4 +1,4 @@
-const { getModels } = require("@mission-apprentissage/tco-service-node");
+const { BcnFormationDiplome } = require("../../common/models");
 
 const cfdEntreeMap = {
   32033422: ["32033423", "32033424", "32033425"],
@@ -15,9 +15,8 @@ const getCfdEntree = (cfd) => {
 };
 
 const getCfdEntreeDateFermeture = async (cfd) => {
-  const Models = await getModels();
   const cfd_entree = getCfdEntree(cfd);
-  const bcnFormationDiplome = await Models.BcnFormationDiplome.findOne({ FORMATION_DIPLOME: cfd_entree });
+  const bcnFormationDiplome = await BcnFormationDiplome.findOne({ FORMATION_DIPLOME: cfd_entree });
 
   const dateParts = bcnFormationDiplome?.DATE_FERMETURE.split("/");
 

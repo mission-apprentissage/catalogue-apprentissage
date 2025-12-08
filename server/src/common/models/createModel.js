@@ -2,7 +2,10 @@ const diffHistory = require("mongoose-diff-history/diffHistory");
 const { mongoose } = require("../mongodb");
 const { mongoosastic, getElasticInstance } = require("../esClient");
 
-const createModel = (modelName, [schemaDescriptor, schemaOptions], options = {}) => {
+const createModel = (modelName, schemaDeclaration, options = {}) => {
+  // console.log("createModel", { modelName, schemaDeclaration, options });
+
+  const [schemaDescriptor, schemaOptions] = schemaDeclaration;
   if (mongoose.models[modelName]) {
     return mongoose.models[modelName];
   }

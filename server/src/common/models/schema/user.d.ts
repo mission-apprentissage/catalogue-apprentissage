@@ -20,9 +20,17 @@ export interface User {
    */
   isAdmin?: boolean;
   /**
-   * Champ libre: Tag
+   * Champ libre: Tag (deprecated)
    */
   tag?: string | null;
+  /**
+   * Tag 1
+   */
+  tag_1?: string | null;
+  /**
+   * Tag 2
+   */
+  tag_2?: string | null;
   /**
    * Champ libre: Fonction
    */
@@ -55,7 +63,15 @@ export interface User {
    * Historique des dates de connexion
    */
   connection_history?: Date[] | null;
+  /**
+   * Utilisateur ayant créé celui-ci
+   */
+  created_by?: string | null;
+  /**
+   * Utilisateur ayant modifié celui-ci
+   */
+  updated_by?: string | null;
   _id?: Types.ObjectId;
-  updated_at?: Date;
   created_at?: Date;
+  updated_at?: Date;
 }

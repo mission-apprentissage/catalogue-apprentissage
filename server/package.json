@@ -23,10 +23,9 @@
     "psup:import": "standalone=true node src/jobs/parcoursup/importer.js",
     "psup:report": "standalone=true node src/jobs/parcoursup/reportRejected.js",
     "psup:export": "standalone=true node src/jobs/parcoursup/export/index.js",
-    "rcoFormation:duplicate": "standalone=true node src/jobs/oneshot/findRcoDuplicates/index.js",
     "uai:check": "standalone=true node src/jobs/checkUai/index.js",
     "compute:distance": "standalone=true node src/jobs/oneshot/computeDistance/index.js",
-    "etablissements:tags": "standalone=true node src/jobs/etablissements/tags.js",
+    "bcn:jobs": "standaloneJobs=true node src/jobs/bcn/index.js ",
     "etablissements:jobs": "standaloneJobs=true node src/jobs/etablissements/index.js",
     "formations:jobs": "standaloneJobs=true node src/jobs/formations/index.js",
     "affelnet:jobs": "standaloneJobs=true node src/jobs/affelnet/index.js",
@@ -40,13 +39,11 @@
     "migration:status": "migrate-mongo status",
     "migration:up": "migrate-mongo up",
     "migration:down": "migrate-mongo down",
-    "bcn:jobs": "run=true node node_modules/@mission-apprentissage/tco-service-node/lib/jobs/bcnDownloader/index.js; run=true node node_modules/@mission-apprentissage/tco-service-node/lib/jobs/bcnImporter/index.js ",
     "prepare": "cd .. && husky install server/.husky"
   },
   "dependencies": {
     "@elastic/elasticsearch": "8.15.0",
     "@mechanicalhuman/bunyan-pretty": "3.1.0",
-    "@mission-apprentissage/tco-service-node": "2.44.0",
     "axios": "1.11.0",
     "body-parser": "1.20.3",
     "boom": "7.3.0",
@@ -93,12 +90,15 @@
     "oleoduc": "0.8.0",
     "passport": "0.7.0",
     "passport-jwt": "4.0.1",
+    "query-string": "6",
+    "rate-limiter-flexible": "2.2.1",
     "require-all": "3.0.0",
     "sanitize-filename": "1.6.3",
     "sha512crypt-node": "1.0.2",
     "stream-json": "1.7.4",
     "swagger-jsdoc": "6.2.8",
     "swagger-ui-express": "5.0.1",
+    "title-case": "3",
     "xlsx": "0.18.5"
   },
   "devDependencies": {
@@ -116,13 +116,7 @@
     "nodemon": "2.0.15",
     "nyc": "17.1.0",
     "prettier": "3.6.2",
-    "rewiremock": "3.14.5",
     "sinon": "^19"
-  },
-  "overrides": {
-    "@mission-apprentissage/tco-service-node": {
-      "mongoose": "$mongoose"
-    }
   },
   "mocha": {},
   "prettier": {

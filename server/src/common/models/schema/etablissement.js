@@ -1,4 +1,4 @@
-const { isValideUAI } = require("@mission-apprentissage/tco-service-node");
+const { validateUAI } = require("../../utils/uaiUtils");
 
 const etablissementSchema = {
   siege_social: {
@@ -204,7 +204,7 @@ const etablissementSchema = {
     type: String,
     default: null,
     validate: {
-      validator: async (value) => !value || (await isValideUAI(value)),
+      validator: async (value) => !value || (await validateUAI(value)),
       message: (props) => `${props.value} n'est pas un code UAI valide.`,
     },
     description: "UAI de l'établissement",

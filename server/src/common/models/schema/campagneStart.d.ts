@@ -8,6 +8,6 @@ const { Types } = require("mongoose");
 
 export interface CampagneStart {
   _id?: Types.ObjectId;
-  updated_at?: Date;
   created_at?: Date;
+  updated_at?: Date;
 }

@@ -17,8 +17,16 @@ const chunkedAsyncForEach = async (array, callback, chunkSize = 10) => {
   });
 };
 
+const timeout = (promise, millis) => {
+  const timeout = new Promise((resolve, reject) => {
+    setTimeout(() => reject(`Timed out after ${millis} ms.`), millis);
+  });
+
+  return Promise.race([promise, timeout]).finally(() => clearTimeout(timeout));
+};
+
 const delay = (time) => {
   return new Promise((resolve) => setTimeout(resolve, time));
 };
 
-module.exports = { asyncForEach, chunkedAsyncForEach, delay };
+module.exports = { asyncForEach, chunkedAsyncForEach, delay, timeout };
