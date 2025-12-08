@@ -39,8 +39,6 @@ const sanitize = (obj, SAFE_OPERATORS = []) => {
   }, {});
   sanitizedObj = deepRenameKeys(sanitizedObj, keysMap);
 
-  logger.debug("", JSON.stringify(sanitizedObj));
-
   return sanitizedObj;
 };
 

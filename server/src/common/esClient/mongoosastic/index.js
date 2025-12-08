@@ -17,6 +17,7 @@
 
 const serialize = require("./serialize");
 const { cursor } = require("../../utils/cursor");
+const logger = require("../../logger");
 // https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/current/bulk_examples.html
 
 let isMappingNeedingGeoPoint = false;
@@ -203,6 +204,7 @@ function Mongoosastic(schema, options) {
   };
 
   schema.methods.index = function schemaIndex(refresh = true) {
+    logger.debug({ type: "mongoosastic", this: this }, "INDEX");
     return new Promise(async (resolve, reject) => {
       try {
         const _opts = { index: indexName, type: typeName, refresh: refresh };
@@ -218,6 +220,7 @@ function Mongoosastic(schema, options) {
   };
 
   schema.methods.unIndex = function schemaUnIndex() {
+    logger.debug({ type: "mongoosastic", this: this }, "UNINDEX");
     return new Promise(async (resolve, reject) => {
       try {
         const _opts = { index: indexName, type: typeName, refresh: true };
@@ -274,6 +277,8 @@ function Mongoosastic(schema, options) {
   };
 
   const postDocumentRemove = (doc) => {
+    logger.info({ type: "mongoosastic", doc, this: this }, "POST DOCUMENT REMOVE");
+
     if (isHooksPaused) return;
     if (doc) {
       const _doc = new doc.constructor(doc);
@@ -282,6 +287,8 @@ function Mongoosastic(schema, options) {
   };
 
   const postDocumentSave = (doc) => {
+    logger.info({ type: "mongoosastic", doc, this: this }, "POST DOCUMENT SAVE");
+
     if (isHooksPaused) return;
     if (doc) {
       const _doc = new doc.constructor(doc);
@@ -290,14 +297,14 @@ function Mongoosastic(schema, options) {
   };
 
   async function postQuerySave(next) {
-    const doc = await this.model.findOne(this.getQuery());
+    logger.info({ type: "mongoosastic", doc, this: this }, "POST QUERY SAVE");
 
-    console.log(doc);
+    const doc = await this.model.findOne(this.getQuery());
 
     if (doc) {
       const _doc = new this.model(doc);
 
-      console.log(_doc);
+      logger.info({ type: "mongoosastic", _doc }, "INDEXING");
       return _doc.index();
     }
   }
@@ -327,10 +334,7 @@ function Mongoosastic(schema, options) {
     inSchema.post("deleteOne", { document: true, query: false }, postDocumentRemove);
 
     // // TODO: Query middleware hooks
-    // inSchema.post("updateOne", { document: false, query: true }, postQuerySave);
-    inSchema.post("findOneAndUpdate", { document: false, query: true }, postQuerySave);
-    // inSchema.post("replaceOne", { document: false, query: true }, postQuerySave);
-    // inSchema.post("findOneAndReplace", { document: false, query: true }, postQuerySave);
+    inSchema.post(["updateOne", "findOneAndUpdate", "replaceOne", "findOneAndReplace"], postQuerySave);
 
     // inSchema.post("insertMany", { document: false, query: true }, postQuerySaveMany);
     // inSchema.post("updateMany", { document: false, query: true }, postQuerySaveMany);
