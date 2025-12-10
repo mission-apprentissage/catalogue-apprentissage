@@ -42,9 +42,9 @@ const dbOperations = async (base, db, Entity, description = "", identity) => {
         logger.debug(`BCN ${description} '${item[identity]}' successfully added in db ${db.name}`);
       }
     });
-    logger.info(`Importing BCN ${description}  table Succeed`);
+    logger.info(`Importing BCN ${description} table Succeed`);
   } catch (error) {
-    logger.error(`Importing BCN ${description}  table Failed`);
+    logger.error(`Importing BCN ${description} table Failed`);
   }
 };
 

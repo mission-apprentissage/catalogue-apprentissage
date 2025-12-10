@@ -1,5 +1,5 @@
 const { showProgressBar } = require("../../src/common/utils/paginator");
-const { Etablissement, Formation } = require("../../src/common/models");
+const { Etablissement, Formation, User } = require("../../src/common/models");
 
 const setupBeforeEach = () => {
   // console.debug(`${__filename} - beforeEach`);
@@ -12,16 +12,19 @@ const setupAfterEach = () => {
 const setupBefore = () => {
   // console.debug(`${__filename} - before`);
 
-  // console.log = () => {};
-
   Formation.pauseAllMongoosaticHooks();
   Etablissement.pauseAllMongoosaticHooks();
+  User.pauseAllMongoosaticHooks();
 
   showProgressBar(false);
 };
 
 const setupAfter = () => {
   // console.debug(`${__filename} - after`);
+
+  Formation.startAllMongoosaticHooks();
+  Etablissement.startAllMongoosaticHooks();
+  User.startAllMongoosaticHooks();
 
   showProgressBar(true);
 };

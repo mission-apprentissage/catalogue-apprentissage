@@ -81,6 +81,9 @@ module.exports = () => {
       }
     );
 
+    // TODO : comprendre pourquoi ça n'est pas automatiquement appelé lors d'appel à findOneAndUpdate...
+    result.index();
+
     res.json(result);
   });
 
@@ -131,6 +134,9 @@ module.exports = () => {
         runValidators: true,
       }
     );
+
+    // TODO : comprendre pourquoi ça n'est pas automatiquement appelé lors d'appel à findOneAndUpdate...
+    result.index();
 
     res.json(result);
   });
@@ -190,10 +196,13 @@ module.exports = () => {
       }
     );
 
+    // TODO : comprendre pourquoi ça n'est pas automatiquement appelé lors d'appel à findOneAndUpdate...
+    result.index();
+
     res.json(result);
   });
 
-  const parcoursup_statut_reinitialisation = tryCatch(async ({ user, params, body }, res) => {
+  const reinitParcoursupStatut = tryCatch(async ({ user, params, body }, res) => {
     const sanitizedParams = sanitize(params);
     const sanitizedBody = sanitize(body);
     const itemId = sanitizedParams.id;
@@ -228,7 +237,7 @@ module.exports = () => {
       },
     };
 
-    await Formation.updateOne(
+    await Formation.findOneAndUpdate(
       { _id: itemId },
       {
         ...update,
@@ -259,9 +268,10 @@ module.exports = () => {
 
     await updateOneTagsHistory("parcoursup_statut", itemId);
 
-    await rebuildEsIndex("formation", true, { _id: itemId });
-
     const result = await Formation.findOne({ _id: itemId });
+
+    // TODO : comprendre pourquoi ça n'est pas automatiquement appelé lors d'appel à findOneAndUpdate...
+    result.index();
 
     res.json(result);
   });
@@ -318,7 +328,7 @@ module.exports = () => {
   router.post("/formations/:id/handle-rejection", handleRejection);
   router.post("/formations/:id/unhandle-rejection", unhandleRejection);
 
-  router.post("/formations/:id/reinit-parcoursup-statut", parcoursup_statut_reinitialisation);
+  router.post("/formations/:id/reinit-parcoursup-statut", reinitParcoursupStatut);
 
   /**
    * Route spéciale pour futurepro (ex "c'est qui le pro")

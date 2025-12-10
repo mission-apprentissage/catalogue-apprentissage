@@ -1,5 +1,3 @@
-const axios = require("axios");
-const ApiEsSup = require("../../../common/apis/ApiEsSup");
 const geoAdresseData = require("./geoAdresseData");
 const fs = require("fs-extra");
 const path = require("path");

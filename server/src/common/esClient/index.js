@@ -1,5 +1,5 @@
 const { Client } = require("@elastic/elasticsearch");
-const mongoosastic = require("./mongoosastic");
+// const { mongoosastic } = require("./mongoosastic");
 const config = require("config");
 
 const getClientOptions = () => {
@@ -30,5 +30,5 @@ const getElasticInstance = () => clientDefault;
 
 module.exports = {
   getElasticInstance,
-  mongoosastic,
+  // mongoosastic,
 };

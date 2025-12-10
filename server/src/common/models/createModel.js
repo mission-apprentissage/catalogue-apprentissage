@@ -1,6 +1,5 @@
 const diffHistory = require("mongoose-diff-history/diffHistory");
 const { mongoose } = require("../mongodb");
-const { mongoosastic, getElasticInstance } = require("../esClient");
 
 const createModel = (modelName, schemaDeclaration, options = {}) => {
   // console.log("createModel", { modelName, schemaDeclaration, options });
@@ -12,7 +11,10 @@ const createModel = (modelName, schemaDeclaration, options = {}) => {
 
   const schema = new mongoose.Schema(schemaDescriptor, schemaOptions);
   schema.plugin(require("mongoose-paginate"));
+
   if (options.elastic) {
+    const { getElasticInstance } = require("../esClient");
+    const { mongoosastic } = require("../esClient/mongoosastic");
     schema.plugin(mongoosastic, { esClient: getElasticInstance(), ...options.elastic });
   }
 

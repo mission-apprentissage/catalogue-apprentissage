@@ -116,7 +116,7 @@
     "nodemon": "2.0.15",
     "nyc": "17.1.0",
     "prettier": "3.6.2",
-    "sinon": "^19"
+    "sinon": "^21"
   },
   "mocha": {},
   "prettier": {

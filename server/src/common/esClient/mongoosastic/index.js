@@ -13,11 +13,11 @@
 /**
  * @typedef {import("@elastic/elasticsearch").Client} Client
  * @typedef {import("mongoose").Query} Query
+ * @typedef {import("mongoose").Schema} Schema
  */
 
 const serialize = require("./serialize");
 const { cursor } = require("../../utils/cursor");
-const logger = require("../../logger");
 // https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/current/bulk_examples.html
 
 let isMappingNeedingGeoPoint = false;
@@ -140,13 +140,115 @@ function getMapping(schema, inPrefix = "", requireAsciiFolding = false) {
 
 let isHooksPaused = false;
 
+const postDocumentSave = (doc) => {
+  const logger = require("../../logger");
+
+  logger.debug?.({ type: "mongoosastic" }, "POST DOCUMENT SAVE");
+
+  if (isHooksPaused) return;
+  if (doc) {
+    const _doc = new doc.constructor(doc);
+    return _doc.index();
+  }
+};
+
+const postDocumentRemove = (doc) => {
+  const logger = require("../../logger");
+
+  logger.debug?.({ type: "mongoosastic" }, "POST DOCUMENT REMOVE");
+
+  if (isHooksPaused) return;
+  if (doc) {
+    const _doc = new doc.constructor(doc);
+    return _doc.unIndex();
+  }
+};
+
+async function postQuerySave() {
+  const logger = require("../../logger");
+
+  logger.debug?.({ type: "mongoosastic" }, "POST QUERY SAVE");
+
+  if (isHooksPaused) return;
+
+  const doc = await this.model.findOne(this._conditions);
+
+  if (doc) {
+    doc.index();
+  }
+}
+
+async function postQuerySaveMany(query) {
+  const logger = require("../../logger");
+
+  logger.debug?.({ type: "mongoosastic" }, "POST QUERY SAVE MANY");
+
+  if (isHooksPaused) return;
+
+  const docs = await this.model.find(this._conditions);
+
+  docs.forEach((doc) => doc.index());
+}
+
+async function preQueryRemove() {
+  const logger = require("../../logger");
+
+  logger.debug?.({ type: "mongoosastic" }, "PRE QUERY REMOVE");
+
+  if (isHooksPaused) return;
+
+  const doc = await this.model.findOne(this._conditions);
+
+  if (doc) {
+    doc.unIndex();
+  }
+}
+
+async function preQueryRemoveMany(query) {
+  const logger = require("../../logger");
+
+  logger.debug?.({ type: "mongoosastic" }, "PRE QUERY REMOVE MANY");
+
+  if (isHooksPaused) return;
+
+  const docs = await this.model.find(this._conditions);
+
+  docs.forEach((doc) => doc.unIndex());
+}
+
+/**
+ * Use standard Mongoose Middleware hooks
+ * to persist to Elasticsearch
+ *
+ * See https://mongoosejs.com/docs/7.x/docs/middleware.html#types-of-middleware
+ *
+ * @param  {Schema} inSchema
+ *
+ */
+function setUpMiddlewareHooks(inSchema) {
+  // Document middleware hooks
+  inSchema.post(["save", "updateOne"], { document: true, query: false }, postDocumentSave);
+  inSchema.post(["deleteOne"], { document: true, query: false }, postDocumentRemove);
+
+  // Query middleware hooks
+  inSchema.post(
+    ["updateOne", "findOneAndUpdate", "replaceOne", "findOneAndReplace"],
+    { document: false, query: true },
+    postQuerySave
+  );
+  inSchema.post(["insertMany", "updateMany"], { document: false, query: true }, postQuerySaveMany);
+
+  inSchema.pre(["deleteOne", "findOneAndDelete"], { document: false, query: true }, preQueryRemove);
+  inSchema.pre("deleteMany", { document: false, query: true }, preQueryRemoveMany);
+}
+
 /**
  *
  * @param {*} schema
  * @param {Object} options
  * @param {Client} options.esClient
  */
-function Mongoosastic(schema, options) {
+module.exports.mongoosastic = (schema, options) => {
   const { esClient } = options;
 
   const mapping = getMapping(schema, "");
@@ -204,15 +306,22 @@ function Mongoosastic(schema, options) {
   };
 
   schema.methods.index = function schemaIndex(refresh = true) {
-    logger.debug({ type: "mongoosastic", this: this }, "INDEX");
+    const logger = require("../../logger");
+
+    logger.debug?.({ type: "mongoosastic", index: indexName, id: this._id }, "DOCUMENT INDEX");
+
     return new Promise(async (resolve, reject) => {
       try {
-        const _opts = { index: indexName, type: typeName, refresh: refresh };
-        _opts.body = serialize(this, mapping);
-        _opts.id = this._id.toString();
+        const _opts = {
+          index: indexName,
+          type: typeName,
+          refresh: refresh,
+          id: this._id.toString(),
+          body: serialize(this, mapping),
+        };
         await esClient.index(_opts);
-      } catch (e) {
-        console.error(`Error index ${this._id.toString()}`, e.message || e, e?.meta?.body?.error?.reason);
+      } catch (error) {
+        logger.error?.({ type: "mongoosastic", error }, `Error indexing ${this._id.toString()}`);
         return reject();
       }
       resolve();
@@ -220,11 +329,18 @@ function Mongoosastic(schema, options) {
   };
 
   schema.methods.unIndex = function schemaUnIndex() {
-    logger.debug({ type: "mongoosastic", this: this }, "UNINDEX");
+    const logger = require("../../logger");
+
+    logger.debug?.({ type: "mongoosastic", index: indexName, id: this._id }, "DOCUMENT UNINDEX");
+
     return new Promise(async (resolve, reject) => {
       try {
-        const _opts = { index: indexName, type: typeName, refresh: true };
-        _opts.id = this._id.toString();
+        const _opts = {
+          index: indexName,
+          type: typeName,
+          refresh: true,
+          id: this._id.toString(),
+        };
 
         let tries = 3;
         while (tries > 0) {
@@ -237,8 +353,14 @@ function Mongoosastic(schema, options) {
             --tries;
           }
         }
-      } catch (e) {
-        console.log(`Error delete ${this._id.toString()}`, e.message || e);
+      } catch (error) {
+        logger.error?.(
+          {
+            type: "mongoosastic",
+            error,
+          },
+          `Error unindexing ${this._id.toString()}`
+        );
         return reject();
       }
       resolve();
@@ -247,12 +369,12 @@ function Mongoosastic(schema, options) {
 
   schema.statics.pauseAllMongoosaticHooks = function pauseAllMongoosaticHooks() {
     isHooksPaused = true;
-    console.log(`Mongoose Hooks have been paused`);
+    logger.debug({ type: "mongoosastic" }, `Mongoose Hooks have been paused for ${indexName}`);
   };
 
   schema.statics.startAllMongoosaticHooks = function startAllMongoosaticHooks() {
     isHooksPaused = false;
-    console.log(`Mongoose Hooks have been actived`);
+    logger.debug({ type: "mongoosastic" }, `Mongoose Hooks have been activated for ${indexName}`);
   };
 
   schema.statics.synchronize = async function synchronize(filter = {}, refresh = false) {
@@ -276,75 +398,5 @@ function Mongoosastic(schema, options) {
     });
   };
 
-  const postDocumentRemove = (doc) => {
-    logger.info({ type: "mongoosastic", doc, this: this }, "POST DOCUMENT REMOVE");
-
-    if (isHooksPaused) return;
-    if (doc) {
-      const _doc = new doc.constructor(doc);
-      return _doc.unIndex();
-    }
-  };
-
-  const postDocumentSave = (doc) => {
-    logger.info({ type: "mongoosastic", doc, this: this }, "POST DOCUMENT SAVE");
-
-    if (isHooksPaused) return;
-    if (doc) {
-      const _doc = new doc.constructor(doc);
-      return _doc.index();
-    }
-  };
-
-  async function postQuerySave(next) {
-    logger.info({ type: "mongoosastic", doc, this: this }, "POST QUERY SAVE");
-
-    const doc = await this.model.findOne(this.getQuery());
-
-    if (doc) {
-      const _doc = new this.model(doc);
-
-      logger.info({ type: "mongoosastic", _doc }, "INDEXING");
-      return _doc.index();
-    }
-  }
-
-  // async function postQuerySaveMany(query) {
-  //   console.log("postQuerySaveMany", { query, this: this });
-  // }
-
-  // async function postQueryRemove(query) {
-  //   console.log("postQueryRemove", { query, this: this });
-  // }
-
-  // async function postQueryRemoveMany(query) {
-  //   console.log("postQueryRemoveMany", { query, this: this });
-  // }
-
-  /**
-   * Use standard Mongoose Middleware hooks
-   * to persist to Elasticsearch
-   *
-   * See https://mongoosejs.com/docs/7.x/docs/middleware.html#types-of-middleware
-   */
-  function setUpMiddlewareHooks(inSchema) {
-    // Document middleware hooks
-    inSchema.post("save", { document: true, query: false }, postDocumentSave);
-    inSchema.post("updateOne", { document: true, query: false }, postDocumentSave);
-    inSchema.post("deleteOne", { document: true, query: false }, postDocumentRemove);
-
-    // // TODO: Query middleware hooks
-    inSchema.post(["updateOne", "findOneAndUpdate", "replaceOne", "findOneAndReplace"], postQuerySave);
-
-    // inSchema.post("insertMany", { document: false, query: true }, postQuerySaveMany);
-    // inSchema.post("updateMany", { document: false, query: true }, postQuerySaveMany);
-
-    // inSchema.post("deleteOne", { document: false, query: true }, postQueryRemove);
-    // inSchema.post("findOneAndDelete", { document: false, query: true }, postQueryRemove);
-
-    // inSchema.post("deleteMany", { document: false, query: true }, postQueryRemoveMany);
-  }
   setUpMiddlewareHooks(schema);
-}
-
-module.exports = Mongoosastic;
+};
