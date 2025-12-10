@@ -191,11 +191,15 @@ export const UserLine = ({ user, roles, refreshSearch }) => {
       }
 
       if (values.newTag1 === "") {
-        errors.newTag1 = "Le champs est obligatoire.";
+        errors.newTag1 = "Le champ doit être renseigné.";
       }
 
-      if (values.newTag1 === "Autre" && errors.newTag2 === "") {
+      if (values.newTag1 === "Autre" && values.newTag2 === "") {
         errors.newTag2 = "Le champs est obligatoire.";
+      }
+
+      if (values.newTag1 !== "Autre" && values.newFonction === "") {
+        errors.newFonction = "La fonction doit être renseignée";
       }
 
       if (
@@ -499,37 +503,39 @@ export const UserLine = ({ user, roles, refreshSearch }) => {
         </FormControl>
       )}
 
-      <FormControl py={2} isInvalid={touched.newFonction && errors.newFonction}>
-        <FormLabel>Fonction</FormLabel>
-        {values.newTag1 === "Autre" ? (
-          <Input
-            type="text"
-            id="newFonction"
-            name="newFonction"
-            value={values.newFonction}
-            onChange={handleChange}
-            onBlur={handleBlur}
-          />
-        ) : (
-          <Select
-            type="text"
-            id="newFonction"
-            name="newFonction"
-            value={values.newFonction}
-            onChange={handleChange}
-            onBlur={handleBlur}
-          >
-            <option value={""}>Veuillez sélectionner une option...</option>
-            <option value={"SAIO / SRFD : adjoint chef de service"}>SAIO / SRFD : adjoint chef de service</option>
-            <option value={"SAIO / SRFD : chef de service"}>SAIO / SRFD : chef de service</option>
-            <option value={"SAIO / SRFD : chargé de mission ou assimilé"}>
-              SAIO / SRFD : chargé de mission ou assimilé
-            </option>
-          </Select>
-        )}
+      {values.newTag1 !== "" && (
+        <FormControl py={2} isInvalid={touched.newFonction && errors.newFonction}>
+          <FormLabel>Fonction</FormLabel>
+          {values.newTag1 === "Autre" ? (
+            <Input
+              type="text"
+              id="newFonction"
+              name="newFonction"
+              value={values.newFonction}
+              onChange={handleChange}
+              onBlur={handleBlur}
+            />
+          ) : (
+            <Select
+              type="text"
+              id="newFonction"
+              name="newFonction"
+              value={values.newFonction}
+              onChange={handleChange}
+              onBlur={handleBlur}
+            >
+              <option value={""}>Veuillez sélectionner une option...</option>
+              <option value={"SAIO / SRFD : adjoint chef de service"}>SAIO / SRFD : adjoint chef de service</option>
+              <option value={"SAIO / SRFD : chef de service"}>SAIO / SRFD : chef de service</option>
+              <option value={"SAIO / SRFD : chargé de mission ou assimilé"}>
+                SAIO / SRFD : chargé de mission ou assimilé
+              </option>
+            </Select>
+          )}
 
-        <FormErrorMessage>{errors.newFonction}</FormErrorMessage>
-      </FormControl>
+          <FormErrorMessage>{errors.newFonction}</FormErrorMessage>
+        </FormControl>
+      )}
 
       <FormControl py={2} mt={3} isInvalid={touched.accessAllCheckbox && errors.accessAllCheckbox}>
         <Checkbox
