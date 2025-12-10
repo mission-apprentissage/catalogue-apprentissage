@@ -368,13 +368,19 @@ module.exports.mongoosastic = (schema, options) => {
   };
 
   schema.statics.pauseAllMongoosaticHooks = function pauseAllMongoosaticHooks() {
+    const logger = require("../../logger");
+
     isHooksPaused = true;
     logger.debug({ type: "mongoosastic" }, `Mongoose Hooks have been paused for ${indexName}`);
+    // console.log(`Mongoose Hooks have been paused for ${indexName}`);
   };
 
   schema.statics.startAllMongoosaticHooks = function startAllMongoosaticHooks() {
+    const logger = require("../../logger");
+
     isHooksPaused = false;
     logger.debug({ type: "mongoosastic" }, `Mongoose Hooks have been activated for ${indexName}`);
+    // console.log(`Mongoose Hooks have been activated for ${indexName}`);
   };
 
   schema.statics.synchronize = async function synchronize(filter = {}, refresh = false) {
