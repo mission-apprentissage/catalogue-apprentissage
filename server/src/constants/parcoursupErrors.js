@@ -109,7 +109,7 @@ const parcoursupErrors = [
   },
   {
     regexp:
-      /Erreur lors de la creation : Il n'est pas possible de créer une formation sur un établissement d'inscription qui n'a pas de rôle d'inscription./,
+      /.*Erreur lors de la creation : Il n'est pas possible de créer une formation sur un établissement d'affectation qui n'a pas de rôle d'Affectation.*/,
     description:
       "Il n’est pas possible de créer une formation sur un établissement d’affectation qui n’a pas de rôle d’établissement d’accueil.",
     action: `Veuillez contacter la Moss via la messagerie Parcoursup afin d’attribuer le rôle d’accueil à l’établissement dans lequel se déroulera la formation, puis revenez sur cette fiche pour demander à nouveau la publication Parcoursup.`,
