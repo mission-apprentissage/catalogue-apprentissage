@@ -7,6 +7,7 @@ const { sanitize, SAFE_UPDATE_OPERATORS } = require("../../common/utils/sanitize
 const { hasAccessTo, hasOneOfRoles } = require("../../common/utils/rolesUtils");
 const { updateOneTagsHistory } = require("../../logic/updaters/tagsHistoryUpdater");
 const { rebuildEsIndex } = require("../../jobs/esIndex/esIndex");
+const { validateUAI } = require("../../common/utils/uaiUtils");
 
 module.exports = () => {
   const router = express.Router();
