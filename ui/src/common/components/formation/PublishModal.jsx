@@ -101,6 +101,15 @@ const depublicationOptions = [
           affelnet: true,
           tag: DEPUBLICATION_TAGS.RCO,
         },
+
+        {
+          label: "Absence de site de gestion sur Parcoursup",
+          statut: COMMON_STATUS.NON_PUBLIE,
+          parcoursup: true,
+          affelnet: false,
+          tag: DEPUBLICATION_TAGS.RCO,
+        },
+
         {
           label: "Problème d'UAI",
           parcoursup: true,
