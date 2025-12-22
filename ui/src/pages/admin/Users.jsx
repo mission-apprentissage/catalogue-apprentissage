@@ -199,7 +199,7 @@ export const UserLine = ({ user, roles, refreshSearch }) => {
       }
 
       if (values.newTag1 !== "Autre" && values.newFonction === "") {
-        errors.newFonction = "La fonction doit être renseignée";
+        errors.newFonction = "La fonction doit être renseignée.";
       }
 
       if (
@@ -424,7 +424,7 @@ export const UserLine = ({ user, roles, refreshSearch }) => {
 
   return (
     <form>
-      <FormControl py={2} isInvalid={touched.newUsername && errors.newUsername}>
+      <FormControl py={2} isInvalid={touched.newUsername && errors.newUsername} isRequired>
         <FormLabel>Username</FormLabel>
         <Input
           type="text"
@@ -437,7 +437,7 @@ export const UserLine = ({ user, roles, refreshSearch }) => {
         <FormErrorMessage>{errors.newUsername}</FormErrorMessage>
       </FormControl>
 
-      <FormControl py={2} isInvalid={touched.newEmail && errors.newEmail}>
+      <FormControl py={2} isInvalid={touched.newEmail && errors.newEmail} isRequired>
         <FormLabel>Email</FormLabel>
         <Input
           type="email"
@@ -451,7 +451,7 @@ export const UserLine = ({ user, roles, refreshSearch }) => {
       </FormControl>
 
       {!user && (
-        <FormControl py={2} isInvalid={touched.newTmpPassword && errors.newTmpPassword}>
+        <FormControl py={2} isInvalid={touched.newTmpPassword && errors.newTmpPassword} isRequired>
           <FormLabel>Mot de passe temporaire</FormLabel>
           <PasswordInput
             id="newTmpPassword"
@@ -464,7 +464,7 @@ export const UserLine = ({ user, roles, refreshSearch }) => {
         </FormControl>
       )}
 
-      <FormControl py={2} isInvalid={touched.newTag1 && errors.newTag1}>
+      <FormControl py={2} isInvalid={touched.newTag1 && errors.newTag1} isRequired>
         <FormLabel>Tag 1</FormLabel>
         <Select
           type="text"
@@ -484,7 +484,7 @@ export const UserLine = ({ user, roles, refreshSearch }) => {
       </FormControl>
 
       {values.newTag1 === "Autre" && (
-        <FormControl py={2} isInvalid={touched.newTag2 && errors.newTag2}>
+        <FormControl py={2} isInvalid={touched.newTag2 && errors.newTag2} isRequired={values.newTag1 === "Autre"}>
           <FormLabel>Tag 2</FormLabel>
           <Input
             type="text"
@@ -504,7 +504,11 @@ export const UserLine = ({ user, roles, refreshSearch }) => {
       )}
 
       {values.newTag1 !== "" && (
-        <FormControl py={2} isInvalid={touched.newFonction && errors.newFonction}>
+        <FormControl
+          py={2}
+          isInvalid={touched.newFonction && errors.newFonction}
+          isRequired={values.newTag1 !== "Autre"}
+        >
           <FormLabel>Fonction</FormLabel>
           {values.newTag1 === "Autre" ? (
             <Input
