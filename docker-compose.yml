@@ -45,7 +45,7 @@ services:
       - NODE_ICU_DATA=node_modules/full-icu
 
   mongodb:
-    image: mongo:7.0.28
+    image: mongo:8.0.17
     container_name: catalogue_apprentissage_mongodb
     tty: true
     restart: unless-stopped
