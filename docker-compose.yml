@@ -33,8 +33,6 @@ services:
     tty: true
     build:
       context: server
-      # args:
-      #   - NPM_TOKEN=${NPM_TOKEN}
     mem_limit: 4g
     restart: unless-stopped
     networks:
@@ -47,7 +45,7 @@ services:
       - NODE_ICU_DATA=node_modules/full-icu
 
   mongodb:
-    image: mongo:7.0.25
+    image: mongo:7.0.28
     container_name: catalogue_apprentissage_mongodb
     tty: true
     restart: unless-stopped

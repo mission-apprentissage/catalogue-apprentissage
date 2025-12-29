@@ -31,8 +31,6 @@ services:
     build:
       context: server
       dockerfile: Dockerfile.dev
-      args:
-        - NPM_TOKEN=local
     environment:
       - CATALOGUE_APPRENTISSAGE_ENV=dev
       - CATALOGUE_APPRENTISSAGE_LOG_LEVEL=debug

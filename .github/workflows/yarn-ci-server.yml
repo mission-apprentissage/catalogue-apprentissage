@@ -10,7 +10,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: 'server'
+        working-directory: "server"
 
     steps:
       # Checks-out the repository
@@ -21,25 +21,18 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          cache: 'yarn'
-          cache-dependency-path: '**/yarn.lock'
+          node-version: "20"
+          cache: "yarn"
+          cache-dependency-path: "**/yarn.lock"
 
       # setup .yarnrc.yml
       - name: Create .yarnrc.yml
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
           yarn set version 4.5.0
           yarn config set nodeLinker node-modules
           yarn config set defaultSemverRangePrefix ""
           yarn config set compressionLevel mixed
           yarn config set --home enableTelemetry 0
-          yarn config set npmScopes.mission-apprentissage.npmRegistryServer "https://npm.pkg.github.com"
-          yarn config set npmScopes.mission-apprentissage.npmPublishRegistry "https://npm.pkg.github.com"
-          yarn config set npmScopes.mission-apprentissage.npmAlwaysAuth true
-          yarn config set npmScopes.mission-apprentissage.npmAuthToken $NPM_TOKEN
-
 
       # Install dependencies
       - name: Run Yarn Install
@@ -76,4 +69,3 @@ jobs:
       - name: Teardown
         run: |
           yarn docker:down
-

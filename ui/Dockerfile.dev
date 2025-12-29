@@ -15,12 +15,12 @@ ENV REACT_APP_METABASE_SECRET_KEY=$REACT_APP_METABASE_SECRET_KEY
 WORKDIR /app
 
 RUN corepack enable &&\
-  corepack prepare yarn@stable --activate && \
-  yarn set version 4.5.0  && \
-  yarn config set nodeLinker node-modules && \
-  yarn config set defaultSemverRangePrefix '' && \
-  yarn config set --home enableTelemetry 0 && \
-  yarn config set compressionLevel mixed
+    corepack prepare yarn@stable --activate && \
+    yarn set version 4.5.0  && \
+    yarn config set nodeLinker node-modules && \
+    yarn config set defaultSemverRangePrefix '' && \
+    yarn config set --home enableTelemetry 0 && \
+    yarn config set compressionLevel mixed
 
 EXPOSE 3000
 
