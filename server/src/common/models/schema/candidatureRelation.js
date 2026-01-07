@@ -116,7 +116,6 @@ const candidatureRelationSchema = {
   },
 
   localites_formation: {
-    index: false,
     type: [String],
     default: [],
     description: "Localités des établissements d'accueil",
@@ -127,7 +126,6 @@ const candidatureRelationSchema = {
   },
 
   uais_formation: {
-    index: false,
     type: [String],
     default: [],
     description: "UAIs des établissements d'accueil",
@@ -137,7 +135,6 @@ const candidatureRelationSchema = {
     // },
   },
   codes_formation: {
-    index: false,
     type: [String],
     default: [],
     description: "Offres associées",
@@ -166,7 +163,6 @@ const candidatureRelationSchema = {
     description: "Statut de création du compte",
   },
   statut_diffusion: {
-    index: true,
     type: String,
     default: null,
     description: "Statut de diffusion des candidatures",
@@ -178,49 +174,41 @@ const candidatureRelationSchema = {
     description: "Statut générique",
   },
   nombre_voeux: {
-    index: true,
     type: Number,
     default: 0,
     description: "Nombre de vœux",
   },
   last_import_voeux: {
-    index: true,
     type: Date,
     default: null,
     description: "Date du dernier import de vœux",
   },
   telechargement: {
-    index: true,
     type: Boolean,
     default: false,
     description: "Téléchargement",
   },
   telechargement_date: {
-    index: true,
     type: Date,
     default: null,
     description: "Date du dernier téléchargement",
   },
   nombre_voeux_telecharges: {
-    index: true,
     type: Number,
     default: 0,
     description: "Vœux téléchargés par le destinataire principal",
   },
   nombre_voeux_a_retelecharges: {
-    index: true,
     type: Number,
     default: 0,
     description: "Vœux à télécharger pour mise à jour",
   },
   nombre_voeux_jamais_telecharges: {
-    index: true,
     type: Number,
     default: 0,
     description: "Vœux jamais téléchargés par le destinataire principal",
   },
   admin_intervention: {
-    index: true,
     type: String,
     default: null,
     description: "Intervention par un administrateur",

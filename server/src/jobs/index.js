@@ -32,10 +32,6 @@ runScript(async ({ db }) => {
     await formationsJobs();
     await sleep(10000);
 
-    // Relations
-    await relationJobs();
-    await sleep(10000);
-
     // Parcoursup & Affelnet
     await parcoursupJobs(); // ~ 10 minutes  // maj des rapprochements & étiquettes périmètre & calcul stats
     await affelnetJobs(); // ~ 15 minutes  // maj des rapprochements & étiquettes périmètre & calcul stats
@@ -52,6 +48,9 @@ runScript(async ({ db }) => {
     await rebuildEsIndex("formations"); // ~ 5 minutes // maj elastic search (recherche des formations)
     await disableAlertMessage();
     Formation.startAllMongoosaticHooks();
+
+    // Relations
+    await relationJobs();
 
     logger.info({ type: "job" }, `ALL JOBS ✅`);
   } catch (error) {
