@@ -107,6 +107,14 @@ export default [
         feature: "Liste de MEFs fiabilisés sur Parcoursup",
         ref: "page_upload/parcoursup-mefs",
       },
+      {
+        feature: "Liste des relations depuis le site des Candidatures Affelnet",
+        ref: "page_upload/candidature-relations",
+      },
+      // {
+      //   feature: "Liste des formations depuis le site des Candidatures Affelnet",
+      //   ref: "page_upload/candidature-formations",
+      // },
     ],
   },
   {

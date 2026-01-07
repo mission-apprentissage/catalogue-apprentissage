@@ -9,8 +9,15 @@ const {
   getSessionEndDate,
 } = require("../../../../src/common/utils/rulesUtils");
 const { CampagneStart } = require("../../../../src/common/models");
+const { setupBeforeAll } = require("../../../helpers/setup");
+const { connectToMongoForTests } = require("../../../utils/testUtils");
 
 describe(__filename, () => {
+  before(async () => {
+    setupBeforeAll();
+    await connectToMongoForTests();
+  });
+
   describe("getExpirationDate", () => {
     it("should give the 31/08 of current year if before 01/10", () => {
       const expected = new Date(`2021-08-31T23:59:59.999Z`);

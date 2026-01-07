@@ -21,7 +21,7 @@ const styles = {
     color: colors.info,
     Icon: InfoFill,
   },
-  infoLignt: {
+  infoLight: {
     color: colors.bluesoft[400],
     Icon: InfoFill,
   },

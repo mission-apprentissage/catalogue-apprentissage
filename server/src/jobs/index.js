@@ -9,6 +9,7 @@ const { parcoursupJobs } = require("./parcoursup");
 const { affelnetJobs } = require("./affelnet");
 const { etablissementsJobs } = require("./etablissements");
 const { formationsJobs } = require("./formations");
+const { relationsJobs } = require("./relations");
 const { collectPreviousSeasonStats } = require("./formations/previousSeasonStats");
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -29,6 +30,10 @@ runScript(async ({ db }) => {
     // Formations
     Formation.pauseAllMongoosaticHooks();
     await formationsJobs();
+    await sleep(10000);
+
+    // Relations
+    await relationJobs();
     await sleep(10000);
 
     // Parcoursup & Affelnet

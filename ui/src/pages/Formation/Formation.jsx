@@ -22,7 +22,7 @@ import { useFormik } from "formik";
 
 import Layout from "../layout/Layout";
 import helpText from "../../locales/helpText.json";
-import { ArrowDownLine, MapPin2Fill } from "../../theme/components/icons";
+import { ArrowDownLine, ExternalLinkLine, MapPin2Fill } from "../../theme/components/icons";
 import { CATALOGUE_GENERAL_LABEL, CATALOGUE_NON_ELIGIBLE_LABEL } from "../../constants/catalogueLabels";
 import { AFFELNET_STATUS, COMMON_STATUS, PARCOURSUP_STATUS } from "../../constants/status";
 
@@ -46,6 +46,8 @@ import { PublishModalButton } from "../../common/components/formation/PublishMod
 import { UaiHistoryModalButton } from "../../common/components/formation/UaiHistoryModalButton";
 import { ReinitStatutModalButton } from "../../common/components/formation/ReinitStatutModalButton";
 import { DateContext } from "../../DateContext";
+import { RelationEmailResponsableModal } from "../../common/components/formation/RelationEmailResponsableModal";
+import { RelationEmailResponsableModalButton } from "../../common/components/formation/RelationEmailResponsableModalButton";
 
 const CATALOGUE_API = `${process.env.REACT_APP_BASE_URL}/api`;
 
@@ -159,7 +161,8 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
                       <Text fontSize={"zeta"} color={"grey.600"} mb={2}>
                         - Si l’UAI lieu est modifiée, la formation devra à nouveau être importée dans Affelnet. Son état
                         basculera de “Publié” à “En attente de publication”, jusqu'à ce que vous procédiez à l’import
-                        depuis Affelnet.
+                        depuis Affelnet.import {RelationEmailResponsableModalButton} from
+                        '../../common/components/formation/RelationEmailResponsableModalButton';
                       </Text>
                     )}
                     {typeof formation.editedFields?.uai_formation !== "undefined" && (
@@ -372,6 +375,7 @@ export default () => {
   const { id } = useParams();
   const toast = useToast();
   const [formation, setFormation] = useState();
+  const [relation, setRelation] = useState();
   const [loading, setLoading] = useState(false);
 
   const [edition, setEdition] = useState(null);
@@ -444,9 +448,9 @@ export default () => {
 
   const mountedRef = useRef(id);
 
-  useEffect(() => {
-    const abortController = new AbortController();
+  const fetchData = useCallback(() => {
     (async () => {
+      const abortController = new AbortController();
       try {
         if (mountedRef.current !== id) return null;
 
@@ -461,20 +465,31 @@ export default () => {
           throw new Error("Cette formation n'est pas publiée dans le catalogue");
         }
 
-        setLoading(false);
         setFormation(formation);
         setFieldValue("uai_formation", formation.uai_formation ?? "");
+
+        const relation = await _get(
+          `${CATALOGUE_API}/entity/relation?query={"siret_responsable":"${formation.etablissement_gestionnaire_siret}","siret_formateur":"${formation.etablissement_formateur_siret}"}`
+        );
+        setRelation(relation);
+
+        setLoading(false);
       } catch (e) {
         if (mountedRef.current !== id) return null;
         setLoading(false);
       }
     })();
+  }, [id, setFieldValue]);
+
+  useEffect(() => {
+    if (mountedRef.current !== id) return null;
+
+    fetchData();
 
     return () => {
       mountedRef.current = null;
-      abortController.abort();
     };
-  }, [id, setFieldValue]);
+  }, [fetchData, id]);
 
   const onEdit = (fieldName = null) => {
     setEdition(fieldName);
@@ -691,6 +706,99 @@ export default () => {
                     </Flex>
                   </Flex>
                 )}
+                {formation.affelnet_perimetre && relation && formation.candidature_relation && (
+                  <Alert
+                    mt={4}
+                    type={
+                      formation.candidature_relation?.nombre_voeux &&
+                      !formation.candidature_relation?.nombre_voeux_telecharges &&
+                      !relation.editedFields?.email_responsable
+                        ? "warning"
+                        : "infoLight"
+                    }
+                  >
+                    <Text>
+                      <Text as="span">
+                        Statut de téléchargement des candidatures sur la précédente campagne pour cet organisme{" "}
+                        {formation.etablissement_formateur_siret === formation.etablissement_gestionnaire_siret ? (
+                          <>responsable-formateur</>
+                        ) : (
+                          <>formateur</>
+                        )}
+                        , toutes offres confondues :{" "}
+                      </Text>
+                      <Text as="b" variant="highlight">
+                        {formation.candidature_relation?.statut_diffusion_generique}
+                      </Text>
+                      <Link
+                        ml={2}
+                        textDecoration={"underline"}
+                        fontSize={"zeta"}
+                        color={"grey.600"}
+                        isExternal
+                        href={`https://candidats-affelnet.apprentissage.education.fr/admin/etablissement/${relation.siret_responsable}#${relation.siret_formateur}`}
+                      >
+                        Voir sur le site des candidatures&nbsp; <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} />
+                      </Link>
+                    </Text>
+                    <br />
+                    <Text>
+                      <Text as="span">Contact : </Text>
+                      <Text as="b" variant="highlight">
+                        {formation.candidature_relation.active_delegue ? (
+                          <>
+                            {formation.candidature_relation?.email_delegue} (délégation accordée par{" "}
+                            {relation?.email_responsable ?? formation.candidature_relation?.email_responsable})
+                          </>
+                        ) : (
+                          <>{relation?.email_responsable ?? formation.candidature_relation?.email_responsable}</>
+                        )}
+                      </Text>
+                      <Text as="span" fontSize={"zeta"} color={"grey.600"}>
+                        {relation.editedFields?.email_responsable ? (
+                          <>
+                            (édité par {relation.last_update_who} le{" "}
+                            {new Date(relation.last_update_at).toLocaleDateString("fr-FR")})
+                          </>
+                        ) : (
+                          <></>
+                        )}{" "}
+                      </Text>
+                      <RelationEmailResponsableModalButton
+                        formation={formation}
+                        relation={relation}
+                        callback={fetchData}
+                      />
+                    </Text>
+                  </Alert>
+                )}
+                {formation.affelnet_perimetre && relation && !formation.candidature_relation && (
+                  <Alert mt={4} type={"infoLight"}>
+                    <Text>
+                      Aucune candidature apprentissage n’a été diffusée pour ce{" "}
+                      {formation.etablissement_formateur_siret === formation.etablissement_gestionnaire_siret ? (
+                        <>responsable-formateur</>
+                      ) : (
+                        <>formateur</>
+                      )}{" "}
+                      (sauf en cas de modification de Siret survenue entre temps). Si des offres sont publiées pour la
+                      prochaine campagne, le courriel utilisé pour la diffusion sera :{" "}
+                      <Text as="b" variant="highlight">
+                        {relation.email_responsable ?? "non définie"}
+                      </Text>
+                      <InfoTooltip
+                        description={
+                          "Ce courriel est issu des enregistrements effectués par l’organisme de formation au Carif-Oref)"
+                        }
+                      />{" "}
+                      <RelationEmailResponsableModalButton
+                        formation={formation}
+                        relation={relation}
+                        callback={fetchData}
+                      />
+                    </Text>
+                  </Alert>
+                )}
 
                 {((formation.parcoursup_perimetre &&
                   // formation.parcoursup_previous_session &&
@@ -699,14 +807,13 @@ export default () => {
                     // formation.affelnet_previous_session &&
                     !formation.affelnet_session)) &&
                   !formation.cle_me_remplace_par?.length && (
-                    <Alert mt={4} type={"warning"}>
+                    <Alert mt={4} type="warning">
                       La formation pourrait être dans le périmètre{" "}
                       {formation.parcoursup_perimetre ? "Parcoursup" : "Affelnet"}, mais ne possède pas de date de début
                       correspondant à la prochaine rentrée. S'il s'agit d'un problème de collecte, veuillez faire le
                       signalement auprès du Carif-Oref.
                     </Alert>
                   )}
-
                 {formation.variante_a_distance && (
                   <Alert mt={4} type={"info"}>
                     La formation est également proposée dans une{" "}
@@ -719,7 +826,6 @@ export default () => {
                     .
                   </Alert>
                 )}
-
                 {!!formation.variantes_en_presentiel?.length && (
                   <Alert mt={4} type={"info"}>
                     Cette offre 100% à distance est également proposée{" "}
@@ -746,7 +852,6 @@ export default () => {
                     )}
                   </Alert>
                 )}
-
                 {hasAccessTo(user, "page_formation/voir_status_publication_ps") &&
                   [PARCOURSUP_STATUS.PRET_POUR_INTEGRATION, PARCOURSUP_STATUS.REJETE].includes(
                     formation.parcoursup_statut
@@ -765,7 +870,6 @@ export default () => {
                         : ""}
                     </Alert>
                   )}
-
                 {hasAccessTo(user, "page_formation/voir_status_publication_af") &&
                   formation.affelnet_raison_depublication && (
                     <Alert mt={4} type={"warning"}>

@@ -3,9 +3,11 @@ const { AffelnetFormation, Formation } = require("../../../common/models");
 const { connectToMongoForTests, cleanAll } = require("../../../../tests/utils/testUtils.js");
 const { afCoverage } = require("../coverage");
 const { AFFELNET_STATUS } = require("../../../constants/status");
+const { setupBeforeAll, setupAfterAll } = require("../../../../tests/helpers/setup.js");
 
 describe(__filename, () => {
   before(async () => {
+    setupBeforeAll();
     // Connection to test collection
     await connectToMongoForTests();
     await Formation.deleteMany({});
@@ -70,6 +72,7 @@ describe(__filename, () => {
   });
 
   after(async () => {
+    setupAfterAll();
     await cleanAll();
   });
 

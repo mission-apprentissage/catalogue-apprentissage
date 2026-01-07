@@ -1,6 +1,8 @@
 const affelnetFormationSchema = require("./affelnetFormation");
 const alertSchema = require("./alert");
 const campagneStartSchema = require("./campagneStart");
+const candidatureFormationSchema = require("./candidatureFormation");
+const candidatureRelationSchema = require("./candidatureRelation");
 const consoleStatSchema = require("./consoleStat");
 const consumptionSchema = require("./consumption");
 const dualControlEtablissementSchema = require("./dualControlEtablissement");
@@ -13,6 +15,7 @@ const parcoursupFormationSchema = require("./parcoursupFormation");
 const previousSeasonFormationSchema = require("./previousSeasonFormation");
 const previousSeasonFormationStatSchema = require("./previousSeasonFormationStat");
 const reglePerimetreSchema = require("./reglePerimetre");
+const relationSchema = require("./relation");
 const roleSchema = require("./role");
 const statistiqueSchema = require("./statistique");
 const userSchema = require("./user");
@@ -36,6 +39,8 @@ const schemasMap = new Map(
     affelnetFormation: [affelnetFormationSchema, { timestamps }],
     alert: [alertSchema, { timestamps }],
     campagneStart: [campagneStartSchema, { timestamps }],
+    candidatureFormation: [candidatureFormationSchema, { timestamps }],
+    candidatureRelation: [candidatureRelationSchema, { timestamps }],
     consoleStat: [consoleStatSchema, {}],
     consumption: [consumptionSchema, {}],
     dualControlEtablissement: [dualControlEtablissementSchema, {}],
@@ -48,6 +53,7 @@ const schemasMap = new Map(
     previousSeasonFormation: [previousSeasonFormationSchema, {}],
     previousSeasonFormationStat: [previousSeasonFormationStatSchema, {}],
     reglePerimetre: [reglePerimetreSchema, { timestamps }],
+    relation: [relationSchema, { timestamps }],
     role: [roleSchema, { timestamps }],
     statistique: [statistiqueSchema, { timestamps }],
     user: [userSchema, { timestamps }],

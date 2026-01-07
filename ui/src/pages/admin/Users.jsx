@@ -195,7 +195,7 @@ export const UserLine = ({ user, roles, refreshSearch }) => {
       }
 
       if (values.newTag1 === "Autre" && values.newTag2 === "") {
-        errors.newTag2 = "Le champs est obligatoire.";
+        errors.newTag2 = "Le champ est obligatoire.";
       }
 
       if (values.newTag1 !== "Autre" && values.newFonction === "") {

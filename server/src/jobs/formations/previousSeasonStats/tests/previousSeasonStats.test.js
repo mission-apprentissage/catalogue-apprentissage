@@ -2,9 +2,11 @@ const assert = require("assert");
 // const collectPreviousSeasonStats = require("../index");
 const { connectToMongoForTests, cleanAll } = require("../../../../../tests/utils/testUtils");
 const { PreviousSeasonFormation, Formation, PreviousSeasonFormationStat } = require("../../../../common/models");
+const { setupBeforeAll, setupAfterAll } = require("../../../../../tests/helpers/setup");
 
 describe(__filename, () => {
   before(async () => {
+    setupBeforeAll();
     // Connection to test collection
     await connectToMongoForTests();
     await PreviousSeasonFormation.deleteMany({});
@@ -35,6 +37,7 @@ describe(__filename, () => {
 
   after(async () => {
     await cleanAll();
+    setupAfterAll();
   });
 
   it("should have inserted sample data", async () => {

@@ -1,9 +1,12 @@
 const assert = require("assert");
 const httpTests = require("../../utils/httpTests");
 const { Formation, User } = require("../../../src/common/models");
+const { setupBeforeAll } = require("../../helpers/setup");
+const { connectToMongoForTests } = require("../../utils/testUtils");
 
 httpTests(__filename, ({ startServer }) => {
   before(async () => {
+    setupBeforeAll();
     await Formation.deleteMany({});
     await User.deleteMany({});
   });

@@ -126,17 +126,18 @@ const run = async () => {
 
   reglesPublicationInterdite.length > 0 &&
     (await asyncForEach(reglesPublicationInterdite, async (rule) => {
-      console.log(
-        `[national] ${rule.diplome} ${rule.nom_regle_complementaire} => ${rule.statut} [${await Formation.countDocuments(
-          {
-            ...filterReglement,
-            ...filterSessionDate,
-            ...filterStatus,
+      // console.log(
+      //   `[national] ${rule.diplome} ${rule.nom_regle_complementaire ? `[${rule.nom_regle_complementaire}]` : ""} => ${rule.statut} [${await Formation.countDocuments(
+      //     {
+      //       ...filterReglement,
+      //       ...filterSessionDate,
+      //       ...filterStatus,
 
-            ...getQueryFromRule(rule, true),
-          }
-        )} formations concernées]`
-      );
+      //       ...getQueryFromRule(rule, true),
+      //     }
+      //   )} formations concernées]`
+      // );
+
       await Formation.updateMany(
         {
           ...filterReglement,
@@ -169,17 +170,18 @@ const run = async () => {
 
   reglesPublicationManuelle.length > 0 &&
     (await asyncForEach(reglesPublicationManuelle, async (rule) => {
-      console.log(
-        `[national] ${rule.diplome} ${rule.nom_regle_complementaire} => ${rule.statut} [${await Formation.countDocuments(
-          {
-            ...filterReglement,
-            ...filterSessionDate,
-            ...filterStatus,
+      // console.log(
+      //   `[national] ${rule.diplome} ${rule.nom_regle_complementaire ? `[${rule.nom_regle_complementaire}]` : ""} => ${rule.statut} [${await Formation.countDocuments(
+      //     {
+      //       ...filterReglement,
+      //       ...filterSessionDate,
+      //       ...filterStatus,
 
-            ...getQueryFromRule(rule, true),
-          }
-        )} formations concernées]`
-      );
+      //       ...getQueryFromRule(rule, true),
+      //     }
+      //   )} formations concernées]`
+      // );
+
       await Formation.updateMany(
         {
           ...filterReglement,
@@ -227,17 +229,18 @@ const run = async () => {
 
   reglesPublicationAutomatique.length > 0 &&
     (await asyncForEach(reglesPublicationAutomatique, async (rule) => {
-      console.log(
-        `[national] ${rule.diplome} ${rule.nom_regle_complementaire} => ${rule.statut} [${await Formation.countDocuments(
-          {
-            ...filterReglement,
-            ...filterSessionDate,
-            ...filterStatus,
+      // console.log(
+      //   `[national] ${rule.diplome} ${rule.nom_regle_complementaire ? `[${rule.nom_regle_complementaire}]` : ""} => ${rule.statut} [${await Formation.countDocuments(
+      //     {
+      //       ...filterReglement,
+      //       ...filterSessionDate,
+      //       ...filterStatus,
 
-            ...getQueryFromRule(rule, true),
-          }
-        )} formations concernées]`
-      );
+      //       ...getQueryFromRule(rule, true),
+      //     }
+      //   )} formations concernées]`
+      // );
+
       await Formation.updateMany(
         {
           ...filterReglement,
@@ -289,19 +292,20 @@ const run = async () => {
 
   await asyncForEach(academieRules, async (rule) => {
     await asyncForEach(Object.entries(rule.statut_academies), async ([num_academie, status]) => {
-      console.log(
-        `[${num_academie}] ${rule.diplome} ${rule.nom_regle_complementaire} => ${status} [${await Formation.countDocuments(
-          {
-            ...filterReglement,
-            ...filterSessionDate,
-            ...filterStatus,
+      // console.log(
+      //   `[${num_academie}] ${rule.diplome} ${rule.nom_regle_complementaire ? `[${rule.nom_regle_complementaire}]` : ""} => ${status} [${await Formation.countDocuments(
+      //     {
+      //       ...filterReglement,
+      //       ...filterSessionDate,
+      //       ...filterStatus,
 
-            num_academie,
+      //       num_academie,
 
-            ...getQueryFromRule(rule, true),
-          }
-        )} formations concernées]`
-      );
+      //       ...getQueryFromRule(rule, true),
+      //     }
+      //   )} formations concernées]`
+      // );
+
       await Formation.updateMany(
         {
           ...filterReglement,

@@ -2,6 +2,7 @@ const { Formation } = require("../../../common/models");
 const { AFFELNET_STATUS } = require("../../../constants/status");
 const { cursor } = require("../../../common/utils/cursor");
 const logger = require("../../../common/logger");
+const { validateUAI } = require("../../../common/utils/uaiUtils");
 
 const run = async () => {
   await cursor(
@@ -40,6 +41,7 @@ const run = async () => {
             ...(!!previousEditedUaiFormation && !formation.editedFields?.uai_formation
               ? {
                   uai_formation: previousEditedUaiFormation,
+                  uai_formation_valide: validateUAI(previousEditedUaiFormation),
                   editedFields: {
                     uai_formation: previousEditedUaiFormation,
                   },

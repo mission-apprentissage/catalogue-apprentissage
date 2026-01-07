@@ -1,9 +1,13 @@
 const assert = require("assert");
-const { Formation } = require("../../../common/models");
+const { Formation } = require("../../../common/models/index.js");
 const { connectToMongoForTests, cleanAll } = require("../../../../tests/utils/testUtils.js");
-const { afReinitStatus } = require("../reinitStatus");
-const { run, allHistoryIsEnAttenteAfterDate, lastHistoryIsEnAttenteBeforeDate } = require("../reinitStatus/controller");
-const { AFFELNET_STATUS } = require("../../../constants/status");
+const { afReinitStatus } = require("../reinitStatus/index.js");
+const {
+  run,
+  allHistoryIsEnAttenteAfterDate,
+  lastHistoryIsEnAttenteBeforeDate,
+} = require("../reinitStatus/controller.js");
+const { AFFELNET_STATUS } = require("../../../constants/status.js");
 
 // TODO : Tests en échec car updated_at est géré automatiquement par timestamps: true sur le schéma updateHistory. (pas moyen de régler ça non complétion automatique)
 
@@ -14,9 +18,12 @@ describe(__filename, () => {
     affelnet_statut: AFFELNET_STATUS.PRET_POUR_INTEGRATION,
   };
 
-  beforeEach(async () => {
+  before(async () => {
     // Connection to test collection
     await connectToMongoForTests();
+  });
+
+  beforeEach(async () => {
     await Formation.deleteMany({});
 
     // allHistoryIsEnAttenteAfterDate YES

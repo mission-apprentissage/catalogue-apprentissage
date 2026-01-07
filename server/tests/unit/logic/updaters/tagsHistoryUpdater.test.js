@@ -4,6 +4,7 @@ const { connectToMongoForTests, cleanAll } = require("../../../../tests/utils/te
 const { asyncForEach } = require("../../../../src/common/utils/asyncUtils");
 const { updateManyTagsHistory } = require("../../../../src/logic/updaters/tagsHistoryUpdater.js");
 const { PARCOURSUP_STATUS, AFFELNET_STATUS } = require("../../../../src/constants/status");
+const { setupBeforeAll } = require("../../../helpers/setup.js");
 
 const sampleData = [
   {
@@ -66,9 +67,13 @@ const sampleData = [
 
 describe(__filename, () => {
   describe("updateManyTagsHistory", () => {
+    before(async () => {
+      setupBeforeAll();
+      await connectToMongoForTests();
+    });
+
     beforeEach(async () => {
       // Connection to test collection
-      await connectToMongoForTests();
       await Formation.deleteMany({});
 
       // insert sample data in DB

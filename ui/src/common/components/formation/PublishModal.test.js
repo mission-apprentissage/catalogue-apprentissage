@@ -154,6 +154,8 @@ it("should compute submit body when UNpublish affelnet", () => {
     _id: "id",
     affelnet_statut: AFFELNET_STATUS.PUBLIE,
     parcoursup_statut: PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT,
+    parcoursup_perimetre: false,
+    affelnet_perimetre: true,
     affelnet_infos_offre: "",
     affelnet_raison_depublication: "",
     parcoursup_raison_depublication: "",
@@ -171,6 +173,7 @@ it("should compute submit body when UNpublish affelnet", () => {
     affelnet: "false",
     parcoursup: "false",
     affelnet_raison_depublication: "not to be published",
+    affelnet_raison_depublication_statut: AFFELNET_STATUS.NON_PUBLIE,
     date: new Date("2021-10-14"),
   });
 
@@ -184,11 +187,13 @@ it("should compute submit body when UNpublish affelnet", () => {
   });
 });
 
-it("should do nothing when UNpublish affelnet for a status already not published", () => {
+it("should compute submitBody when UNpublish affelnet for a status already not published", () => {
   const formation = {
     _id: "id",
     affelnet_statut: AFFELNET_STATUS.NON_PUBLIE,
     parcoursup_statut: PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT,
+    parcoursup_perimetre: false,
+    affelnet_perimetre: true,
     affelnet_infos_offre: "",
     affelnet_raison_depublication: "",
     parcoursup_raison_depublication: "",
@@ -205,9 +210,10 @@ it("should do nothing when UNpublish affelnet for a status already not published
     formation,
     affelnet: "false",
     affelnet_raison_depublication: "not to be published",
+    affelnet_raison_depublication_statut: AFFELNET_STATUS.NON_PUBLIE,
   });
 
-  expect(result).toEqual({
+  expect(result).not.toEqual({
     body: {},
   });
 });
@@ -285,6 +291,8 @@ it("should compute submit body when UNpublish parcoursup", () => {
     _id: "id",
     affelnet_statut: AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT,
     parcoursup_statut: PARCOURSUP_STATUS.PUBLIE,
+    parcoursup_perimetre: true,
+    affelnet_perimetre: false,
     affelnet_infos_offre: "",
     affelnet_raison_depublication: "",
     parcoursup_raison_depublication: "",
@@ -301,6 +309,7 @@ it("should compute submit body when UNpublish parcoursup", () => {
     formation,
     parcoursup: "false",
     parcoursup_raison_depublication: "not to be published",
+    parcoursup_raison_depublication_statut: PARCOURSUP_STATUS.NON_PUBLIE,
     date: new Date("2021-10-14"),
   });
 
@@ -396,6 +405,8 @@ it("should render the publish modal", () => {
     _id: "id",
     affelnet_statut: AFFELNET_STATUS.A_PUBLIER,
     parcoursup_statut: PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT,
+    parcoursup_perimetre: false,
+    affelnet_perimetre: true,
     affelnet_infos_offre: "",
     affelnet_raison_depublication: "",
     parcoursup_raison_depublication: "",
@@ -411,9 +422,6 @@ it("should render the publish modal", () => {
   const { getByTestId } = render(
     <PublishModal isOpen={true} onClose={onClose} onFormationUpdate={onFormationUpdate} formation={formation} />
   );
-
-  const psupForm = getByTestId("parcoursup-form");
-  expect(psupForm).toHaveAttribute("aria-disabled", "true");
 
   const afForm = getByTestId("affelnet-form");
   expect(afForm).toHaveAttribute("aria-disabled", "false");
@@ -431,6 +439,8 @@ it("should toggle the affelnet forms", async () => {
     _id: "id",
     affelnet_statut: AFFELNET_STATUS.A_PUBLIER,
     parcoursup_statut: PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT,
+    parcoursup_perimetre: false,
+    affelnet_perimetre: true,
     affelnet_infos_offre: "",
     affelnet_raison_depublication: "",
     parcoursup_raison_depublication: "",
@@ -477,6 +487,55 @@ it("should toggle the parcoursup forms", async () => {
     _id: "id",
     affelnet_statut: AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT,
     parcoursup_statut: PARCOURSUP_STATUS.A_PUBLIER,
+    affelnet_perimetre: false,
+    parcoursup_perimetre: true,
+    affelnet_infos_offre: "",
+    affelnet_raison_depublication: "",
+    parcoursup_raison_depublication: "",
+    num_academie: 10,
+    uai_formation: "abcdefg0",
+    uai_formation_valide: true,
+    etablissement_gestionnaire_uai: "test_uai_gestionnaire",
+    etablissement_formateur_uai: "test_uai_formateur",
+    cfd: "test_cfd",
+    intitule_long: "PATISSIER CAP",
+  };
+
+  const { getByTestId } = render(
+    <PublishModal isOpen={true} onClose={onClose} onFormationUpdate={onFormationUpdate} formation={formation} />
+  );
+
+  const psPublishForm = getByTestId("ps-publish-form");
+  const psUnpublishForm = getByTestId("ps-unpublish-form");
+
+  expect(psPublishForm).not.toBeVisible();
+  expect(psUnpublishForm).not.toBeVisible();
+
+  const radioYes = getByTestId("ps-radio-yes");
+
+  await userEvent.click(radioYes);
+
+  expect(psPublishForm).toBeVisible();
+  expect(psUnpublishForm).not.toBeVisible();
+
+  const radioNo = getByTestId("ps-radio-no");
+
+  await userEvent.click(radioNo);
+
+  expect(psUnpublishForm).toBeVisible();
+  expect(psPublishForm).not.toBeVisible();
+});
+
+it("should toggle the affelnet forms", async () => {
+  const onClose = jest.fn();
+  const onFormationUpdate = jest.fn();
+
+  const formation = {
+    _id: "id",
+    affelnet_statut: AFFELNET_STATUS.A_PUBLIER,
+    parcoursup_statut: PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT,
+    affelnet_perimetre: true,
+    parcoursup_perimetre: false,
     affelnet_infos_offre: "",
     affelnet_raison_depublication: "",
     parcoursup_raison_depublication: "",
@@ -495,31 +554,23 @@ it("should toggle the parcoursup forms", async () => {
 
   const afPublishForm = getByTestId("af-publish-form");
   const afUnpublishForm = getByTestId("af-unpublish-form");
-  const psPublishForm = getByTestId("ps-publish-form");
-  const psUnpublishForm = getByTestId("ps-unpublish-form");
 
   expect(afPublishForm).not.toBeVisible();
   expect(afUnpublishForm).not.toBeVisible();
-  expect(psPublishForm).not.toBeVisible();
-  expect(psUnpublishForm).not.toBeVisible();
 
-  const radioYes = getByTestId("ps-radio-yes");
+  const radioYes = getByTestId("af-radio-yes");
 
   await userEvent.click(radioYes);
 
-  expect(afPublishForm).not.toBeVisible();
+  expect(afPublishForm).toBeVisible();
   expect(afUnpublishForm).not.toBeVisible();
-  expect(psPublishForm).toBeVisible();
-  expect(psUnpublishForm).not.toBeVisible();
 
-  const radioNo = getByTestId("ps-radio-no");
+  const radioNo = getByTestId("af-radio-no");
 
   await userEvent.click(radioNo);
 
-  expect(psUnpublishForm).toBeVisible();
-  expect(psPublishForm).not.toBeVisible();
   expect(afPublishForm).not.toBeVisible();
-  expect(afUnpublishForm).not.toBeVisible();
+  expect(afUnpublishForm).toBeVisible();
 });
 
 it("should submit", async () => {
@@ -534,6 +585,8 @@ it("should submit", async () => {
     _id: "id",
     affelnet_statut: AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT,
     parcoursup_statut: PARCOURSUP_STATUS.A_PUBLIER,
+    parcoursup_perimetre: true,
+    affelnet_perimetre: false,
     affelnet_infos_offre: "",
     affelnet_raison_depublication: "",
     parcoursup_raison_depublication: "",
@@ -575,6 +628,8 @@ it("should submit but no update", async () => {
     _id: "id",
     affelnet_statut: AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT,
     parcoursup_statut: PARCOURSUP_STATUS.A_PUBLIER,
+    parcoursup_perimetre: true,
+    affelnet_perimetre: false,
     affelnet_infos_offre: "",
     affelnet_raison_depublication: "",
     parcoursup_raison_depublication: "",

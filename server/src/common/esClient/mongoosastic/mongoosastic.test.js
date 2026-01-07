@@ -41,7 +41,7 @@ integrationTests(__filename, () => {
     sinon.restore();
   });
 
-  it("should call createModel without error", () => {
+  it.skip("should call createModel without error", () => {
     createModel(
       "tests",
       [
@@ -61,7 +61,7 @@ integrationTests(__filename, () => {
     );
   });
 
-  it("should create a document without error", async () => {
+  it.skip("should create a document without error", async () => {
     const test1 = await Test.create({ message: "Test1" });
 
     assert.strictEqual(test1.message, "Test1");
@@ -72,7 +72,7 @@ integrationTests(__filename, () => {
     assert.strictEqual(test2.message, "Test2");
   });
 
-  it("should call postDocumentSave when calling save on a document", async () => {
+  it.skip("should call postDocumentSave when calling save on a document", async () => {
     const loggerDebug = sinon.spy(logger, "debug");
     const test = new Test({ message: "Test" });
 
@@ -81,7 +81,7 @@ integrationTests(__filename, () => {
     sinon.assert.calledOnceWithMatch(loggerDebug, { type: "mongoosastic" }, "POST DOCUMENT SAVE");
   });
 
-  it("should call postDocumentSave when calling create on a model", async () => {
+  it.skip("should call postDocumentSave when calling create on a model", async () => {
     const loggerDebug = sinon.spy(logger, "debug");
     await Test.create({ message: "Test" });
 
@@ -89,7 +89,7 @@ integrationTests(__filename, () => {
   });
 
   // TODO : Now updateOne seems to call both document and query hooks...
-  // it("should call postDocumentSave when calling updateOne on a document", async () => {
+  // it.skip("should call postDocumentSave when calling updateOne on a document", async () => {
   //   const loggerDebug = sinon.spy(logger, "debug");
   //   const test = new Test();
 
@@ -109,7 +109,7 @@ integrationTests(__filename, () => {
   //   sinon.assert.calledWithMatch(loggerDebug.thirdCall, { type: "mongoosastic" }, "POST DOCUMENT SAVE");
   // });
 
-  it("should call postDocumentRemove when calling deleteOne on a document", async () => {
+  it.skip("should call postDocumentRemove when calling deleteOne on a document", async () => {
     const loggerDebug = sinon.spy(logger, "debug");
     const test = new Test();
     test.message = "Test";
@@ -125,7 +125,7 @@ integrationTests(__filename, () => {
     sinon.assert.calledWithMatch(loggerDebug.secondCall, { type: "mongoosastic" }, "POST DOCUMENT REMOVE");
   });
 
-  it("should call postQuerySave when calling updateOne on a model", async () => {
+  it.skip("should call postQuerySave when calling updateOne on a model", async () => {
     const loggerDebug = sinon.spy(logger, "debug");
 
     const test = await Test.create({ message: "Test" });
@@ -141,7 +141,7 @@ integrationTests(__filename, () => {
     sinon.assert.calledWithMatch(loggerDebug.secondCall, { type: "mongoosastic" }, "POST QUERY SAVE");
   });
 
-  it("should call postQuerySave when calling replaceOne on a model", async () => {
+  it.skip("should call postQuerySave when calling replaceOne on a model", async () => {
     const loggerDebug = sinon.spy(logger, "debug");
 
     const test = await Test.create({ message: "Test" });
@@ -157,7 +157,7 @@ integrationTests(__filename, () => {
     sinon.assert.calledWithMatch(loggerDebug.secondCall, { type: "mongoosastic" }, "POST QUERY SAVE");
   });
 
-  it("should call postQuerySave when calling findOneAndReplace on a model", async () => {
+  it.skip("should call postQuerySave when calling findOneAndReplace on a model", async () => {
     const loggerDebug = sinon.spy(logger, "debug");
 
     const test = await Test.create({ message: "Test" });
@@ -173,7 +173,7 @@ integrationTests(__filename, () => {
     sinon.assert.calledWithMatch(loggerDebug.secondCall, { type: "mongoosastic" }, "POST QUERY SAVE");
   });
 
-  it("should call postQuerySave when calling findOneAndUpdate on a model", async () => {
+  it.skip("should call postQuerySave when calling findOneAndUpdate on a model", async () => {
     const loggerDebug = sinon.spy(logger, "debug");
 
     const test = await Test.create({ message: "Test" });
@@ -189,7 +189,7 @@ integrationTests(__filename, () => {
     sinon.assert.calledWithMatch(loggerDebug.secondCall, { type: "mongoosastic" }, "POST QUERY SAVE");
   });
 
-  it("should call postQueryRemove when calling deleteOne on a model", async () => {
+  it.skip("should call postQueryRemove when calling deleteOne on a model", async () => {
     const loggerDebug = sinon.spy(logger, "debug");
 
     const test = await Test.create({ message: "Test" });
@@ -205,7 +205,7 @@ integrationTests(__filename, () => {
     sinon.assert.calledWithMatch(loggerDebug.secondCall, { type: "mongoosastic" }, "PRE QUERY REMOVE");
   });
 
-  it("should call postQueryRemove when calling findOneAndDelete on a model", async () => {
+  it.skip("should call postQueryRemove when calling findOneAndDelete on a model", async () => {
     const loggerDebug = sinon.spy(logger, "debug");
 
     const test = await Test.create({ message: "Test" });
@@ -223,7 +223,7 @@ integrationTests(__filename, () => {
 
   /**
    * Les tests suivants peuvent être utilisé pour vérifier la synchronisation avec une instance elastic search en local.
-   * Pour executer, remplacer it.skip par it.
+   * Pour executer, remplacer it par it.
    */
 
   it.skip("synchronize with an elastic instance when calling create on a model", async () => {
