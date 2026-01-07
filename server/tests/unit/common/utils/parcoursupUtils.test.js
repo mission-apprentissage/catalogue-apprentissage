@@ -50,9 +50,9 @@ describe(__filename, () => {
     it("should find a descriptor for each 400 errors", () => {
       distinctErrors.forEach((parcoursup_error) => {
         const descriptor = getParcoursupError({ parcoursup_error });
-        if (!descriptor) {
-          console.error(parcoursup_error);
-        }
+        // if (!descriptor) {
+        //   console.error(parcoursup_error);
+        // }
 
         if (parcoursup_error.match(/400/)) {
           assert.strictEqual(!!descriptor, true);

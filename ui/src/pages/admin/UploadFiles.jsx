@@ -1,12 +1,13 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import Layout from "../layout/Layout";
-import { Box, Button, Container, Input, ListItem, Select, Text, UnorderedList } from "@chakra-ui/react";
+import { Box, Button, Container, Input, Link, ListItem, Select, Text, UnorderedList } from "@chakra-ui/react";
 import { useDropzone } from "react-dropzone";
 import { _postFile } from "../../common/httpClient";
 import { Breadcrumb } from "../../common/components/Breadcrumb";
 import useAuth from "../../common/hooks/useAuth";
 import { setTitle } from "../../common/utils/pageUtils";
 import { hasAccessTo } from "../../common/utils/rolesUtils";
+import { ExternalLinkLine } from "../../theme/components/icons";
 
 const CATALOGUE_API = `${process.env.REACT_APP_BASE_URL}/api`;
 
@@ -32,6 +33,25 @@ const DOCUMENTS = [
     filename: "CodeDiplome_RNCP_latest_kit.csv",
     label: "Kit code diplome - rncp",
     acl: "page_upload/kit-apprentissage",
+    instruction: (
+      <>
+        <ul style={{ marginLeft: "24px" }}>
+          <li>
+            Le fichier Excel VF_Kit apprentissage et RNCP v.x.x est communiqué périodiquement par email par Inès Jacqot
+            (France Compétences)
+          </li>
+          <li>
+            Onglet CodeDiplome_RNCPvx.x : renommer les colonnes Code diplôme =&gt; Code_Diplome ; RNCP =&gt; Code_RNCP
+          </li>
+          <li>Exporter cet onglet en csv via LibreOffice (séparateur point-virgule)</li>
+          <li>Upload à faire sur les catalogues (public, ME, recette + prod)</li>
+          <li>
+            Sur les tables de correspondances, faire une PR pour remplacer le fichier
+            server/src/jobs/rncpImporter/assets/CodeDiplome_RNCP_latest_kit.csv
+          </li>
+        </ul>
+      </>
+    ),
   },
   {
     filename: "affelnet-import.xlsx",
@@ -39,9 +59,69 @@ const DOCUMENTS = [
     acl: "page_upload/affelnet-formations",
   },
   {
+    filename: "export-candidature-relations.csv",
+    label: "Export des relations depuis le site des Candidatures Affelnet",
+    acl: "page_upload/candidature-relations",
+    instruction: (
+      <>
+        <ul style={{ marginLeft: "24px" }}>
+          <li>
+            Depuis le site{" "}
+            <Link href="https://candidats-affelnet.apprentissage.education.fr" isExternal textDecoration={"underline"}>
+              Transmission des listes de candidats &nbsp;
+              <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} />
+            </Link>
+            , un administrateur doit utiliser la fonction <Text as="b">exporter par relation (csv)</Text>, sans filtrage
+            par academie.
+          </li>
+          <li>Le fichier doit ensuite être déposer ici.</li>
+        </ul>
+      </>
+    ),
+  },
+
+  // {
+  //   filename: "export-candidature-formations.csv",
+  //   label: "Export des formations depuis le site des Candidatures Affelnet",
+  //   acl: "page_upload/candidature-formations",
+  //   instruction: (
+  //     <>
+  //       <ul style={{ marginLeft: "24px" }}>
+  //         <li>
+  //           Depuis le site{" "}
+  //           <Link href="https://candidats-affelnet.apprentissage.education.fr" isExternal textDecoration={"underline"}>
+  //             Transmission des listes de candidats &nbsp;
+  //             <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} />
+  //           </Link>
+  //           , un administrateur doit utiliser la fonction <Text as="b">exporter par formation (csv)</Text>, sans
+  //           filtrage par academie.
+  //         </li>
+  //         <li>Le fichier doit ensuite être déposer ici.</li>
+  //       </ul>
+  //     </>
+  //   ),
+  // },
+  {
     filename: "mefs-parcoursup.csv",
     label: "Liste de MEFs fiabilisés sur Parcoursup",
     acl: "page_upload/parcoursup-mefs",
+    instruction: (
+      <>
+        <ul style={{ marginLeft: "24px" }}>
+          <li>
+            Extraction de la table bcn_n_mef réalisée par la Moss, pour identifier les MEF enregistrés dans Parcoursup.
+          </li>
+          <li>
+            Permet au catalogue de contrôler que le MEF transmis par RCO existe dans le référentiel Parcoursup, ou,
+            lorsqu’il y a plusieurs MEF, de sélectionner le MEF correspondant au périmètre Parcoursup.
+          </li>
+          <li>
+            Format de fichier à déposer : fichier .csv, exporté de préférence via Open Office, paramètres UTF-8,
+            séparateur point-virgule, toutes autres options décochées.
+          </li>
+        </ul>
+      </>
+    ),
   },
 ];
 
@@ -164,48 +244,11 @@ export default () => {
               </Box>
             )}
 
-            {filename === "CodeDiplome_RNCP_latest_kit.csv" && (
+            {DOCUMENTS.find((doc) => doc.filename === filename && !!doc.instruction) && (
               <Box>
                 Mode d’emploi :
                 <br />
-                <ul style={{ marginLeft: "24px" }}>
-                  <li>
-                    Le fichier Excel VF_Kit apprentissage et RNCP v.x.x est communiqué périodiquement par email par Inès
-                    Jacqot (France Compétences)
-                  </li>
-                  <li>
-                    Onglet CodeDiplome_RNCPvx.x : renommer les colonnes Code diplôme =&gt; Code_Diplome ; RNCP =&gt;
-                    Code_RNCP
-                  </li>
-                  <li>Exporter cet onglet en csv via LibreOffice (séparateur point-virgule)</li>
-                  <li>Upload à faire sur les catalogues (public, ME, recette + prod)</li>
-                  <li>
-                    Sur les tables de correspondances, faire une PR pour remplacer le fichier
-                    server/src/jobs/rncpImporter/assets/CodeDiplome_RNCP_latest_kit.csv
-                  </li>
-                </ul>
-                <br />
-              </Box>
-            )}
-
-            {filename === "mefs-parcoursup.csv" && (
-              <Box>
-                Mode d’emploi :
-                <br />
-                <ul style={{ marginLeft: "24px" }}>
-                  <li>
-                    Extraction de la table bcn_n_mef réalisée par la Moss, pour identifier les MEF enregistrés dans
-                    Parcoursup.
-                  </li>
-                  <li>
-                    Permet au catalogue de contrôler que le MEF transmis par RCO existe dans le référentiel Parcoursup,
-                    ou, lorsqu’il y a plusieurs MEF, de sélectionner le MEF correspondant au périmètre Parcoursup.
-                  </li>
-                  <li>
-                    Format de fichier à déposer : fichier .csv, exporté de préférence via Open Office, paramètres UTF-8,
-                    séparateur point-virgule, toutes autres options décochées.
-                  </li>
-                </ul>
+                {DOCUMENTS.find((doc) => doc.filename === filename)?.instruction}
                 <br />
               </Box>
             )}

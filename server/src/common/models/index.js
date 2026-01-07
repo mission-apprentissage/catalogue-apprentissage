@@ -61,6 +61,8 @@ module.exports = {
   }),
   Log: createModel("log", schemas.get("log")),
   AffelnetFormation: createModel("affelnetformation", schemas.get("affelnetFormation")),
+  CandidatureRelation: createModel("candidaturerelation", schemas.get("candidatureRelation")),
+  CandidatureFormation: createModel("candidatureformation", schemas.get("candidatureFormation")),
   Etablissement: createModel("etablissement", schemas.get("etablissement"), {
     elastic: {
       index: "etablissements",
@@ -85,4 +87,5 @@ module.exports = {
   PreviousSeasonFormation: createModel("previousSeasonFormation", schemas.get("previousSeasonFormation")),
   PreviousSeasonFormationStat: createModel("previousSeasonFormationStat", schemas.get("previousSeasonFormationStat")),
   CampagneStart: createModel("campagneStart", schemas.get("campagneStart")),
+  Relation: createModel("relation", schemas.get("relation")),
 };

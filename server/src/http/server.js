@@ -18,6 +18,7 @@ const permissionsMiddleware = require("./middlewares/permissionsMiddleware");
 const packageJson = require("../../package.json");
 const formation = require("./routes/formation");
 const formationSecure = require("./routes/formationSecure");
+const relation = require("./routes/relation");
 const report = require("./routes/report");
 const auth = require("./routes/auth");
 const authSecure = require("./routes/authSecure");
@@ -122,7 +123,7 @@ module.exports = async (components, verbose = true) => {
 
   const apiLimiter = rateLimit({
     windowMs: 1000, // 1 second
-    max: 25, // 25 calls per IP per second
+    max: 50, // 50 calls per IP per second
   });
 
   const apiPerimetreLimiter = rateLimit({
@@ -137,7 +138,7 @@ module.exports = async (components, verbose = true) => {
 
   const authLimiter = rateLimit({
     windowMs: 60 * 1000, // 1 minute
-    max: 20, // Limit each IP to 10 calls per minute
+    max: 30, // Limit each IP to 30 calls per minute
     message: "Too many calls from this IP, please try again after one minute",
   });
 
@@ -185,6 +186,7 @@ module.exports = async (components, verbose = true) => {
     ["/entity", apiLimiter, anyAuthMiddleware, etablissementSecure(components)],
     ["/upload", apiLimiter, permissionsMiddleware({ isAdmin: true }, ["page_upload"]), upload()],
     ["/entity", apiLimiter, anyAuthMiddleware, reglePerimetreSecure()],
+    ["/entity", apiLimiter, anyAuthMiddleware, relation()],
 
     ["/constants", apiLimiter, anyAuthMiddleware, dates()],
 

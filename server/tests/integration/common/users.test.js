@@ -1,9 +1,13 @@
 const assert = require("assert");
 const integrationTests = require("../../utils/integrationTests");
 const users = require("../../../src/common/components/users");
-const { User } = require("../../../src/common/models");
+const { setupBeforeAll } = require("../../helpers/setup");
 
 integrationTests(__filename, () => {
+  before(async () => {
+    setupBeforeAll();
+  });
+
   it("Permet de créer un utilisateur", async () => {
     const { createUser, getUser } = await users();
 

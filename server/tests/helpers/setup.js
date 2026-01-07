@@ -9,7 +9,7 @@ const setupAfterEach = () => {
   // console.debug(`${__filename} - afterEach`);
 };
 
-const setupBefore = () => {
+const setupBeforeAll = () => {
   // console.debug(`${__filename} - before`);
 
   Formation.pauseAllMongoosaticHooks();
@@ -19,7 +19,7 @@ const setupBefore = () => {
   showProgressBar(false);
 };
 
-const setupAfter = () => {
+const setupAfterAll = () => {
   // console.debug(`${__filename} - after`);
 
   Formation.startAllMongoosaticHooks();
@@ -32,6 +32,6 @@ const setupAfter = () => {
 module.exports = {
   setupBeforeEach,
   setupAfterEach,
-  setupBefore,
-  setupAfter,
+  setupBeforeAll,
+  setupAfterAll,
 };

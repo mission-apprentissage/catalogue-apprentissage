@@ -6,7 +6,11 @@ const tryCatch = require("../middlewares/tryCatchMiddleware");
 const csvToJson = require("convert-csv-to-json");
 const path = require("path");
 const logger = require("../../common/logger");
-const { afImportFormations } = require("../../jobs/affelnet/import");
+const {
+  afImportFormations,
+  afImportCandidatureRelations,
+  afImportCandidatureFormations,
+} = require("../../jobs/affelnet/import");
 const { afCoverage } = require("../../jobs/affelnet/coverage");
 const { rebuildEsIndex } = require("../../jobs/esIndex/esIndex");
 const { hasAccessTo } = require("../../common/utils/rolesUtils");
@@ -36,6 +40,20 @@ const DOCUMENTS = new Map([
       acl: "page_upload/parcoursup-mefs",
     },
   ],
+  [
+    "candidature-relations",
+    {
+      filename: "export-candidature-relations.csv",
+      acl: "page_upload/candidature-relations",
+    },
+  ],
+  // [
+  //   "candidature-formations",
+  //   {
+  //     filename: "export-candidature-formations.csv",
+  //     acl: "page_upload/candidature-formations",
+  //   },
+  // ],
 ]);
 
 /**
@@ -157,12 +175,41 @@ module.exports = () => {
 
             break;
           }
+
+          case DOCUMENTS.get("candidature-relations").filename: {
+            if (!hasAccessTo(req.user, DOCUMENTS.get("candidature-relations").acl)) {
+              return res.status(403).json({
+                error: `Vous ne disposez pas des droits nécessaires pour déposer ce fichier`,
+              });
+            }
+
+            callback = async () => {
+              await afImportCandidatureRelations();
+            };
+
+            break;
+          }
+
+          // case DOCUMENTS.get("candidature-formations").filename: {
+          //   if (!hasAccessTo(req.user, DOCUMENTS.get("candidature-formations").acl)) {
+          //     return res.status(403).json({
+          //       error: `Vous ne disposez pas des droits nécessaires pour déposer ce fichier`,
+          //     });
+          //   }
+
+          //   callback = async () => {
+          //     await afImportCandidatureFormations();
+          //   };
+
+          //   break;
+          // }
+
           default:
             return res.status(400).json({ error: `Le type de fichier est invalide` });
         }
 
         // success, move the file
-        await move(src, dest, { overwrite: true }, async (error) => {
+        move(src, dest, { overwrite: true }, async (error) => {
           if (error) return logger.error({ type: "http" }, error);
 
           // launch cb if any

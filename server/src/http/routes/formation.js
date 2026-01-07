@@ -2,7 +2,7 @@ const express = require("express");
 const Joi = require("joi");
 const { oleoduc, compose, transformIntoJSON, transformIntoCSV } = require("oleoduc");
 const tryCatch = require("../middlewares/tryCatchMiddleware");
-const { Formation, CampagneStart } = require("../../common/models");
+const { Formation, CandidatureRelation } = require("../../common/models");
 const { sendJsonStream, sendCsvStream } = require("../../common/utils/httpUtils");
 const { sanitize, SAFE_FIND_OPERATORS } = require("../../common/utils/sanitizeUtils");
 const { paginate } = require("../../common/utils/mongooseUtils");
@@ -70,35 +70,30 @@ module.exports = () => {
       Object.assign(mQuery, defaultFilter);
     }
 
-    const allData = await Formation.paginate(mQuery, {
-      page,
-      limit: Math.min(limit, 1000),
-      lean: true,
-      select,
-      sort,
-    });
-    return res.json({
-      formations: allData.docs,
-      pagination: {
-        page: allData.page,
-        resultats_par_page: Math.min(limit, 1000),
-        nombre_de_page: allData.pages,
-        total: allData.total,
-      },
-    });
+    const { find, pagination } = await paginate(Formation, query, { page, limit: Math.min(limit, 1000), select, sort });
+    const stream = oleoduc(
+      find.cursor(),
+      transformData(async (formation) => {
+        formation.candidature_relation = await CandidatureRelation.findOne({
+          siret_responsable: formation.etablissement_gestionnaire_siret,
+          siret_formateur: formation.etablissement_formateur_siret,
+        }).lean();
 
-    // const { find, pagination } = await paginate(Formation, query, { page, limit, select, sort });
-    // const stream = oleoduc(
-    //   find.cursor(),
-    //   transformIntoJSON({
-    //     arrayWrapper: {
-    //       pagination,
-    //     },
-    //     arrayPropertyName: "formations",
-    //   })
-    // );
+        // formation.candidature_formation = await CandidatureFormation.findOne({
+        //   affelnet_id: formation.affelnet_id,
+        // }).lean();
 
-    // return sendJsonStream(stream, res);
+        return formation;
+      }),
+      transformIntoJSON({
+        arrayWrapper: {
+          pagination,
+        },
+        arrayPropertyName: "formations",
+      })
+    );
+
+    return sendJsonStream(stream, res);
   });
 
   const postFormations = tryCatch(async (req, res) => {
@@ -141,6 +136,18 @@ module.exports = () => {
     const { find, pagination } = await paginate(Formation, query, { page, limit, select, sort });
     const stream = oleoduc(
       find.cursor(),
+      transformData(async (formation) => {
+        formation.candidature_relation = await CandidatureRelation.findOne({
+          siret_responsable: formation.etablissement_gestionnaire_siret,
+          siret_formateur: formation.etablissement_formateur_siret,
+        }).lean();
+
+        // formation.candidature_formation = await CandidatureFormation.findOne({
+        //   affelnet_id: formation.affelnet_id,
+        // }).lean();
+
+        return formation;
+      }),
       transformIntoJSON({
         arrayWrapper: {
           pagination,
@@ -209,9 +216,18 @@ module.exports = () => {
             updates_history: 0,
             __v: 0,
           };
-    const retrievedData = await Formation.findOne(query, select).lean();
-    if (retrievedData) {
-      return res.json(retrievedData);
+    const formation = await Formation.findOne(query, select).lean();
+    if (formation) {
+      formation.candidature_relation = await CandidatureRelation.findOne({
+        siret_responsable: formation.etablissement_gestionnaire_siret,
+        siret_formateur: formation.etablissement_formateur_siret,
+      }).lean();
+
+      // formation.candidature_formation = await CandidatureFormation.findOne({
+      //   affelnet_id: formation.affelnet_id,
+      // }).lean();
+
+      return res.json(formation);
     }
     return res.status(404).send({ message: `Item doesn't exist` });
   });
@@ -230,13 +246,23 @@ module.exports = () => {
             updates_history: 0,
             __v: 0,
           };
-    const retrievedDataByCleME = await Formation.findOne({ cle_ministere_educatif: itemId }, select).lean();
-    if (retrievedDataByCleME) {
-      return res.json(retrievedDataByCleME);
+    let formation = await Formation.findOne({ cle_ministere_educatif: itemId }, select).lean();
+
+    if (!formation) {
+      formation = await Formation.findById(itemId, select).lean();
     }
-    const retrievedDataById = await Formation.findById(itemId, select).lean();
-    if (retrievedDataById) {
-      return res.json(retrievedDataById);
+
+    if (formation) {
+      formation.candidature_relation = await CandidatureRelation.findOne({
+        siret_responsable: formation.etablissement_gestionnaire_siret,
+        siret_formateur: formation.etablissement_formateur_siret,
+      }).lean();
+
+      // formation.candidature_formation = await CandidatureFormation.findOne({
+      //   affelnet_id: formation.affelnet_id,
+      // }).lean();
+
+      return res.json(formation);
     }
 
     return res.status(404).send({ message: `Item ${itemId} doesn't exist` });

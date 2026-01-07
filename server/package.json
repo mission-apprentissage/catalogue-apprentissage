@@ -9,8 +9,8 @@
   "scripts": {
     "start": "nodemon --ignore tests/ src/index.js",
     "debug": "nodemon --inspect=0.0.0.0 --signal SIGINT --ignore tests/ src/index.js",
-    "test": "mocha --file tests/globalSetup.js --recursive --exit --timeout 60000 tests/ src/**/*.test.js",
-    "test:coverage": "nyc --reporter=lcov mocha --file tests/globalSetup.js --recursive --exit --timeout 60000 tests/ src/**/*.test.js",
+    "test": "mocha",
+    "test:coverage": "nyc --reporter=lcov mocha --watch=false",
     "lint": "prettier --write 'src/**/*.js' 'tests/**/*.js'",
     "docker:start": "docker compose up -d --build --force-recreate",
     "docker:start-ci": "docker compose up -d mongodb",
@@ -19,9 +19,6 @@
     "docker:clean": "docker compose kill && docker system prune --force --volumes",
     "jobs": "node src/jobs/index.js",
     "startCampagne": "node src/jobs/startCampagne.js",
-    "psup:prepare": "standalone=true node src/jobs/parcoursup/prepare.js",
-    "psup:import": "standalone=true node src/jobs/parcoursup/importer.js",
-    "psup:report": "standalone=true node src/jobs/parcoursup/reportRejected.js",
     "psup:export": "standalone=true node src/jobs/parcoursup/export/index.js",
     "uai:check": "standalone=true node src/jobs/checkUai/index.js",
     "compute:distance": "standalone=true node src/jobs/oneshot/computeDistance/index.js",
@@ -56,7 +53,7 @@
     "compression": "1.7.4",
     "config": "3.3.12",
     "connect-mongo": "6.0.0",
-    "convert-csv-to-json": "2.49.0",
+    "convert-csv-to-json": "3.10.0",
     "cors": "2.8.5",
     "csv-parse": "5.5.6",
     "deep-object-diff": "^1.1.9",
@@ -71,7 +68,7 @@
     "generate-password": "^1.7.1",
     "joi": "17.13.3",
     "json-schema-to-typescript": "15.0.0",
-    "jsonwebtoken": "9.0.2",
+    "jsonwebtoken": "9.0.3",
     "lodash": "4.17.21",
     "luxon": "3.5.0",
     "migrate-mongo": "11.0.0",
@@ -102,6 +99,8 @@
     "xlsx": "0.18.5"
   },
   "devDependencies": {
+    "@eslint/eslintrc": "3.3.3",
+    "@eslint/js": "9.39.2",
     "axiosist": "1.2.0",
     "chai": "6.2.0",
     "eslint": "9.34.0",
@@ -110,15 +109,38 @@
     "eslint-plugin-node": "11.1.0",
     "eslint-plugin-prettier": "5.5.4",
     "faker": "5.5.3",
+    "globals": "17.0.0",
     "husky": "8.0.3",
     "lint-staged": "^14.0.1",
-    "mocha": "10.2.0",
+    "mocha": "11.7.5",
     "nodemon": "2.0.15",
     "nyc": "17.1.0",
     "prettier": "3.6.2",
     "sinon": "^21"
   },
-  "mocha": {},
+  "overrides": {
+    "mocha": {
+      "glob": "~13"
+    }
+  },
+  "mocha": {
+    "timeout": "60000",
+    "file": "tests/globalSetup.js",
+    "exit": true,
+    "recursive": true,
+    "spec": [
+      "./tests/**/*.test.js",
+      "./src/**/*.test.js"
+    ],
+    "watch": true,
+    "watch-files": [
+      "src",
+      "tests"
+    ]
+  },
+  "jest": {
+    "moduleFileExtensions": []
+  },
   "prettier": {
     "printWidth": 120,
     "bracketSpacing": true,
@@ -134,5 +156,5 @@
     "node": ">=20",
     "yarn": ">=4.5.0"
   },
-  "packageManager": "yarn@4.5.0+sha512.837566d24eec14ec0f5f1411adb544e892b3454255e61fdef8fd05f3429480102806bac7446bc9daff3896b01ae4b62d00096c7e989f1596f2af10b927532f39"
+  "packageManager": "yarn@4.12.0"
 }

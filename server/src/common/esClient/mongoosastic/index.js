@@ -306,6 +306,10 @@ module.exports.mongoosastic = (schema, options) => {
   };
 
   schema.methods.index = function schemaIndex(refresh = true) {
+    if (!indexName || !this._id || isHooksPaused) {
+      return;
+    }
+
     const logger = require("../../logger");
 
     logger.debug?.({ type: "mongoosastic", index: indexName, id: this._id }, "DOCUMENT INDEX");
@@ -321,7 +325,7 @@ module.exports.mongoosastic = (schema, options) => {
         };
         await esClient.index(_opts);
       } catch (error) {
-        logger.error?.({ type: "mongoosastic", error }, `Error indexing ${this._id.toString()}`);
+        logger.error?.({ type: "mongoosastic", error }, `Error indexing ${this.indexName} ${this._id.toString()}`);
         return reject();
       }
       resolve();
@@ -329,6 +333,10 @@ module.exports.mongoosastic = (schema, options) => {
   };
 
   schema.methods.unIndex = function schemaUnIndex() {
+    if (!indexName || !this._id || isHooksPaused) {
+      return;
+    }
+
     const logger = require("../../logger");
 
     logger.debug?.({ type: "mongoosastic", index: indexName, id: this._id }, "DOCUMENT UNINDEX");
@@ -359,7 +367,7 @@ module.exports.mongoosastic = (schema, options) => {
             type: "mongoosastic",
             error,
           },
-          `Error unindexing ${this._id.toString()}`
+          `Error unindexing ${this.indexName} ${this._id.toString()}`
         );
         return reject();
       }

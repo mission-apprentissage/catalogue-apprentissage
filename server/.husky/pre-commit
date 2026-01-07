@@ -2,4 +2,4 @@
 . "$(dirname -- "$0")/_/husky.sh"
 
 cd server
-./scripts/preventSensibleFilesCommit.sh && lint-staged && yarn doc
+./scripts/preventSensibleFilesCommit.sh && yarn lint-staged && yarn doc

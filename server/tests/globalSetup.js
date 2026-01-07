@@ -1,6 +1,6 @@
-const { setupBeforeEach, setupAfterEach, setupBefore, setupAfter } = require("./helpers/setup");
+const { setupBeforeEach, setupAfterEach, setupBeforeAll, setupAfterAll } = require("./helpers/setup");
 
 beforeEach(setupBeforeEach);
 afterEach(setupAfterEach);
-before(setupBefore);
-after(setupAfter);
+before(setupBeforeAll);
+after(setupAfterAll);

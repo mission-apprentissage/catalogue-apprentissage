@@ -36,7 +36,7 @@ describe(__filename, () => {
     assert.deepEqual(result, { updates: null, keys: [], length: 0 });
   });
 
-  it("should find update if france competence info doesn't change", () => {
+  it("should find update if france competence info changes", () => {
     const previousFormationP = {
       france_competence_infos: {
         fc_is_catalog_general: false,

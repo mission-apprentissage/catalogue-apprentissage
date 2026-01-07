@@ -133,6 +133,7 @@ const formation = {
     { mef10: "2472541133", modalite: { duree: "3", annee: "3" } },
     { mef10: "2472541132", modalite: { duree: "3", annee: "2" } },
   ],
+  CI_inscrit_rncp: "3 - Inscrit de droit",
   editedFields: { uai_formation: "0573690B" },
   parcoursup_raison_depublication: null,
   lieu_formation_geo_coordonnees: "49.103334,6.855078",
@@ -148,7 +149,7 @@ const formation = {
   partenaires: null,
 };
 
-it("renders the description block of the training", async () => {
+it("Affiche le bloc description d'une formation", async () => {
   const { queryByText } = render(
     <DescriptionBlock
       formation={{
@@ -175,7 +176,7 @@ it("renders the description block of the training", async () => {
   expect(warn).not.toBeInTheDocument();
 });
 
-it("show partenaires for titre or tp", async () => {
+it("Affiche le bloc partenaire pour les formations inscrites sur demande", async () => {
   const tpFormation = {
     ...formation,
     etablissement_reference_habilite_rncp: true,
@@ -197,9 +198,10 @@ it("show partenaires for titre or tp", async () => {
   expect(partenaires).toBeInTheDocument();
 });
 
-it("dont show partenaires if certificateur is ministere EN for titre or tp", async () => {
+it("N'affiche pas le bloc partenaire pour les formations inscrites sur demande si le certificateur est le Ministère du Travail", async () => {
   const tpFormation = {
     ...formation,
+    CI_inscrit_rncp: "4 - Inscrit sur demande",
     rncp_details: {
       ...formation.rncp_details,
       code_type_certif: "TP",
@@ -217,7 +219,7 @@ it("dont show partenaires if certificateur is ministere EN for titre or tp", asy
   expect(partenaires).not.toBeInTheDocument();
 });
 
-it("show partenaires", async () => {
+it("Affiche le bloc partenaire et la liste des partenaires pour les formations inscrites sur demande", async () => {
   const partenairesData = [
     {
       Siret_Partenaire: "34958609900021",
@@ -228,6 +230,7 @@ it("show partenaires", async () => {
   const tpFormation = {
     ...formation,
     etablissement_reference_habilite_rncp: true,
+    CI_inscrit_rncp: "4 - Inscrit sur demande",
     rncp_details: {
       ...formation.rncp_details,
       code_type_certif: "TP",
@@ -244,7 +247,7 @@ it("show partenaires", async () => {
   expect(partenaire).toBeInTheDocument();
 });
 
-it("display a warning for cfd outdated", async () => {
+it("Affiche un warning en cas d'expiration du CFD", async () => {
   const testFormation = {
     ...formation,
     cfd_date_fermeture: null,
@@ -258,7 +261,7 @@ it("display a warning for cfd outdated", async () => {
   expect(warn).toBeInTheDocument();
 });
 
-it("display a warning for missing session", async () => {
+it("Affiche un warning si pas de session sur la prochaine campagne", async () => {
   const testFormation = {
     ...formation,
     periode: ["2023-09"],
