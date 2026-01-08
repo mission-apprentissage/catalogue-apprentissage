@@ -1,6 +1,6 @@
 const express = require("express");
 const Joi = require("joi");
-const { oleoduc, compose, transformIntoJSON, transformIntoCSV } = require("oleoduc");
+const { oleoduc, compose, transformIntoJSON, transformIntoCSV, transformData } = require("oleoduc");
 const tryCatch = require("../middlewares/tryCatchMiddleware");
 const { Formation, CandidatureRelation } = require("../../common/models");
 const { sendJsonStream, sendCsvStream } = require("../../common/utils/httpUtils");
