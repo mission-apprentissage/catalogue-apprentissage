@@ -123,16 +123,9 @@ const createFormation = async (formation, email = null) => {
     formation.parcoursup_error = null;
     await formation.save({ validateBeforeSave: false });
   } catch (error) {
-    // logger.error(
-    //   { type: "job" },
-    //   "Parcoursup WS error",
-    //   error?.response?.status,
-    //   error?.response?.data?.message ?? error?.response?.data ?? "erreur de création",
-    //   data
-    // );
     formation.last_update_at = Date.now();
     formation.last_update_who = `web service Parcoursup${email ? `, sent by ${email}` : ""}, received error`;
-    formation.parcoursup_error = `${error?.response?.status} ${
+    formation.parcoursup_error = `${error?.response?.status ?? "???"} ${
       error?.response?.data?.message ?? error?.response?.data ?? "erreur de création"
     }`;
 
@@ -156,7 +149,11 @@ const createFormation = async (formation, email = null) => {
         parcoursup_statut: next_parcoursup_statut,
       });
     } else {
-      logger.error({ type: "job" }, `Erreur Parcoursup non gérée : ${formation.parcoursup_error}`);
+      logger.error(
+        { type: "job" },
+        `Erreur Parcoursup non gérée ${formation.cle_ministere_educatif}: ${formation.parcoursup_error}`
+      );
+      formation.parcoursup_statut = PARCOURSUP_STATUS.ERROR;
     }
 
     await formation.save({ validateBeforeSave: false });

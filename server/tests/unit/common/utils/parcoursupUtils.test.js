@@ -16,7 +16,7 @@ const distinctErrors = [
   "400 Le code RCO 106905P01111969025060005019010819100015-01053#L01 existe dejà sur un autre établissement 0011444P",
   '401 <!doctype html><html lang="fr"><head><title>État HTTP 401 – Non authorisé</title><style type="text/css">body {font-family:Tahoma,Arial,sans-serif;} h1, h2, h3, b {color:white;background-color:#525D76;} h1 {font-size:22px;} h2 {font-size:16px;} h3 {font-size:14px;} p {font-size:12px;} a {color:black;} .line {height:1px;background-color:#525D76;border:none;}</style></head><body><h1>État HTTP 401 – Non authorisé</h1><hr class="line" /><p><b>Type</b> Rapport d\'état</p><p><b>description</b> La requête nécessite une authentification HTTP.</p><hr class="line" /><h3>|\\|/-\\!3()() 3B3-888 S.B1</h3></body></html>',
   "403 ",
-  "undefined erreur de création",
+  "??? erreur de création",
 ];
 
 describe(__filename, () => {

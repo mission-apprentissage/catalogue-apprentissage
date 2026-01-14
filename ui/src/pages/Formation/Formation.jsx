@@ -752,6 +752,20 @@ export default () => {
                     formation.parcoursup_statut
                   ) &&
                   !!formation.parcoursup_error && <RejectionBlock formation={formation} />}
+
+                {hasAccessTo(user, "page_formation/voir_status_publication_ps") &&
+                  [PARCOURSUP_STATUS.ERROR].includes(formation.parcoursup_statut) && (
+                    <Alert mt={4} type={"warning"}>
+                      Une erreur non gérée est survenue lors de l'envoi à Parcoursup :{" "}
+                      <Text as="b">{formation.parcoursup_error}</Text>
+                      <br />
+                      Une nouvelle tentative d'envoi sera effectuée cette nuit.
+                      <br />
+                      Si l'erreur persiste, vous pouvez envoyez un message dans la rubrique contact Parcoursup avec
+                      l’URL catalogue de l’offre.
+                    </Alert>
+                  )}
+
                 {hasAccessTo(user, "page_formation/voir_status_publication_ps") &&
                   formation.parcoursup_raison_depublication && (
                     <Alert mt={4} type={"warning"}>

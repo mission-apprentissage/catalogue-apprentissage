@@ -14,6 +14,7 @@ export const PARCOURSUP_STATUS = {
   A_PUBLIER_HABILITATION: "à publier (sous condition habilitation)",
   REJETE: "rejet de publication",
   FERME: "fermé",
+  ERROR: "échec d'envoi",
 };
 
 export const AFFELNET_STATUS = {
