@@ -756,8 +756,7 @@ export default () => {
                 {hasAccessTo(user, "page_formation/voir_status_publication_ps") &&
                   [PARCOURSUP_STATUS.ERROR].includes(formation.parcoursup_statut) && (
                     <Alert mt={4} type={"warning"}>
-                      Une erreur non gérée est survenue lors de l'envoi à Parcoursup :{" "}
-                      <Text as="b">{formation.parcoursup_error}</Text>
+                      Une erreur non gérée est survenue lors de l'envoi à Parcoursup : {formation.parcoursup_error}
                       <br />
                       Une nouvelle tentative d'envoi sera effectuée cette nuit.
                       <br />

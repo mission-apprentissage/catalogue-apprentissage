@@ -107,13 +107,6 @@ const parcoursupErrors = [
       "Le rôle défini dans Parcoursup pour cet établissement ne permet pas une publication de l'offre vers Parcoursup.",
     action: `Vous devez vérifier voire modifier le rôle de l'établissement (profil établissement d'accueil) dans Parcoursup puis demander à nouveau la publication une fois la modification effectuée.`,
   },
-  {
-    regexp:
-      /.*Erreur lors de la creation : Il n'est pas possible de créer une formation sur un établissement d'affectation qui n'a pas de rôle d'Affectation.*/,
-    description:
-      "Il n’est pas possible de créer une formation sur un établissement d’affectation qui n’a pas de rôle d’établissement d’accueil.",
-    action: `Veuillez contacter la Moss via la messagerie Parcoursup afin d’attribuer le rôle d’accueil à l’établissement dans lequel se déroulera la formation, puis revenez sur cette fiche pour demander à nouveau la publication Parcoursup.`,
-  },
 ];
 
 module.exports = { parcoursupErrors };
