@@ -15,7 +15,6 @@ const parcoursupFormationSchema = require("./parcoursupFormation");
 const previousSeasonFormationSchema = require("./previousSeasonFormation");
 const previousSeasonFormationStatSchema = require("./previousSeasonFormationStat");
 const reglePerimetreSchema = require("./reglePerimetre");
-const relationSchema = require("./relation");
 const roleSchema = require("./role");
 const statistiqueSchema = require("./statistique");
 const userSchema = require("./user");
@@ -53,7 +52,6 @@ const schemasMap = new Map(
     previousSeasonFormation: [previousSeasonFormationSchema, {}],
     previousSeasonFormationStat: [previousSeasonFormationStatSchema, {}],
     reglePerimetre: [reglePerimetreSchema, { timestamps }],
-    relation: [relationSchema, { timestamps }],
     role: [roleSchema, { timestamps }],
     statistique: [statistiqueSchema, { timestamps }],
     user: [userSchema, { timestamps }],

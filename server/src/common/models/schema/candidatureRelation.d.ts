@@ -115,6 +115,10 @@ export interface CandidatureRelation {
    * Intervention par un administrateur
    */
   admin_intervention?: string | null;
+  /**
+   * Modification effectuée depuis la dernière campagne ? (permet de supprimer le warning pour candidatures non téléchargées)
+   */
+  intervention_since_last_session?: boolean;
   _id?: Types.ObjectId;
   created_at?: Date;
   updated_at?: Date;

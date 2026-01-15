@@ -9,7 +9,6 @@ const { parcoursupJobs } = require("./parcoursup");
 const { affelnetJobs } = require("./affelnet");
 const { etablissementsJobs } = require("./etablissements");
 const { formationsJobs } = require("./formations");
-const { relationsJobs } = require("./relations");
 const { collectPreviousSeasonStats } = require("./formations/previousSeasonStats");
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -48,9 +47,6 @@ runScript(async ({ db }) => {
     await rebuildEsIndex("formations"); // ~ 5 minutes // maj elastic search (recherche des formations)
     await disableAlertMessage();
     Formation.startAllMongoosaticHooks();
-
-    // Relations
-    await relationJobs();
 
     logger.info({ type: "job" }, `ALL JOBS ✅`);
   } catch (error) {

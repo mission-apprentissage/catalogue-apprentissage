@@ -2,6 +2,7 @@ const logger = require("../../../common/logger");
 const controller = require("./controller");
 const previousStatus = require("./previousStatus");
 const checkUai = require("./checkUai");
+const removeCandidatureItems = require("./removeCandidatureItems");
 
 const { runScript } = require("../../scriptWrapper");
 
@@ -14,6 +15,9 @@ const afStartCampagne = async () => {
 
     logger.info({ type: "job" }, "∙ Vérification de la validité de l'UAI");
     await checkUai.run();
+
+    logger.info({ type: "job" }, "∙ Suppression des tables importées depuis le site de transfert des candidaturesI");
+    await removeCandidatureItems.run();
 
     logger.info({ type: "job" }, "∙ Réinitialisation des statuts");
     await controller.run();

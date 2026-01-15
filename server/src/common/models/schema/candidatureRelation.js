@@ -213,6 +213,13 @@ const candidatureRelationSchema = {
     default: null,
     description: "Intervention par un administrateur",
   },
+
+  intervention_since_last_session: {
+    type: Boolean,
+    default: false,
+    description:
+      "Modification effectuée depuis la dernière campagne ? (permet de supprimer le warning pour candidatures non téléchargées)",
+  },
 };
 
 module.exports = candidatureRelationSchema;

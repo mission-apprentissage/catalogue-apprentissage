@@ -162,6 +162,14 @@ export default [
     ref: "page_other",
     subFeatures: [
       {
+        feature: "API Candidature relation - Consultation",
+        ref: "page_other/api_candidature_relation_find",
+      },
+      {
+        feature: "API Candidature relation - Edition",
+        ref: "page_other/api_candidature_relation_update",
+      },
+      {
         feature: "Prise de rendez-vous LBA",
         ref: "page_other/perimetre_prise_rdv",
       },

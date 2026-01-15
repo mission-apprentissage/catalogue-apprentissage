@@ -64,7 +64,7 @@ module.exports = () => {
       throw Boom.unauthorized();
     }
 
-    logger.info({ type: "http" }, "Updating new item: ", payload);
+    logger.info({ type: "http" }, "Updating relation: ", payload);
 
     const updatedRelation = { ...relation };
 
