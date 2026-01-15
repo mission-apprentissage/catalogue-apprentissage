@@ -87,5 +87,4 @@ module.exports = {
   PreviousSeasonFormation: createModel("previousSeasonFormation", schemas.get("previousSeasonFormation")),
   PreviousSeasonFormationStat: createModel("previousSeasonFormationStat", schemas.get("previousSeasonFormationStat")),
   CampagneStart: createModel("campagneStart", schemas.get("campagneStart")),
-  Relation: createModel("relation", schemas.get("relation")),
 };

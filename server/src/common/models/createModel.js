@@ -4,6 +4,14 @@ const { mongoose } = require("../mongodb");
 const createModel = (modelName, schemaDeclaration, options = {}) => {
   // console.log("createModel", { modelName, schemaDeclaration, options });
 
+  if (!modelName) {
+    throw Error("modelName must be defined");
+  }
+
+  if (!schemaDeclaration) {
+    throw Error(`schemaDeclaration is not defined for model ${modelName}`);
+  }
+
   const [schemaDescriptor, schemaOptions] = schemaDeclaration;
   if (mongoose.models[modelName]) {
     return mongoose.models[modelName];

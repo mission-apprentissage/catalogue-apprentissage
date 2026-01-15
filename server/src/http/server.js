@@ -18,7 +18,7 @@ const permissionsMiddleware = require("./middlewares/permissionsMiddleware");
 const packageJson = require("../../package.json");
 const formation = require("./routes/formation");
 const formationSecure = require("./routes/formationSecure");
-const relation = require("./routes/relation");
+const candidature = require("./routes/candidature");
 const report = require("./routes/report");
 const auth = require("./routes/auth");
 const authSecure = require("./routes/authSecure");
@@ -31,7 +31,6 @@ const esSearch = require("./routes/esSearch");
 const esMultiSearchNoIndex = require("./routes/esMultiSearchNoIndex");
 const parcoursup = require("./routes/parcoursup");
 const etablissement = require("./routes/etablissement");
-const etablissementSecure = require("./routes/etablissementSecure");
 const upload = require("./routes/upload");
 const alert = require("./routes/alert");
 const perimetrePriseRdv = require("./routes/perimetrePriseRdv");
@@ -183,10 +182,9 @@ module.exports = async (components, verbose = true) => {
     ],
     ["/entity", apiLimiter, anyAuthMiddleware, formationSecure()],
     ["/stats", apiLimiter, anyAuthMiddleware, stats(components)],
-    ["/entity", apiLimiter, anyAuthMiddleware, etablissementSecure(components)],
     ["/upload", apiLimiter, permissionsMiddleware({ isAdmin: true }, ["page_upload"]), upload()],
     ["/entity", apiLimiter, anyAuthMiddleware, reglePerimetreSecure()],
-    ["/entity", apiLimiter, anyAuthMiddleware, relation()],
+    ["/entity", apiLimiter, anyAuthMiddleware, candidature()],
 
     ["/constants", apiLimiter, anyAuthMiddleware, dates()],
 

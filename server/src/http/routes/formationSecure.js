@@ -28,7 +28,7 @@ module.exports = () => {
       throw Boom.unauthorized();
     }
 
-    logger.info({ type: "http" }, "Updating new item: ", payload);
+    logger.info({ type: "http" }, "Updating formation: ", payload);
 
     if (payload.uai_formation) {
       logger.info(

@@ -46,8 +46,6 @@ import { PublishModalButton } from "../../common/components/formation/PublishMod
 import { UaiHistoryModalButton } from "../../common/components/formation/UaiHistoryModalButton";
 import { ReinitStatutModalButton } from "../../common/components/formation/ReinitStatutModalButton";
 import { DateContext } from "../../DateContext";
-import { RelationEmailResponsableModal } from "../../common/components/formation/RelationEmailResponsableModal";
-import { RelationEmailResponsableModalButton } from "../../common/components/formation/RelationEmailResponsableModalButton";
 
 const CATALOGUE_API = `${process.env.REACT_APP_BASE_URL}/api`;
 
@@ -161,8 +159,7 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
                       <Text fontSize={"zeta"} color={"grey.600"} mb={2}>
                         - Si l’UAI lieu est modifiée, la formation devra à nouveau être importée dans Affelnet. Son état
                         basculera de “Publié” à “En attente de publication”, jusqu'à ce que vous procédiez à l’import
-                        depuis Affelnet.import {RelationEmailResponsableModalButton} from
-                        '../../common/components/formation/RelationEmailResponsableModalButton';
+                        depuis Affelnet.
                       </Text>
                     )}
                     {typeof formation.editedFields?.uai_formation !== "undefined" && (
@@ -375,7 +372,7 @@ export default () => {
   const { id } = useParams();
   const toast = useToast();
   const [formation, setFormation] = useState();
-  const [relation, setRelation] = useState();
+  const [candidatureRelation, setCandidatureRelation] = useState();
   const [loading, setLoading] = useState(false);
 
   const [edition, setEdition] = useState(null);
@@ -468,10 +465,14 @@ export default () => {
         setFormation(formation);
         setFieldValue("uai_formation", formation.uai_formation ?? "");
 
-        const relation = await _get(
-          `${CATALOGUE_API}/entity/relation?query={"siret_responsable":"${formation.etablissement_gestionnaire_siret}","siret_formateur":"${formation.etablissement_formateur_siret}"}`
+        const candidatureRelation = await _get(
+          `${CATALOGUE_API}/entity/candidature/relation?siret_responsable=${formation.etablissement_gestionnaire_siret}&siret_formateur=${formation.etablissement_formateur_siret}`,
+          {
+            signal: abortController.signal,
+          }
         );
-        setRelation(relation);
+
+        setCandidatureRelation(candidatureRelation);
 
         setLoading(false);
       } catch (e) {
@@ -706,99 +707,46 @@ export default () => {
                     </Flex>
                   </Flex>
                 )}
-                {formation.affelnet_perimetre && relation && formation.candidature_relation && (
-                  <Alert
-                    mt={4}
-                    type={
-                      formation.candidature_relation?.nombre_voeux &&
-                      !formation.candidature_relation?.nombre_voeux_telecharges &&
-                      !relation.editedFields?.email_responsable
-                        ? "warning"
-                        : "infoLight"
-                    }
-                  >
-                    <Text>
-                      <Text as="span">
-                        Statut de téléchargement des candidatures sur la précédente campagne pour cet organisme{" "}
-                        {formation.etablissement_formateur_siret === formation.etablissement_gestionnaire_siret ? (
-                          <>responsable-formateur</>
-                        ) : (
-                          <>formateur</>
-                        )}
-                        , toutes offres confondues :{" "}
+
+                {hasAccessTo(user, "page_other/api_candidature_relation_find") &&
+                  formation.affelnet_perimetre &&
+                  candidatureRelation && (
+                    <Alert
+                      mt={4}
+                      type={
+                        candidatureRelation?.nombre_voeux &&
+                        !candidatureRelation?.nombre_voeux_telecharges &&
+                        !candidatureRelation?.intervention_since_last_session
+                          ? "warning"
+                          : "infoLight"
+                      }
+                    >
+                      <Text>
+                        <Text as="span">
+                          Statut de téléchargement des candidatures sur la précédente campagne pour cet organisme{" "}
+                          {formation.etablissement_formateur_siret === formation.etablissement_gestionnaire_siret ? (
+                            <>responsable-formateur</>
+                          ) : (
+                            <>formateur</>
+                          )}
+                          , toutes offres confondues :{" "}
+                        </Text>
+                        <Text as="b" variant="highlight">
+                          {candidatureRelation?.statut_diffusion_generique}
+                        </Text>
+                        <Link
+                          ml={2}
+                          textDecoration={"underline"}
+                          fontSize={"zeta"}
+                          color={"grey.600"}
+                          isExternal
+                          href={`${process.env.REACT_APP_CANDIDATURE_URL}/admin/etablissement/${candidatureRelation.siret_responsable}#${candidatureRelation.siret_formateur}`}
+                        >
+                          Voir sur le site des candidatures&nbsp; <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} />
+                        </Link>
                       </Text>
-                      <Text as="b" variant="highlight">
-                        {formation.candidature_relation?.statut_diffusion_generique}
-                      </Text>
-                      <Link
-                        ml={2}
-                        textDecoration={"underline"}
-                        fontSize={"zeta"}
-                        color={"grey.600"}
-                        isExternal
-                        href={`https://candidats-affelnet.apprentissage.education.fr/admin/etablissement/${relation.siret_responsable}#${relation.siret_formateur}`}
-                      >
-                        Voir sur le site des candidatures&nbsp; <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} />
-                      </Link>
-                    </Text>
-                    <br />
-                    <Text>
-                      <Text as="span">Contact : </Text>
-                      <Text as="b" variant="highlight">
-                        {formation.candidature_relation.active_delegue ? (
-                          <>
-                            {formation.candidature_relation?.email_delegue} (délégation accordée par{" "}
-                            {relation?.email_responsable ?? formation.candidature_relation?.email_responsable})
-                          </>
-                        ) : (
-                          <>{relation?.email_responsable ?? formation.candidature_relation?.email_responsable}</>
-                        )}
-                      </Text>
-                      <Text as="span" fontSize={"zeta"} color={"grey.600"}>
-                        {relation.editedFields?.email_responsable ? (
-                          <>
-                            (édité par {relation.last_update_who} le{" "}
-                            {new Date(relation.last_update_at).toLocaleDateString("fr-FR")})
-                          </>
-                        ) : (
-                          <></>
-                        )}{" "}
-                      </Text>
-                      <RelationEmailResponsableModalButton
-                        formation={formation}
-                        relation={relation}
-                        callback={fetchData}
-                      />
-                    </Text>
-                  </Alert>
-                )}
-                {formation.affelnet_perimetre && relation && !formation.candidature_relation && (
-                  <Alert mt={4} type={"infoLight"}>
-                    <Text>
-                      Aucune candidature apprentissage n’a été diffusée pour ce{" "}
-                      {formation.etablissement_formateur_siret === formation.etablissement_gestionnaire_siret ? (
-                        <>responsable-formateur</>
-                      ) : (
-                        <>formateur</>
-                      )}{" "}
-                      (sauf en cas de modification de Siret survenue entre temps). Si des offres sont publiées pour la
-                      prochaine campagne, le courriel utilisé pour la diffusion sera :{" "}
-                      <Text as="b" variant="highlight">
-                        {relation.email_responsable ?? "non définie"}
-                      </Text>
-                      <InfoTooltip
-                        description={
-                          "Ce courriel est issu des enregistrements effectués par l’organisme de formation au Carif-Oref)"
-                        }
-                      />{" "}
-                      <RelationEmailResponsableModalButton
-                        formation={formation}
-                        relation={relation}
-                        callback={fetchData}
-                      />
-                    </Text>
-                  </Alert>
-                )}
+                    </Alert>
+                  )}
 
                 {((formation.parcoursup_perimetre &&
                   // formation.parcoursup_previous_session &&
