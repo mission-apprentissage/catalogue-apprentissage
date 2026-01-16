@@ -168,16 +168,16 @@ const formationSchema = {
     default: null,
     description: "Localité",
   },
-  uai_formationcert: {
-    index: true,
-    type: String,
-    default: null,
-    description: "UAI du lieu de la formation",
-    // validate: {
-    //   validator: async (value) => !value || (await validateUAI(value)),
-    //   message: (props) => `${props.value} n'est pas un code UAI valide.`,
-    // },
-  },
+  // uai_formationcert: {
+  //   index: true,
+  //   type: String,
+  //   default: null,
+  //   description: "UAI du lieu de la formation",
+  //   // validate: {
+  //   //   validator: async (value) => !value || (await validateUAI(value)),
+  //   //   message: (props) => `${props.value} n'est pas un code UAI valide.`,
+  //   // },
+  // },
   uai_formation: {
     index: true,
     type: String,
