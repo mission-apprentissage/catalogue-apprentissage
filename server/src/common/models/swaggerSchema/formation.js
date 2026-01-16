@@ -88,10 +88,6 @@ module.exports = {
         type: "string",
         description: "Localité",
       },
-      uai_formationcert: {
-        type: "string",
-        description: "UAI du lieu de la formation",
-      },
       uai_formation: {
         type: "string",
         description: "UAI du lieu de la formation",

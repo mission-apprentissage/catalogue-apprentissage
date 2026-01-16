@@ -187,10 +187,6 @@ export interface Formation {
   /**
    * UAI du lieu de la formation
    */
-  uai_formationcert?: string | null;
-  /**
-   * UAI du lieu de la formation
-   */
   uai_formation?: string | null;
   /**
    * L'UAI du lieu de formation est il valide ?
