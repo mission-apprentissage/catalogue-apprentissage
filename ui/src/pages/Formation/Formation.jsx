@@ -341,11 +341,16 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
                   </Text>
                 </>
               )}
-
               <Text mb={4}>
                 Académie de rattachement <InfoTooltip description={helpText.formation.academie} /> :{" "}
                 <Text as="span" variant="highlight">
                   {formation.nom_academie} ({formation.num_academie})
+                </Text>
+              </Text>
+              <Text mb={4}>
+                UAI de rattachement <InfoTooltip description={helpText.formation.etablissement_lieu_formation_uai} /> :{" "}
+                <Text as="span" variant="highlight">
+                  {formation.etablissement_lieu_formation_uai}
                 </Text>
               </Text>
             </Box>
