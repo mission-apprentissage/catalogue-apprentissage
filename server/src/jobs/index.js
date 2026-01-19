@@ -17,8 +17,8 @@ runScript(async ({ db }) => {
   try {
     logger.info({ type: "job" }, `ALL JOBS ⏳`);
 
-    await bcnJobs();
-    await sleep(10000);
+    // await bcnJobs();
+    // await sleep(10000);
 
     Etablissement.pauseAllMongoosaticHooks();
 
