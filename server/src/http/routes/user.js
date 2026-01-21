@@ -8,6 +8,7 @@ const { User } = require("../../common/models");
 const { sanitize, SAFE_FIND_OPERATORS } = require("../../common/utils/sanitizeUtils");
 const { generate } = require("generate-password");
 const logger = require("../../common/logger");
+const { isUserAdmin } = require("../../common/utils/rolesUtils");
 
 const userSchema = Joi.object({
   username: Joi.string().required(),
@@ -88,13 +89,18 @@ module.exports = ({ users, mailer, db: { db } }) => {
 
       const { username, password, options } = req.body;
 
-      let alreadyExists = await users.getUser(username);
-      if (alreadyExists) {
+      let existingUser = await users.getUser(username);
+
+      if (existingUser) {
         throw Boom.conflict(`Impossible de créer, l'utilisateur ${username.toLowerCase()} existe déjà.`);
       }
-      alreadyExists = await users.getUserByEmail(options.email);
-      if (alreadyExists) {
+      existingUser = await users.getUserByEmail(options.email);
+      if (existingUser) {
         throw Boom.conflict(`Impossible de créer, l'email ${options.email.toLowerCase()} est déjà utilisé.`);
+      }
+
+      if (typeof req.body.options.permissions.isAdmin !== "undefined" && !isUserAdmin(req.user)) {
+        throw Boom.forbidden("Seul un administrateur peut attribuer le rôle d'administrateur.");
       }
 
       const user = await users.createUser(username, password, { ...options, created_by: req.user.email });
@@ -119,6 +125,20 @@ module.exports = ({ users, mailer, db: { db } }) => {
     tryCatch(async (req, res) => {
       const username = req.params.username;
 
+      const existingUser = await users.getUser(username);
+
+      if (!existingUser) {
+        throw Boom.notFound("L'utilisateur demandé n'existe pas");
+      }
+
+      if (existingUser.isAdmin && !isUserAdmin(req.user)) {
+        throw Boom.forbidden("Seul un administrateur peut modifier un autre administrateur.");
+      }
+
+      if (typeof req.body.options.permissions.isAdmin !== "undefined" && !isUserAdmin(req.user)) {
+        throw Boom.forbidden("Seul un administrateur peut attribuer/supprimer le rôle d'administrateur.");
+      }
+
       const user = await users.updateUser(username, {
         isAdmin: req.body.options.permissions.isAdmin,
         email: req.body.options.email?.toLowerCase(),
@@ -142,6 +162,16 @@ module.exports = ({ users, mailer, db: { db } }) => {
     "/user/:username/regenerate-password",
     tryCatch(async (req, res) => {
       const username = req.params.username;
+
+      const existingUser = await users.getUser(username);
+
+      if (!existingUser) {
+        throw Boom.notFound("L'utilisateur demandé n'existe pas");
+      }
+
+      if (existingUser.isAdmin && !isUserAdmin(req.user)) {
+        throw Boom.forbidden("Seul un administrateur peut modifier un autre administrateur");
+      }
 
       const password = generate({
         length: 12,
@@ -173,6 +203,16 @@ module.exports = ({ users, mailer, db: { db } }) => {
     "/user/:username",
     tryCatch(async ({ params }, res) => {
       const username = params.username;
+
+      const existingUser = await users.getUser(username);
+
+      if (!existingUser) {
+        throw Boom.notFound("L'utilisateur demandé n'existe pas");
+      }
+
+      if (existingUser.isAdmin && !isUserAdmin(req.user)) {
+        throw Boom.forbidden("Seul un administrateur peut supprimer un autre administrateur");
+      }
 
       await closeSessionsOfThisUser(db, username);
 

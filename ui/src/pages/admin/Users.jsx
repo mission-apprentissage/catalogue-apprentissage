@@ -43,6 +43,8 @@ import { useUserSearch } from "../../common/hooks/useUserSearch";
 import SearchUser from "../../common/components/Search/SearchUser";
 import { ACADEMIES } from "../../constants/academies";
 import ACL from "./acl";
+import useAuth from "../../common/hooks/useAuth";
+import { isUserAdmin } from "../../common/utils/rolesUtils";
 
 const academies = new Map(Object.entries(ACADEMIES));
 
@@ -134,6 +136,7 @@ export const CardListUser = ({ user, roles, refreshSearch }) => {
 
 export const UserLine = ({ user, roles, refreshSearch }) => {
   const toast = useToast();
+  const [auth] = useAuth();
   const [rolesAcl, setRolesAcl] = useState(buildRolesAcl(user?.roles || [], roles));
 
   useEffect(() => {
@@ -250,7 +253,11 @@ export const UserLine = ({ user, roles, refreshSearch }) => {
                 roles,
                 acl,
                 permissions: {
-                  isAdmin: accessAll,
+                  ...(isUserAdmin(auth)
+                    ? {
+                        isAdmin: accessAll,
+                      }
+                    : {}),
                 },
               },
             };
@@ -541,23 +548,25 @@ export const UserLine = ({ user, roles, refreshSearch }) => {
         </FormControl>
       )}
 
-      <FormControl py={2} mt={3} isInvalid={touched.accessAllCheckbox && errors.accessAllCheckbox}>
-        <Checkbox
-          name="accessAllCheckbox"
-          id="accessAllCheckbox"
-          isChecked={values.accessAllCheckbox.length > 0}
-          onChange={handleChange}
-          onBlur={handleBlur}
-          value="on"
-          fontWeight={values.accessAllCheckbox.length > 0 ? "bold" : "normal"}
-          color={"bluefrance"}
-        >
-          Admin
-        </Checkbox>
-        <FormErrorMessage>{errors.accessAllCheckbox}</FormErrorMessage>
-      </FormControl>
+      {isUserAdmin(auth) && (
+        <FormControl py={2} mt={3} isInvalid={touched.accessAllCheckbox && errors.accessAllCheckbox}>
+          <Checkbox
+            name="accessAllCheckbox"
+            id="accessAllCheckbox"
+            isChecked={values.accessAllCheckbox.length > 0}
+            onChange={handleChange}
+            onBlur={handleBlur}
+            value="on"
+            fontWeight={values.accessAllCheckbox.length > 0 ? "bold" : "normal"}
+            color={"bluefrance"}
+          >
+            Admin
+          </Checkbox>
+          <FormErrorMessage>{errors.accessAllCheckbox}</FormErrorMessage>
+        </FormControl>
+      )}
 
-      <FormControl py={2} isInvalid={touched.roles && errors.roles}>
+      <FormControl py={2} mt={3} isInvalid={touched.roles && errors.roles}>
         <FormLabel>Rôles</FormLabel>
         <HStack wrap="wrap" spacing={"4%"}>
           {roles.map((role, i) => {

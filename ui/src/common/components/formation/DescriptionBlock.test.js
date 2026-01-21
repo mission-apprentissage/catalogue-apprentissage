@@ -179,7 +179,7 @@ it("show partenaires for titre or tp", async () => {
   const tpFormation = {
     ...formation,
     etablissement_reference_habilite_rncp: true,
-    CI_inscrit_rncp: "4 - Inscrit sure demande",
+    CI_inscrit_rncp: "4 - Inscrit sur demande",
     rncp_details: {
       ...formation.rncp_details,
       code_type_certif: "TP",
