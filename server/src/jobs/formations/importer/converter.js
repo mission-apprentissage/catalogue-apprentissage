@@ -1,7 +1,5 @@
 const config = require("config");
-
-const { diff: objectDiff } = require("deep-object-diff");
-const { diff: arrayDiff } = require("deep-object-diff");
+const { diff } = require("deep-object-diff");
 const { Formation, DualControlFormation, Etablissement } = require("../../../common/models/index");
 const { cursor } = require("../../../common/utils/cursor");
 const { distanceBetweenCoordinates } = require("../../../common/utils/distanceUtils");
@@ -13,11 +11,12 @@ const { PARCOURSUP_STATUS, AFFELNET_STATUS } = require("../../../constants/statu
 const { getCampagneStartDate } = require("../../../common/utils/rulesUtils");
 const { validateUAI } = require("../../../common/utils/uaiUtils");
 
-const updateRelationFields = async ({ filter = {} }) => {
+const updateRelationFields = async () => {
   logger.info({ type: "job" }, " == Updating relations for formations == ");
 
-  await cursor(Formation.find(filter), async (formation) => {
-    await Formation.updateOne({ _id: formation._id }, { $set: { ...(await computeRelationFields(formation)) } });
+  await cursor(Formation.find({ published: true }), async (formation) => {
+    const updates = await computeRelationFields(formation);
+    await Formation.updateOne({ _id: formation._id }, { $set: updates });
   });
 
   logger.info({ type: "job" }, " == Updating relations for formations: DONE == ");
@@ -87,7 +86,7 @@ const recomputeFields = async (fields, oldFields, { forceRecompute = false } = {
     true ||
     forceRecompute ||
     Object.entries(
-      objectDiff(
+      diff(
         fields?.bcn_mefs_10.map(({ mef_outdated, date_fermeture, ...mef }) => mef),
         oldFields?.bcn_mefs_10.map(({ mef_outdated, date_fermeture, ...mef }) => mef)
       ) ?? {}
@@ -100,7 +99,7 @@ const recomputeFields = async (fields, oldFields, { forceRecompute = false } = {
     new Date(fields?.rncp_details?.date_fin_validite_enregistrement).getTime() !==
       new Date(oldFields?.rncp_details?.date_fin_validite_enregistrement).getTime() ||
     new Date(fields?.cfd_date_fermeture).getTime() !== new Date(oldFields?.cfd_date_fermeture).getTime() ||
-    arrayDiff(fields?.date_debut, oldFields?.date_debut).length
+    diff(fields?.date_debut, oldFields?.date_debut).length
   ) {
     ({
       bcn_mefs_10,
@@ -331,7 +330,6 @@ const recomputeFields = async (fields, oldFields, { forceRecompute = false } = {
 
     cfd_entree,
     cfd_entree_date_fermeture,
-    // ...(await computeRelationFields(fields)),
 
     partenaires,
 
@@ -434,15 +432,6 @@ const applyConversion = async (
           "variante_a_distance",
         ];
 
-        // console.log(
-        //   { cle_ministere_educatif },
-        //   {
-        //     $set: {
-        //       ...(await recomputeFields(removeFields({ ...dcFormation }, notToCompare), formation, { forceRecompute })),
-        //     },
-        //   }
-        // );
-
         const result = await Formation.updateOne(
           { cle_ministere_educatif },
           {
@@ -458,7 +447,7 @@ const applyConversion = async (
 
           if (config.log?.level === "debug") {
             const newFormation = await Formation.findById(formation._id).lean();
-            const differences = objectDiff(formation, newFormation);
+            const differences = diff(formation, newFormation);
             logger.debug({ type: "job" }, { cle_ministere_educatif, differences });
           }
 

@@ -8,28 +8,7 @@ const { rncpFormat } = require("../../format");
 const { rncpDetailsSchema } = require("./rncpDetails/rncpDetails");
 const { mefSchema } = require("./mef");
 const { validateUAI } = require("../../../utils/uaiUtils");
-
-const updateHistorySchema = new mongoose.Schema(
-  {
-    from: {
-      type: Object,
-      default: {},
-      description: "Valeurs avant mise à jour",
-    },
-    to: {
-      type: Object,
-      default: {},
-      description: "Valeurs après mise à jour",
-    },
-  },
-  {
-    _id: false,
-    timestamps: {
-      createdAt: false,
-      updatedAt: "updated_at",
-    },
-  }
-);
+const { updateHistorySchema } = require("../updateHistory");
 
 const rejectionCauseSchema = new mongoose.Schema(
   {

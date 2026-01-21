@@ -3,8 +3,6 @@ const { runScript } = require("../../scriptWrapper");
 const { downloader } = require("./downloader");
 const { converter } = require("./converter");
 const { DualControlFormation } = require("../../../common/models/index");
-const { updateRelationFields: updateEtablissementRelationFields } = require("../../etablissements/importer/converter");
-const { updateRelationFields: updateFormationRelationFields } = require("./converter");
 
 const importer = async (
   { noDownload = false, useExistingArchive = false, forceRecompute = false, skip = 0, filter = {} } = {
@@ -40,10 +38,6 @@ const importer = async (
     // STEP 2 : Convert formations
     logger.info({ type: "job" }, " -- Converting formations -- ");
     await converter({ forceRecompute, skip, filter });
-
-    // STEP 3 : Rebuild relations between etablissements and formations
-    await updateEtablissementRelationFields();
-    await updateFormationRelationFields({ filter });
 
     logger.info({ type: "job" }, " -- FORMATIONS IMPORTER : ✅ -- ");
   } catch (error) {

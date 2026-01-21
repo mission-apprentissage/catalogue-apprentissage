@@ -8,31 +8,70 @@ const { validateUAI } = require("../../../common/utils/uaiUtils");
 const updateRelationFields = async () => {
   logger.info({ type: "job" }, " == Updating relations for etablissements == ");
 
-  await cursor(Etablissement.find({}).sort(), async (etablissement) => {
-    await Etablissement.updateOne(
-      { _id: etablissement._id },
-      { $set: { ...(await computeRelationFields(etablissement)) } }
-    );
+  await cursor(Etablissement.find({ published: true }), async (etablissement) => {
+    const updates = await computeRelationFields(etablissement);
+    await Etablissement.updateOne({ _id: etablissement._id }, { $set: updates });
   });
 
   logger.info({ type: "job" }, " == Updating relations for etablissements: DONE == ");
 };
 
 const computeRelationFields = async (fields) => {
-  const etablissement_siege_id = (await Etablissement.findOne({ siret: fields.etablissement_siege_siret }))?.id;
+  // console.log(fields.siret);
+  const etablissement_siege_id =
+    (await Etablissement.findOne({ siret: fields.etablissement_siege_siret }))?._id ?? null;
+
+  // potentialEmails = new Set(
+  //   (
+  //     await Formation.find(
+  //       {
+  //         published: true,
+  //         catalogue_published: true,
+  //         affelnet_perimetre: true,
+  //         etablissement_gestionnaire_siret: fields.siret,
+  //       },
+  //       { _id: 0, etablissement_gestionnaire_courriel: 1 }
+  //     ).lean()
+  //   ).map((f) => f.etablissement_gestionnaire_courriel)
+  // );
+
+  // logger.debug({ type: "job" }, { siret: fields.siret, potentialEmails });
+
+  // const email_direction =
+  //   fields?.editedFields?.email_direction ?? (potentialEmails.size === 1 ? [...potentialEmails][0] : null);
 
   const formations = await Formation.find({
+    published: true,
     $or: [{ etablissement_gestionnaire_siret: fields.siret }, { etablissement_formateur_siret: fields.siret }],
   });
 
-  const formation_ids = formations?.map((formation) => formation._id) ?? [];
-  const formation_uais = formations?.map((formation) => formation.uai_formation) ?? [];
+  const formations_ids = [
+    ...new Set(formations?.map((formation) => formation._id).filter((value) => !["", null].includes(value)) ?? []),
+  ];
+  const formations_uais = [
+    ...new Set(
+      formations?.map((formation) => formation.uai_formation).filter((value) => !["", null].includes(value)) ?? []
+    ),
+  ];
 
-  return {
-    etablissement_siege_id,
-    formation_ids,
-    formation_uais,
+  const previous = {
+    etablissement_siege_id: fields.etablissement_siege_id,
+    email_direction: fields.email_direction,
+    formations_ids: fields.formations_ids,
+    formations_uais: fields.formations_uais,
   };
+  const next = {
+    etablissement_siege_id,
+    email_direction,
+    formations_ids,
+    formations_uais,
+  };
+
+  const differences = diff(previous, next);
+
+  logger.debug({ type: "job" }, { siret: fields.siret, previous, next, differences });
+
+  return next;
 };
 
 const recomputeFields = async (fields) => {
@@ -44,7 +83,6 @@ const recomputeFields = async (fields) => {
     uai_valide,
 
     raison_sociale_enseigne,
-    // ...(await computeRelationFields(fields)),
 
     ...fields,
   };

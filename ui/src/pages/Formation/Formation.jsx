@@ -372,6 +372,7 @@ export default () => {
   const { id } = useParams();
   const toast = useToast();
   const [formation, setFormation] = useState();
+  const [responsable, setResponsable] = useState();
   const [candidatureRelation, setCandidatureRelation] = useState();
   const [loading, setLoading] = useState(false);
 
@@ -464,6 +465,13 @@ export default () => {
 
         setFormation(formation);
         setFieldValue("uai_formation", formation.uai_formation ?? "");
+
+        const responsable = await _get(
+          `${CATALOGUE_API}/entity/etablissement/${formation.etablissement_gestionnaire_siret}?select={"__v":0}`,
+          {}
+        );
+
+        setResponsable(responsable);
 
         const candidatureRelation = await _get(
           `${CATALOGUE_API}/entity/candidature/relation?siret_responsable=${formation.etablissement_gestionnaire_siret}&siret_formateur=${formation.etablissement_formateur_siret}`,
@@ -710,43 +718,58 @@ export default () => {
 
                 {hasAccessTo(user, "page_other/api_candidature_relation_find") &&
                   formation.affelnet_perimetre &&
-                  candidatureRelation && (
-                    <Alert
-                      mt={4}
-                      type={
-                        candidatureRelation?.nombre_voeux &&
+                  (candidatureRelation ? (
+                    <>
+                      {candidatureRelation?.nombre_voeux &&
                         !candidatureRelation?.nombre_voeux_telecharges &&
-                        !candidatureRelation?.intervention_since_last_session
-                          ? "warning"
-                          : "infoLight"
-                      }
-                    >
-                      <Text>
-                        <Text as="span">
-                          Statut de téléchargement des candidatures sur la précédente campagne pour cet organisme{" "}
-                          {formation.etablissement_formateur_siret === formation.etablissement_gestionnaire_siret ? (
-                            <>responsable-formateur</>
-                          ) : (
-                            <>formateur</>
-                          )}
-                          , toutes offres confondues :{" "}
-                        </Text>
-                        <Text as="b" variant="highlight">
-                          {candidatureRelation?.statut_diffusion_generique}
-                        </Text>
-                        <Link
-                          ml={2}
-                          textDecoration={"underline"}
-                          fontSize={"zeta"}
-                          color={"grey.600"}
-                          isExternal
-                          href={`${process.env.REACT_APP_CANDIDATURE_URL}/admin/etablissement/${candidatureRelation.siret_responsable}#${candidatureRelation.siret_formateur}`}
-                        >
-                          Voir sur le site des candidatures&nbsp; <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} />
-                        </Link>
-                      </Text>
-                    </Alert>
-                  )}
+                        !candidatureRelation?.intervention_since_last_session && (
+                          <Alert mt={4} type={"warning"}>
+                            <Text>
+                              <Text as="span">
+                                Candidatures non téléchargées lors de la précédente campagne de diffusion pour cet
+                                organisme{" "}
+                                {formation.etablissement_formateur_siret ===
+                                formation.etablissement_gestionnaire_siret ? (
+                                  <>responsable-formateur</>
+                                ) : (
+                                  <>formateur</>
+                                )}
+                                , toutes offres confondues.{" "}
+                              </Text>
+
+                              <Link
+                                ml={2}
+                                textDecoration={"underline"}
+                                isExternal
+                                href={`${process.env.REACT_APP_CANDIDATURE_URL}/admin/etablissement/${candidatureRelation.siret_responsable}#${candidatureRelation.siret_formateur}`}
+                              >
+                                Vérifier et modifier le destinataire.&nbsp;{" "}
+                                <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} />
+                              </Link>
+                            </Text>
+                            <Text>
+                              <Text as="i" fontSize={"zeta"} color={"grey.600"}>
+                                L’accès au site des candidatures vous permet de modifier le destinataire si vous en avez
+                                connaissance. Vos modifications seront prises en compte pour la prochaine campagne de
+                                diffusion.
+                              </Text>
+                            </Text>
+                          </Alert>
+                        )}
+                    </>
+                  ) : (
+                    <></>
+                    // <Alert mt={4} type={"infoLight"}>
+                    //   Aucune information de téléchargement des candidatures n'a été diffusée pour cet organisme{" "}
+                    //   {formation.etablissement_formateur_siret === formation.etablissement_gestionnaire_siret ? (
+                    //     <>responsable-formateur</>
+                    //   ) : (
+                    //     <>formateur</>
+                    //   )}{" "}
+                    //   (sauf en cas de modification de Siret survenu entre temps). Si des offres sont publiées pour la
+                    //   prochaine campagne, le courriel utilisé pour la diffusion sera : {responsable?.email_direction} .
+                    // </Alert>
+                  ))}
 
                 {((formation.parcoursup_perimetre &&
                   // formation.parcoursup_previous_session &&
