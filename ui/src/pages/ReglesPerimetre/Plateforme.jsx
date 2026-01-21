@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   Accordion,
   AccordionButton,
@@ -22,7 +22,7 @@ import { RuleModal } from "./components/RuleModal";
 import { Diplome } from "./components/Diplome";
 import { Headline } from "./components/Headline";
 import useAuth from "../../common/hooks/useAuth";
-import { hasAllAcademiesRight, isUserAdmin } from "../../common/utils/rolesUtils";
+import { hasAccessTo, hasAccessToAtLeastOneOf, hasAllAcademiesRight, isUserAdmin } from "../../common/utils/rolesUtils";
 import { ExportButton } from "./components/ExportButton";
 import {
   createRule,
@@ -54,22 +54,31 @@ export default ({ plateforme }) => {
   const [currentIndex, setCurrentIndex] = useState(-1);
 
   let title;
+  let editAcl;
+  let createAcl;
 
   switch (plateforme) {
     case PLATEFORME.AFFELNET:
       title = currentAcademie
         ? `Règles d’intégration des formations en apprentissage dans Affelnet-lycée – Académie de ${ACADEMIES[String(currentAcademie)?.padStart(2, "0")]?.nom_academie}`
         : `Règles d’intégration des formations en apprentissage dans Affelnet-lycée`;
+      editAcl = "page_perimetre/affelnet-edit-rule";
+      createAcl = "page_perimetre/affelnet-add-rule";
+
       break;
     case PLATEFORME.PARCOURSUP:
       title = currentAcademie
         ? `Règles d’intégration des formations à la plateforme Parcoursup – Académie de ${ACADEMIES[String(currentAcademie)?.padStart(2, "0")]?.nom_academie}`
         : `Règles d'intégration des formations à la plateforme Parcoursup`;
+      editAcl = "page_perimetre/parcoursup-edit-rule";
+      createAcl = "page_perimetre/parcoursup-add-rule";
       break;
     default:
       title = "Règles d’intégration des formations";
       break;
   }
+
+  const acls = [editAcl, createAcl];
 
   setTitle(title);
 
@@ -421,6 +430,10 @@ export default ({ plateforme }) => {
     }
   }, [currentAcademie, niveaux]);
 
+  if (!user || hasAccessToAtLeastOneOf(user, acls) === false) {
+    return;
+  }
+
   return (
     <Layout>
       <Box w="100%" pt={[4, 8]} px={[1, 1, 12, 24]}>
@@ -471,7 +484,7 @@ export default ({ plateforme }) => {
                     />
                   </Flex>
 
-                  {user.isAdmin && !currentAcademie && (
+                  {hasAccessTo(user, createAcl) && !currentAcademie && (
                     <Button
                       variant="primary"
                       onClick={() => {

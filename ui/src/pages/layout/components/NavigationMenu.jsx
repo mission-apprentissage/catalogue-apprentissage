@@ -2,7 +2,12 @@ import React, { useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import { Box, Container, Flex, Link, Text } from "@chakra-ui/react";
 import useAuth from "../../../common/hooks/useAuth";
-import { hasAccessTo, hasOnlyOneAcademyRight, isUserAdmin } from "../../../common/utils/rolesUtils";
+import {
+  hasAccessTo,
+  hasAccessToAtLeastOneOf,
+  hasOnlyOneAcademyRight,
+  isUserAdmin,
+} from "../../../common/utils/rolesUtils";
 import { MenuFill, Close } from "../../../theme/components/icons";
 import { ACADEMIES } from "../../../constants/academies";
 
@@ -94,13 +99,13 @@ const NavLinks = ({ isOpen }) => {
           <NavItem to="/consoles-pilotage/parcoursup">Console Parcoursup</NavItem>
         )}
 
-        {(hasAccessTo(auth, "page_perimetre/affelnet") || hasAccessTo(auth, "page_perimetre/affelnet_academie")) && (
+        {hasAccessToAtLeastOneOf(auth, ["page_perimetre/affelnet-add-rule", "page_perimetre/affelnet-edit-rule"]) && (
           <NavItem to="/regles-perimetre/affelnet">Périmètre Affelnet</NavItem>
         )}
-        {(hasAccessTo(auth, "page_perimetre/parcoursup") ||
-          hasAccessTo(auth, "page_perimetre/parcoursup_academie")) && (
-          <NavItem to="/regles-perimetre/parcoursup">Périmètre Parcoursup</NavItem>
-        )}
+        {hasAccessToAtLeastOneOf(auth, [
+          "page_perimetre/parcoursup-add-rule",
+          "page_perimetre/parcoursup-edit-rule",
+        ]) && <NavItem to="/regles-perimetre/parcoursup">Périmètre Parcoursup</NavItem>}
 
         {hasAccessTo(auth, "page_mode_emploi/parcoursup") && (
           <NavItem to="/mode-emploi/parcoursup">Mode d'emploi Parcoursup</NavItem>

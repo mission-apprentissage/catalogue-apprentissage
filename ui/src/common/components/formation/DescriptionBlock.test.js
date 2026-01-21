@@ -150,7 +150,13 @@ const formation = {
 
 it("renders the description block of the training", async () => {
   const { queryByText } = render(
-    <DescriptionBlock formation={{ ...formation, etablissement_reference_habilite_rncp: null }} />
+    <DescriptionBlock
+      formation={{
+        ...formation,
+        CI_inscrit_rncp: "3 - Inscrit de droit",
+        etablissement_reference_habilite_rncp: null,
+      }}
+    />
   );
 
   expect(queryByText("Description de la certification")).toBeInTheDocument();
@@ -173,6 +179,7 @@ it("show partenaires for titre or tp", async () => {
   const tpFormation = {
     ...formation,
     etablissement_reference_habilite_rncp: true,
+    CI_inscrit_rncp: "4 - Inscrit sure demande",
     rncp_details: {
       ...formation.rncp_details,
       code_type_certif: "TP",
@@ -240,8 +247,10 @@ it("show partenaires", async () => {
 it("display a warning for cfd outdated", async () => {
   const testFormation = {
     ...formation,
+    cfd_date_fermeture: null,
     etablissement_reference_habilite_rncp: null,
     cfd_outdated: true,
+    CI_inscrit_rncp: "3 - Inscrit de droit",
   };
   const { queryByText } = render(<DescriptionBlock formation={testFormation} />);
 

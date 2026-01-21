@@ -5,6 +5,7 @@ import { getDiplomesAllowedForSubRulesUrl, RuleModal } from "./RuleModal";
 import { PARCOURSUP_STATUS } from "../../../constants/status";
 import { setupMswServer, renderWithRouter } from "../../../common/utils/testUtils";
 import { PLATEFORME } from "../../../constants/plateforme";
+import * as useAuth from "../../../common/hooks/useAuth";
 
 const server = setupMswServer(
   rest.get(/\/api\/entity\/perimetre\/niveau/, (req, res, ctx) => {
@@ -107,6 +108,19 @@ it("renders the modal in creation mode for affelnet", async () => {
 
 it("renders the modal in update mode and can delete", async () => {
   window.confirm = jest.fn(() => true); // always click 'yes'
+  jest.spyOn(useAuth, "default").mockImplementation(() => [
+    {
+      permissions: { isAdmin: true },
+      sub: "test",
+      email: "test@apprentissage.beta.gouv.fr",
+      academie: "-1",
+      account_status: "CONFIRMED",
+      roles: ["admin"],
+      isAdmin: true,
+      acl: [],
+    },
+    () => {},
+  ]);
 
   const onClose = jest.fn();
   const onUpdateRule = jest.fn();
@@ -155,6 +169,19 @@ it("renders the modal in update mode and can delete", async () => {
 
 it("renders the modal and can close", async () => {
   window.confirm = jest.fn(() => true); // always click 'yes'
+  jest.spyOn(useAuth, "default").mockImplementation(() => [
+    {
+      permissions: { isAdmin: true },
+      sub: "test",
+      email: "test@apprentissage.beta.gouv.fr",
+      academie: "-1",
+      account_status: "CONFIRMED",
+      roles: ["admin"],
+      isAdmin: true,
+      acl: [],
+    },
+    () => {},
+  ]);
 
   const onClose = jest.fn();
   const onUpdateRule = jest.fn();

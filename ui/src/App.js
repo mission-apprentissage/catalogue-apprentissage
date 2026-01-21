@@ -4,7 +4,7 @@ import { Route, Routes, useNavigate, Navigate, RouterProvider, createBrowserRout
 import ScrollToTop from "./common/components/ScrollToTop";
 import useAuth from "./common/hooks/useAuth";
 import { _get, _post } from "./common/httpClient";
-import { hasAccessTo, hasOnlyOneAcademyRight } from "./common/utils/rolesUtils";
+import { hasAccessTo, hasAccessToAtLeastOneOf, hasOnlyOneAcademyRight } from "./common/utils/rolesUtils";
 import { DateContext } from "./DateContext";
 import { ACADEMIES } from "./constants/academies";
 import { PLATEFORME } from "./constants/plateforme";
@@ -273,11 +273,13 @@ const Root = () => {
 
             {/* Règles de périmètre */}
             {auth &&
-            (hasAccessTo(auth, "page_perimetre") ||
-              hasAccessTo(auth, "page_perimetre/affelnet") ||
-              hasAccessTo(auth, "page_perimetre/parcoursup") ||
-              hasAccessTo(auth, "page_perimetre/affelnet_academie") ||
-              hasAccessTo(auth, "page_perimetre/parcoursup_academie")) ? (
+            hasAccessToAtLeastOneOf(auth, [
+              "page_perimetre",
+              "page_perimetre/affelnet-add-rule",
+              "page_perimetre/parcoursup-add-rule",
+              "page_perimetre/affelnet-edit-rule",
+              "page_perimetre/parcoursup-edit-rule",
+            ]) ? (
               <Route
                 path="/regles-perimetre"
                 element={
@@ -291,8 +293,10 @@ const Root = () => {
             )}
 
             {auth &&
-            (hasAccessTo(auth, "page_perimetre/parcoursup") ||
-              hasAccessTo(auth, "page_perimetre/parcoursup_academie")) ? (
+            hasAccessToAtLeastOneOf(auth, [
+              "page_perimetre/parcoursup-add-rule",
+              "page_perimetre/parcoursup-edit-rule",
+            ]) ? (
               <Route
                 path="/regles-perimetre/parcoursup"
                 element={
@@ -306,7 +310,7 @@ const Root = () => {
             )}
 
             {auth &&
-            (hasAccessTo(auth, "page_perimetre/affelnet") || hasAccessTo(auth, "page_perimetre/affelnet_academie")) ? (
+            hasAccessToAtLeastOneOf(auth, ["page_perimetre/affelnet-add-rule", "page_perimetre/affelnet-edit-rule"]) ? (
               <Route
                 path="/regles-perimetre/affelnet"
                 element={

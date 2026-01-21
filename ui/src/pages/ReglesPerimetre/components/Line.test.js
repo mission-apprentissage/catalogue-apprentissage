@@ -6,9 +6,23 @@ import * as api from "../../../common/api/perimetre";
 import { AFFELNET_STATUS, PARCOURSUP_STATUS } from "../../../constants/status";
 import { CONDITIONS } from "../../../constants/conditionsIntegration";
 import { PLATEFORME } from "../../../constants/plateforme";
+import * as useAuth from "../../../common/hooks/useAuth";
 
 it("renders line & create rule", async () => {
   jest.spyOn(api, "getCount").mockImplementation(() => 123);
+  jest.spyOn(useAuth, "default").mockImplementation(() => [
+    {
+      permissions: { isAdmin: true },
+      sub: "test",
+      email: "test@apprentissage.beta.gouv.fr",
+      academie: "-1",
+      account_status: "CONFIRMED",
+      roles: ["admin"],
+      isAdmin: true,
+      acl: [],
+    },
+    () => {},
+  ]);
 
   const onShowRule = jest.fn();
   const onCreateRule = jest.fn();
@@ -56,6 +70,19 @@ it("renders line & create rule", async () => {
 
 it("renders Line & shows rule", async () => {
   jest.spyOn(api, "getCount").mockImplementation(() => 123);
+  jest.spyOn(useAuth, "default").mockImplementation(() => [
+    {
+      permissions: { isAdmin: true },
+      sub: "test",
+      email: "test@apprentissage.beta.gouv.fr",
+      academie: "-1",
+      account_status: "CONFIRMED",
+      roles: ["admin"],
+      isAdmin: true,
+      acl: [],
+    },
+    () => {},
+  ]);
 
   const onShowRule = jest.fn();
   const onCreateRule = jest.fn();
@@ -122,6 +149,19 @@ it("renders Line & shows rule", async () => {
 
 it("renders Line for academie & doesn't show rule", async () => {
   jest.spyOn(api, "getCount").mockImplementation(() => 123);
+  jest.spyOn(useAuth, "default").mockImplementation(() => [
+    {
+      permissions: { isAdmin: true },
+      sub: "test",
+      email: "test@apprentissage.beta.gouv.fr",
+      academie: "-1",
+      account_status: "CONFIRMED",
+      roles: ["admin"],
+      isAdmin: true,
+      acl: [],
+    },
+    () => {},
+  ]);
 
   const onShowRule = jest.fn();
   const onCreateRule = jest.fn();
@@ -187,6 +227,19 @@ it("renders Line for academie & doesn't show rule", async () => {
 
 it("Action select - should delete rule", async () => {
   jest.spyOn(api, "getCount").mockImplementation(() => 123);
+  jest.spyOn(useAuth, "default").mockImplementation(() => [
+    {
+      permissions: { isAdmin: true },
+      sub: "test",
+      email: "test@apprentissage.beta.gouv.fr",
+      academie: "-1",
+      account_status: "CONFIRMED",
+      roles: ["admin"],
+      isAdmin: true,
+      acl: [],
+    },
+    () => {},
+  ]);
 
   const onShowRule = jest.fn();
   const onCreateRule = jest.fn();
@@ -234,6 +287,19 @@ it("Action select - should delete rule", async () => {
 
 it(`Action select - should update rule & set "non publiable en l'état"`, async () => {
   jest.spyOn(api, "getCount").mockImplementation(() => 123);
+  jest.spyOn(useAuth, "default").mockImplementation(() => [
+    {
+      permissions: { isAdmin: true },
+      sub: "test",
+      email: "test@apprentissage.beta.gouv.fr",
+      academie: "-1",
+      account_status: "CONFIRMED",
+      roles: ["admin"],
+      isAdmin: true,
+      acl: [],
+    },
+    () => {},
+  ]);
 
   const onShowRule = jest.fn();
   const onCreateRule = jest.fn();
@@ -284,6 +350,19 @@ it(`Action select - should update rule & set "non publiable en l'état"`, async 
 
 it("Action select - should update rule & set à publier", async () => {
   jest.spyOn(api, "getCount").mockImplementation(() => 123);
+  jest.spyOn(useAuth, "default").mockImplementation(() => [
+    {
+      permissions: { isAdmin: true },
+      sub: "test",
+      email: "test@apprentissage.beta.gouv.fr",
+      academie: "-1",
+      account_status: "CONFIRMED",
+      roles: ["admin"],
+      isAdmin: true,
+      acl: [],
+    },
+    () => {},
+  ]);
 
   const onShowRule = jest.fn();
   const onCreateRule = jest.fn();
@@ -333,6 +412,19 @@ it("Action select - should update rule & set à publier", async () => {
 
 it("Status select - should update status", async () => {
   jest.spyOn(api, "getCount").mockImplementation(() => 123);
+  jest.spyOn(useAuth, "default").mockImplementation(() => [
+    {
+      permissions: { isAdmin: true },
+      sub: "test",
+      email: "test@apprentissage.beta.gouv.fr",
+      academie: "-1",
+      account_status: "CONFIRMED",
+      roles: ["admin"],
+      isAdmin: true,
+      acl: [],
+    },
+    () => {},
+  ]);
 
   const onShowRule = jest.fn();
   const onCreateRule = jest.fn();
@@ -381,6 +473,19 @@ it("Status select - should update status", async () => {
 
 it("Status select - should update status for academie", async () => {
   jest.spyOn(api, "getCount").mockImplementation(() => 123);
+  jest.spyOn(useAuth, "default").mockImplementation(() => [
+    {
+      permissions: { isAdmin: true },
+      sub: "test",
+      email: "test@apprentissage.beta.gouv.fr",
+      academie: "-1",
+      account_status: "CONFIRMED",
+      roles: ["admin"],
+      isAdmin: true,
+      acl: [],
+    },
+    () => {},
+  ]);
 
   const onShowRule = jest.fn();
   const onCreateRule = jest.fn();
@@ -433,6 +538,19 @@ it("Status select - should update status for academie", async () => {
 
 it("Status select - should remove status for academie", async () => {
   jest.spyOn(api, "getCount").mockImplementation(() => 123);
+  jest.spyOn(useAuth, "default").mockImplementation(() => [
+    {
+      permissions: { isAdmin: true },
+      sub: "test",
+      email: "test@apprentissage.beta.gouv.fr",
+      academie: "-1",
+      account_status: "CONFIRMED",
+      roles: ["admin"],
+      isAdmin: true,
+      acl: [],
+    },
+    () => {},
+  ]);
 
   const onShowRule = jest.fn();
   const onCreateRule = jest.fn();

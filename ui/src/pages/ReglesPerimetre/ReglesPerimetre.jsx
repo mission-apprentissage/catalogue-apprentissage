@@ -1,9 +1,8 @@
-import React from "react";
 import { Box, Container, Flex, Grid, GridItem, Text } from "@chakra-ui/react";
 import { Breadcrumb } from "../../common/components/Breadcrumb";
 import Layout from "../layout/Layout";
 import { setTitle } from "../../common/utils/pageUtils";
-import { hasAccessTo } from "../../common/utils/rolesUtils";
+import { hasAccessToAtLeastOneOf } from "../../common/utils/rolesUtils";
 import useAuth from "../../common/hooks/useAuth";
 import { Card } from "../../common/components/Card";
 
@@ -23,7 +22,10 @@ export default () => {
           </Text>
 
           <Flex my={4} mb={8} alignItems="flex-start" data-testid="grid">
-            {hasAccessTo(auth, "page_perimetre/parcoursup") && (
+            {hasAccessToAtLeastOneOf(auth, [
+              "page_perimetre/parcoursup-add-rule",
+              "page_perimetre/parcoursup-edit-rule",
+            ]) && (
               <Box border="2px" p="24px" borderColor="gray.200" mr={4}>
                 <Text textStyle="h4" color="grey.800" mt={2} mb={5}>
                   Parcoursup
@@ -35,14 +37,22 @@ export default () => {
                       linkTo="/regles-perimetre/parcoursup"
                       title="Règles d'intégration des formations à la plateforme Parcoursup"
                       body="Déterminer les conditions d'intégrations des formations en apprentissage du Catalogue (Carif-Oref) sur la plateforme Parcoursup"
-                      isDisabled={!hasAccessTo(auth, "page_perimetre/parcoursup")}
+                      isDisabled={
+                        !hasAccessToAtLeastOneOf(auth, [
+                          "page_perimetre/parcoursup-add-rule",
+                          "page_perimetre/parcoursup-edit-rule",
+                        ])
+                      }
                     />
                   </GridItem>
                 </Grid>
               </Box>
             )}
 
-            {hasAccessTo(auth, "page_perimetre/affelnet") && (
+            {hasAccessToAtLeastOneOf(auth, [
+              "page_perimetre/affelnet-add-rule",
+              "page_perimetre/affelnet-edit-rule",
+            ]) && (
               <Box style={{ border: "2px solid #E2E8F0", padding: "24px" }} ml={4}>
                 <Text textStyle="h4" color="grey.800" mt={2} mb={5}>
                   Affelnet
@@ -53,7 +63,12 @@ export default () => {
                       linkTo="/regles-perimetre/affelnet"
                       title="Règles d'intégration des formations à la plateforme Affelnet"
                       body="Déterminer les conditions d'intégrations des formations en apprentissage du Catalogue (Carif-Oref) sur la plateforme Affelnet"
-                      isDisabled={!hasAccessTo(auth, "page_perimetre/affelnet")}
+                      isDisabled={
+                        !hasAccessToAtLeastOneOf(auth, [
+                          "page_perimetre/affelnet-add-rule",
+                          "page_perimetre/affelnet-edit-rule",
+                        ])
+                      }
                     />
                   </GridItem>
                 </Grid>

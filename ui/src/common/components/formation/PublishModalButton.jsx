@@ -15,13 +15,13 @@ export const PublishModalButton = ({ formation, setFormation }) => {
 
   switch (true) {
     case formation.affelnet_statut === AFFELNET_STATUS.A_DEFINIR &&
-      hasAccessTo(user, "page_perimetre/affelnet") &&
+      hasAccessTo(user, "page_perimetre/affelnet-edit-rule") &&
       hasAcademyRight(user, formation.num_academie):
       title = "La publication Affelnet nécessite un réglage des règles de périmètre.";
       disabled = true;
       break;
     case formation.affelnet_statut === AFFELNET_STATUS.A_DEFINIR &&
-      !hasAccessTo(user, "page_perimetre/affelnet") &&
+      !hasAccessTo(user, "page_perimetre/affelnet-edit-rule") &&
       hasAcademyRight(user, formation.num_academie):
       title =
         "La publication Affelnet nécessite un réglage des règles de périmètre par le chef de service ou un délégué";
@@ -29,13 +29,13 @@ export const PublishModalButton = ({ formation, setFormation }) => {
       break;
 
     // case formation.parcoursup_statut === PARCOURSUP_STATUS.A_DEFINIR &&
-    //   hasAccessTo(user, "page_perimetre/parcoursup") &&
+    //   hasAccessTo(user, "page_perimetre/parcoursup-edit-rule") &&
     //   hasAcademyRight(user, formation.num_academie):
     //   title = "La publication Parcoursup nécessite un réglage des règles de périmètre.";
     //   disabled = true;
     //   break;
     // case formation.parcoursup_statut === PARCOURSUP_STATUS.A_DEFINIR &&
-    //   !hasAccessTo(user, "page_perimetre/parcoursup") &&
+    //   !hasAccessTo(user, "page_perimetre/parcoursup-edit-rule") &&
     //   hasAcademyRight(user, formation.num_academie):
     //   title =
     //     "La publication Parcoursup nécessite un réglage des règles de périmètre par le chef de service ou un délégué";

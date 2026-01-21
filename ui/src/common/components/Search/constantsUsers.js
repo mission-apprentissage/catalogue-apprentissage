@@ -1,7 +1,7 @@
 import { escapeDiacritics } from "../../utils/downloadUtils";
 import { ACADEMIES } from "../../../constants/academies";
 import { REGIONS } from "../../../constants/regions";
-import { hasAccessTo, hasOneOfRoles } from "../../utils/rolesUtils";
+import { hasAccessTo, hasAccessToAtLeastOneOf, hasOneOfRoles } from "../../utils/rolesUtils";
 
 export const CATALOGUE_API = `${process.env.REACT_APP_BASE_URL}/api`;
 export const allowedFilters = [
@@ -165,7 +165,12 @@ export const columnsDefinition = [
     width: 200,
     exportable: true,
     formatter: (acl, user, { roles }) =>
-      booleanFormatter(hasAccessTo(structureUser(user, roles), "page_perimetre/affelnet")),
+      booleanFormatter(
+        hasAccessToAtLeastOneOf(structureUser(user, roles), [
+          "page_perimetre/affelnet-add-rule",
+          "page_perimetre/affelnet-edit-rule",
+        ])
+      ),
   },
 
   {
@@ -183,7 +188,12 @@ export const columnsDefinition = [
   //   width: 200,
   //   exportable: true,
   //   formatter: (acl, user, { roles }) =>
-  //     booleanFormatter(hasAccessTo(structureUser(user, roles), "page_perimetre/parcoursup")),
+  //     booleanFormatter(
+  //       hasAccessToAtLeastOneOf(structureUser(user, roles), [
+  //         "page_perimetre/parcoursup-add-rule",
+  //         "page_perimetre/parcoursup-edit-rule",
+  //       ])
+  //     ),
   // },
 
   {
@@ -674,7 +684,7 @@ export const quickFiltersDefinition = [
 
       const { roles } = injectedProps;
 
-      const authorizedAcls = ["page_perimetre/affelnet"];
+      const authorizedAcls = ["page_perimetre/affelnet-add-rule", "page_perimetre/affelnet-edit-rule"];
 
       const authorizedRoles = new Set(
         roles?.filter((role) => authorizedAcls.some((acl) => role.acl.includes(acl))).map((role) => role.name)
@@ -873,7 +883,7 @@ export const quickFiltersDefinition = [
 
   //     const { roles } = injectedProps;
 
-  //     const authorizedAcls = ["page_perimetre/parcoursup"];
+  //     const authorizedAcls = ["page_perimetre/parcoursup-add-rule", "page_perimetre/parcoursup-edit-rule"];
 
   //     const authorizedRoles = new Set(
   //       roles?.filter((role) => authorizedAcls.some((acl) => role.acl.includes(acl))).map((role) => role.name)

@@ -36,7 +36,10 @@ it("renders all actions for admin", async () => {
 });
 
 it("renders ps actions for acl ps", async () => {
-  setAuthState({ permissions: { isAdmin: false }, acl: ["page_perimetre/parcoursup"] });
+  setAuthState({
+    permissions: { isAdmin: false },
+    acl: ["page_perimetre/parcoursup-add-rule", "page_perimetre/parcoursup-edit-rule"],
+  });
 
   const { queryByText, getByTestId } = renderWithRouter(<ReglesPerimetre />);
 
@@ -50,7 +53,10 @@ it("renders ps actions for acl ps", async () => {
 });
 
 it("renders af actions for acl af", async () => {
-  setAuthState({ permissions: { isAdmin: false }, acl: ["page_perimetre/affelnet"] });
+  setAuthState({
+    permissions: { isAdmin: false },
+    acl: ["page_perimetre/affelnet-add-rule", "page_perimetre/affelnet-edit-rule"],
+  });
 
   const { queryByText, getByTestId } = renderWithRouter(<ReglesPerimetre />);
 

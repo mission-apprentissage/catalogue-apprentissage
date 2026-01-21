@@ -68,13 +68,24 @@ const updateStatutAcademiesSchema = Joi.object({
 }).unknown();
 
 /**
- * Ensure user can edit perimeter rules
+ * Ensure user can add perimeter rules
  */
-const hasPerimeterPlateformeRight = (user = {}, plateforme) => {
+const hasPerimeterPlateformeCreateRight = (user = {}, plateforme) => {
   return (
     user.isAdmin ||
-    (plateforme === "affelnet" && hasAccessTo(user, "page_perimetre/affelnet")) ||
-    (plateforme === "parcoursup" && hasAccessTo(user, "page_perimetre/parcoursup"))
+    (plateforme === "affelnet" && hasAccessTo(user, "page_perimetre/affelnet-add-rule")) ||
+    (plateforme === "parcoursup" && hasAccessTo(user, "page_perimetre/parcoursup-add-rule"))
+  );
+};
+
+/**
+ * Ensure user can edit perimeter rules
+ */
+const hasPerimeterPlateformeEditRight = (user = {}, plateforme) => {
+  return (
+    user.isAdmin ||
+    (plateforme === "affelnet" && hasAccessTo(user, "page_perimetre/affelnet-edit-rule")) ||
+    (plateforme === "parcoursup" && hasAccessTo(user, "page_perimetre/parcoursup-edit-rule"))
   );
 };
 
@@ -139,7 +150,7 @@ module.exports = () => {
         num_academie,
       } = payload;
 
-      if (!hasPerimeterPlateformeRight(user, plateforme)) {
+      if (!hasPerimeterPlateformeCreateRight(user, plateforme)) {
         throw Boom.unauthorized();
       }
 
@@ -190,7 +201,7 @@ module.exports = () => {
         throw Boom.notFound();
       }
 
-      if (!(hasPerimeterPlateformeRight(user, rule.plateforme) && hasStatutAcademieRight(user, rule, payload))) {
+      if (!(hasPerimeterPlateformeEditRight(user, rule.plateforme) && hasStatutAcademieRight(user, rule, payload))) {
         throw Boom.unauthorized();
       }
 

@@ -42,6 +42,8 @@ import { RuleUpdatesHistory } from "./RuleUpdatesHistory";
 import { StatusSelect } from "./StatusSelect";
 import { sortDescending } from "../../../common/utils/historyUtils";
 import { PLATEFORME } from "../../../constants/plateforme";
+import useAuth from "../../../common/hooks/useAuth";
+import { hasAccessTo } from "../../../common/utils/rolesUtils";
 
 const CATALOGUE_API = `${process.env.REACT_APP_BASE_URL}/api`;
 
@@ -84,6 +86,7 @@ export const getDiplomesAllowedForSubRulesUrl = (plateforme) => {
 };
 
 const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreateRule, plateforme, academie }) => {
+  const [auth] = useAuth();
   const { sessionStartDate, sessionEndDate } = useContext(DateContext);
 
   const {
@@ -106,13 +109,31 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
   const initialRef = React.useRef();
   const toast = useToast();
 
-  const isDisabled = !!academie && !isCreating && (!num_academie || String(num_academie) !== academie);
+  let createAcl, editAcl;
 
-  const isStatusChangeDisabled = !(
-    isCreating || isStatusChangeEnabled({ plateforme, academie, num_academie, status: statut, condition_integration })
-  );
+  switch (plateforme) {
+    case PLATEFORME.AFFELNET:
+      createAcl = "page_perimetre/affelnet-add-rule";
+      editAcl = "page_perimetre/affelnet-edit-rule";
+      break;
+    case PLATEFORME.PARCOURSUP:
+      createAcl = "page_perimetre/parcoursup-add-rule";
+      editAcl = "page_perimetre/parcoursup-edit-rule";
+      break;
+    default:
+      break;
+  }
 
-  const isConditionChangeEnabled = !academie;
+  const isDisabled =
+    (rule ? !hasAccessTo(auth, editAcl) : !hasAccessTo(auth, createAcl)) ||
+    (!!academie && !isCreating && (!num_academie || String(num_academie) !== academie));
+  const isStatusChangeDisabled =
+    (rule ? !hasAccessTo(auth, editAcl) : !hasAccessTo(auth, createAcl)) ||
+    !(
+      isCreating || isStatusChangeEnabled({ plateforme, academie, num_academie, status: statut, condition_integration })
+    );
+  const isConditionChangeDisabled = (rule ? !hasAccessTo(auth, editAcl) : !hasAccessTo(auth, createAcl)) || !!academie;
+
   const initialCondition = academie && isCreating ? CONDITIONS.PEUT_INTEGRER : condition_integration;
   const academieLabel = Object.values(ACADEMIES).find(
     ({ num_academie: num }) => Number(num) === Number(academie ?? num_academie)
@@ -385,6 +406,7 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
                         <Flex flexDirection={"column"} alignItems={"flex-start"}>
                           <FormLabel htmlFor="niveau">Niveau</FormLabel>
                           <Select
+                            aria-disabled={isDisabled}
                             isDisabled={isDisabled}
                             id={"niveau"}
                             name={"niveau"}
@@ -411,6 +433,7 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
                         <Flex flexDirection={"column"} alignItems={"flex-start"} mt={8}>
                           <FormLabel htmlFor={"diplome"}>Type de diplôme ou titre</FormLabel>
                           <Select
+                            aria-disabled={isDisabled}
                             isDisabled={isDisabled}
                             id={"diplome"}
                             name={"diplome"}
@@ -444,6 +467,7 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
                       <Flex flexDirection={"column"} mt={8} alignItems={"flex-start"}>
                         <FormLabel htmlFor={"name"}>Nom du diplôme ou titre</FormLabel>
                         <Input
+                          aria-disabled={isDisabled}
                           isDisabled={isDisabled}
                           id="name"
                           name="name"
@@ -464,6 +488,7 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
                           Les valeurs acceptées sont 1, 2, 3, 9 et X (non collectée).
                         </Text>
                         <Input
+                          aria-disabled={isDisabled}
                           isDisabled={isDisabled}
                           id="duration"
                           name="duration"
@@ -485,6 +510,7 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
                           Les valeurs acceptées sont 1, 2, 3, 9 et X (non collectée).
                         </Text>
                         <Input
+                          aria-disabled={isDisabled}
                           isDisabled={isDisabled}
                           id="registrationYear"
                           name="registrationYear"
@@ -505,6 +531,7 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
                       <Collapse in={isCriteriaOpen} animateOpacity style={{ width: "100%" }}>
                         <Box bg={"grey.100"} p={4} borderLeft={"4px solid"} borderColor={"bluefrance"} w={"100%"}>
                           <RuleBuilder
+                            aria-disabled={isDisabled}
                             isDisabled={isDisabled}
                             regle_complementaire_query={values.query}
                             regle_complementaire={values.regle}
@@ -530,7 +557,8 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
                       <Flex flexDirection={"column"} mt={16} alignItems={"flex-start"}>
                         <FormLabel htmlFor={"condition"}>Condition d'intégration</FormLabel>
                         <ActionsSelect
-                          isDisabled={!isConditionChangeEnabled}
+                          aria-disabled={isConditionChangeDisabled}
+                          isDisabled={isConditionChangeDisabled}
                           id={"condition"}
                           name="condition"
                           value={values.condition}
@@ -554,6 +582,7 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
                       <Flex flexDirection={"column"} mt={8} alignItems={"flex-start"}>
                         <FormLabel htmlFor={"status"}>Règle de publication</FormLabel>
                         <StatusSelect
+                          aria-disabled={isStatusChangeDisabled}
                           isDisabled={isStatusChangeDisabled}
                           id={"status"}
                           name="status"
@@ -582,6 +611,7 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
                   {!isCreating && (
                     <Button
                       data-testid="delete-button"
+                      aria-disabled={isDisabled}
                       isDisabled={isDisabled}
                       variant="outline"
                       colorScheme="red"

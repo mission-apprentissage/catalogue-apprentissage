@@ -132,21 +132,21 @@ export default [
     ref: "page_perimetre",
     subFeatures: [
       {
-        feature: "Affelnet",
-        ref: "page_perimetre/affelnet",
+        feature: "Ajout de règle Affelnet",
+        ref: "page_perimetre/affelnet-add-rule",
       },
-      // {
-      //   feature: "Gestion des règles de périmètre académique Affelnet",
-      //   ref: "page_perimetre/affelnet_academie",
-      // },
       {
-        feature: "Parcoursup",
-        ref: "page_perimetre/parcoursup",
+        feature: "Edition de règle Affelnet",
+        ref: "page_perimetre/affelnet-edit-rule",
       },
-      // {
-      //   feature: "Gestion des règles de périmètre académique Parcoursup",
-      //   ref: "page_perimetre/parcoursup_academie",
-      // },
+      {
+        feature: "Ajout de règle Parcoursup",
+        ref: "page_perimetre/parcoursup-add-rule",
+      },
+      {
+        feature: "Edition de règle Parcoursup",
+        ref: "page_perimetre/parcoursup-edit-rule",
+      },
     ],
   },
   {

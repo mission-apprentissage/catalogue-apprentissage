@@ -18,6 +18,10 @@ export const hasAccessTo = (auth, aclRef) => {
   return isUserAdmin(auth) || auth.acl?.includes(aclRef);
 };
 
+export const hasAccessToAtLeastOneOf = (auth, aclRefs) => {
+  return isUserAdmin(auth) || aclRefs.some((aclRef) => auth.acl?.includes(aclRef));
+};
+
 export const hasAllAcademiesRight = (auth) => {
   const listAcademies = auth?.academie?.split(",")?.map((academieStr) => Number(academieStr));
   return isUserAdmin(auth) || listAcademies?.includes(-1);

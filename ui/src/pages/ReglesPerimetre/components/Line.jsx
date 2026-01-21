@@ -28,6 +28,8 @@ import { DateContext } from "../../../DateContext";
 import { sortDescending } from "../../../common/utils/historyUtils";
 import { PLATEFORME } from "../../../constants/plateforme";
 import { AFFELNET_STATUS } from "../../../constants/status";
+import { hasAccessTo } from "../../../common/utils/rolesUtils";
+import useAuth from "../../../common/hooks/useAuth";
 
 export const Line = ({
   showIcon,
@@ -46,6 +48,8 @@ export const Line = ({
   rule = {},
   academie,
 }) => {
+  const [auth] = useAuth();
+
   const [lineCount, setLineCount] = useState(count);
   const [lineLink, setLineLink] = useState(null);
   const [nextStatus, setNextStatus] = useState(null);
@@ -66,15 +70,31 @@ export const Line = ({
     annee,
   } = rule;
 
-  const isConditionChangeDisabled = !!academie;
+  let editAcl;
 
-  const isStatusChangeDisabled = !isStatusChangeEnabled({
-    plateforme,
-    academie,
-    num_academie,
-    status,
-    condition_integration,
-  });
+  switch (plateforme) {
+    case PLATEFORME.AFFELNET:
+      editAcl = "page_perimetre/affelnet-edit-rule";
+
+      break;
+    case PLATEFORME.PARCOURSUP:
+      editAcl = "page_perimetre/parcoursup-edit-rule";
+      break;
+    default:
+      break;
+  }
+
+  const isConditionChangeDisabled = !hasAccessTo(auth, editAcl) || !!academie;
+
+  const isStatusChangeDisabled =
+    !hasAccessTo(auth, editAcl) ||
+    !isStatusChangeEnabled({
+      plateforme,
+      academie,
+      num_academie,
+      status,
+      condition_integration,
+    });
 
   const getFirstAllowedStatut = (condition) => {
     return STATUS_LIST[condition][plateforme][0];
@@ -246,97 +266,93 @@ export const Line = ({
           {/* {hasCriteria && <Badge ml={4}>Critères additionnels</Badge>} */}
         </Flex>
         <Flex flexBasis={"50%"} justifyContent={"flex-start"} alignItems="center">
-          {(!isConditionChangeDisabled || !isStatusChangeDisabled) && (
-            <>
-              <Flex minW={12} mr={8}>
-                <Link onClick={(e) => e.stopPropagation()} href={lineLink} textDecoration={"underline"}>
-                  {lineCount}
-                </Link>{" "}
+          <Flex minW={12} mr={8}>
+            <Link onClick={(e) => e.stopPropagation()} href={lineLink} textDecoration={"underline"}>
+              {lineCount}
+            </Link>{" "}
+          </Flex>
+          <Flex justifyContent={"space-between"}>
+            {!academie && (
+              <Flex mr={8}>
+                <ActionsSelect
+                  data-testid={"actions-select"}
+                  aria-disabled={isConditionChangeDisabled}
+                  disabled={isConditionChangeDisabled}
+                  value={condition_integration ?? CONDITIONS.NE_DOIT_PAS_INTEGRER}
+                  onChange={async (e) => {
+                    console.log("onChange action");
+                    const action = e.target.value;
+                    if (action === CONDITIONS.NE_DOIT_PAS_INTEGRER) {
+                      if (nom_regle_complementaire) {
+                        await onUpdateRule({
+                          _id: idRule,
+                          condition_integration: e.target.value,
+                          statut: getFirstAllowedStatut(e.target.value),
+                        });
+                      } else {
+                        await onDeleteRule({ _id: idRule });
+                      }
+                    } else {
+                      if (idRule) {
+                        await onUpdateRule({
+                          _id: idRule,
+                          condition_integration: e.target.value,
+                          statut: getFirstAllowedStatut(e.target.value),
+                        });
+                      } else {
+                        await onCreateRule({
+                          plateforme,
+                          niveau,
+                          diplome,
+                          condition_integration: e.target.value,
+                          statut: getFirstAllowedStatut(e.target.value),
+                          regle_complementaire: "{}",
+                        });
+                      }
+                    }
+                  }}
+                />
               </Flex>
-              <Flex justifyContent={"space-between"}>
-                {!academie && (
-                  <Flex mr={8}>
-                    <ActionsSelect
-                      data-testid={"actions-select"}
-                      aria-disabled={isConditionChangeDisabled}
-                      disabled={isConditionChangeDisabled}
-                      value={condition_integration ?? CONDITIONS.NE_DOIT_PAS_INTEGRER}
-                      onChange={async (e) => {
-                        console.log("onChange action");
-                        const action = e.target.value;
-                        if (action === CONDITIONS.NE_DOIT_PAS_INTEGRER) {
-                          if (nom_regle_complementaire) {
-                            await onUpdateRule({
-                              _id: idRule,
-                              condition_integration: e.target.value,
-                              statut: getFirstAllowedStatut(e.target.value),
-                            });
-                          } else {
-                            await onDeleteRule({ _id: idRule });
-                          }
-                        } else {
-                          if (idRule) {
-                            await onUpdateRule({
-                              _id: idRule,
-                              condition_integration: e.target.value,
-                              statut: getFirstAllowedStatut(e.target.value),
-                            });
-                          } else {
-                            await onCreateRule({
-                              plateforme,
-                              niveau,
-                              diplome,
-                              condition_integration: e.target.value,
-                              statut: getFirstAllowedStatut(e.target.value),
-                              regle_complementaire: "{}",
-                            });
-                          }
-                        }
-                      }}
-                    />
-                  </Flex>
-                )}
-                <Flex alignItems="center" mr={8}>
-                  <StatusSelect
-                    data-testid="status-select"
-                    aria-disabled={isStatusChangeDisabled}
-                    isDisabled={isStatusChangeDisabled}
-                    plateforme={plateforme}
-                    academie={academie}
-                    currentStatus={currentStatus}
-                    condition={condition_integration ?? CONDITIONS.NE_DOIT_PAS_INTEGRER}
-                    onChange={onStatusSelectChange}
+            )}
+            <Flex alignItems="center" mr={8}>
+              <StatusSelect
+                data-testid="status-select"
+                aria-disabled={isStatusChangeDisabled}
+                isDisabled={isStatusChangeDisabled}
+                plateforme={plateforme}
+                academie={academie}
+                currentStatus={currentStatus}
+                condition={condition_integration ?? CONDITIONS.NE_DOIT_PAS_INTEGRER}
+                onChange={onStatusSelectChange}
+              />
+              {!!academyUpdatesHistory?.length && (
+                <Box px={4}>
+                  <InfoTooltip
+                    description={
+                      <UnorderedList ml={4}>
+                        {academyUpdatesHistory.map((history, index) => (
+                          <ListItem key={index}>
+                            <Text as={"b"}>
+                              {history?.from?.statut_academies?.[academie] ?? "À définir pour cette académie"}
+                            </Text>
+                            {" ➔ "}
+                            <Text as={"b"}>
+                              {history?.to?.statut_academies?.[academie] ?? "À définir pour cette académie"}
+                            </Text>
+                            <br />
+                            <Text variant={"slight"} as={"span"}>
+                              Modifié {history?.to?.last_update_who && <>par {history?.to?.last_update_who}, </>}le{" "}
+                              {new Date(history?.updated_at)?.toLocaleDateString("fr-FR")}
+                            </Text>
+                          </ListItem>
+                        ))}
+                      </UnorderedList>
+                    }
                   />
-                  {!!academyUpdatesHistory?.length && (
-                    <Box px={4}>
-                      <InfoTooltip
-                        description={
-                          <UnorderedList ml={4}>
-                            {academyUpdatesHistory.map((history, index) => (
-                              <ListItem key={index}>
-                                <Text as={"b"}>
-                                  {history?.from?.statut_academies?.[academie] ?? "À définir pour cette académie"}
-                                </Text>
-                                {" ➔ "}
-                                <Text as={"b"}>
-                                  {history?.to?.statut_academies?.[academie] ?? "À définir pour cette académie"}
-                                </Text>
-                                <br />
-                                <Text variant={"slight"} as={"span"}>
-                                  Modifié {history?.to?.last_update_who && <>par {history?.to?.last_update_who}, </>}le{" "}
-                                  {new Date(history?.updated_at)?.toLocaleDateString("fr-FR")}
-                                </Text>
-                              </ListItem>
-                            ))}
-                          </UnorderedList>
-                        }
-                      />
-                    </Box>
-                  )}
-                </Flex>
-              </Flex>
-            </>
-          )}
+                </Box>
+              )}
+            </Flex>
+          </Flex>
         </Flex>
       </Flex>
 
