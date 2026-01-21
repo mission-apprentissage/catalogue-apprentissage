@@ -5,4 +5,5 @@ location /metabase/ {
     proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
     proxy_set_header        X-Forwarded-Host $server_name;
     proxy_set_header        X-Forwarded-Proto $scheme;
+    proxy_hide_header       Content-Security-Policy;
 }
