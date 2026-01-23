@@ -750,7 +750,7 @@ export default () => {
                                 isExternal
                                 href={`${process.env.REACT_APP_CANDIDATURE_URL}/admin/etablissement/${candidatureRelation.siret_responsable}#${candidatureRelation.siret_formateur}`}
                               >
-                                Vérifier et modifier le destinataire.&nbsp;{" "}
+                                Vérifier et modifier le destinataire&nbsp;
                                 <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} />
                               </Link>
                             </Text>

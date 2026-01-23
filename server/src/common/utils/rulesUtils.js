@@ -38,7 +38,7 @@ const deserialize = (str) => {
  * @returns {Promise<Date>}
  */
 const getCampagneStartDate = async () => {
-  const campagneStart = await CampagneStart.findOne({}, null, { sort: { created_at: -1 } });
+  const campagneStart = await CampagneStart.findOne({}, { created_at: 1 }, { sort: { created_at: -1 } });
 
   return campagneStart?.created_at;
 };

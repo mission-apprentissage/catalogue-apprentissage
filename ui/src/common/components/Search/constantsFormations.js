@@ -26,6 +26,7 @@ export const allowedFilters = [
   "affelnet_statut",
   "affelnet_statut_initial",
   "affelnet_statut_a_definir",
+  "affelnet_candidature_status",
   "agriculture",
   "annee",
   "bcn_mefs_10",
@@ -1438,36 +1439,15 @@ export const quickFiltersDefinition = [
   },
 
   {
-    componentId: `affelnet_publication_auto`,
+    componentId: `affelnet_candidature_status`,
     type: "facet",
-    dataField: "affelnet_publication_auto",
-    title: "Publication automatique",
-    filterLabel: "Publication automatique Affelnet",
+    dataField: "affelnet_candidature_status.keyword",
+    title: "Statut de diffusion des candidatures sur la précédente campagne",
+    filterLabel: "Statut de diffusion des candidatures sur la précédente campagne Affelnet",
+    selectAllLabel: "Tous",
+    sortBy: "count",
     acl: "page_catalogue/voir_filtres_aff",
-    sortBy: "desc",
-    transformData: (data) =>
-      data.map((d) => ({
-        ...d,
-        key: {
-          1: "Oui",
-          0: "Non",
-          null: "Pas d'information",
-        }[d.key],
-      })),
-    customQuery: (values) => {
-      if (values.length && !values.includes("Tous")) {
-        return {
-          query: {
-            terms: {
-              affelnet_publication_auto: values.map(
-                (value) => ({ Oui: true, Non: false, "Pas d'information": null })[value]
-              ),
-            },
-          },
-        };
-      }
-      return {};
-    },
+    helpTextSection: helpText.search.affelnet_candidature_status,
   },
 
   {
@@ -1483,6 +1463,38 @@ export const quickFiltersDefinition = [
     closeText: "Voir plus de filtres Affelnet",
     acl: "page_catalogue/voir_filtres_avances_aff",
     filters: [
+      {
+        componentId: `affelnet_publication_auto`,
+        type: "facet",
+        dataField: "affelnet_publication_auto",
+        title: "Publication automatique",
+        filterLabel: "Publication automatique Affelnet",
+        acl: "page_catalogue/voir_filtres_aff",
+        sortBy: "desc",
+        transformData: (data) =>
+          data.map((d) => ({
+            ...d,
+            key: {
+              1: "Oui",
+              0: "Non",
+              null: "Pas d'information",
+            }[d.key],
+          })),
+        customQuery: (values) => {
+          if (values.length && !values.includes("Tous")) {
+            return {
+              query: {
+                terms: {
+                  affelnet_publication_auto: values.map(
+                    (value) => ({ Oui: true, Non: false, "Pas d'information": null })[value]
+                  ),
+                },
+              },
+            };
+          }
+          return {};
+        },
+      },
       {
         componentId: `affelnet_statut_a_definir`,
         type: "facet",

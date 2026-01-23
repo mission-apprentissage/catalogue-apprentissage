@@ -1,6 +1,6 @@
 const config = require("config");
 const { diff } = require("deep-object-diff");
-const { Formation, DualControlFormation, Etablissement } = require("../../../common/models/index");
+const { Formation, DualControlFormation, Etablissement, CandidatureRelation } = require("../../../common/models/index");
 const { cursor } = require("../../../common/utils/cursor");
 const { distanceBetweenCoordinates } = require("../../../common/utils/distanceUtils");
 const logger = require("../../../common/logger");
@@ -27,20 +27,20 @@ const computeRelationFields = async (fields) => {
   const etablissementFormateur = await Etablissement.findOne({ siret: fields.etablissement_formateur_siret });
   const etablissementLieu = await Etablissement.findOne({ siret: fields.etablissement_lieu_formation_siret });
 
-  const etablissement_gestionnaire_id = etablissementGestionnaire?.id;
-  const etablissement_formateur_id = etablissementFormateur?.id;
-  const lieu_formation_id = etablissementLieu?.id;
-  const etablissement_gestionnaire_published = etablissementGestionnaire?.published;
-  const etablissement_formateur_published = etablissementFormateur?.published;
-  const lieu_formation_published = etablissementLieu?.published;
+  const etablissement_gestionnaire_id = etablissementGestionnaire?.id ?? null;
+  const etablissement_formateur_id = etablissementFormateur?.id ?? null;
+  const lieu_formation_id = etablissementLieu?.id ?? null;
+  const etablissement_gestionnaire_published = etablissementGestionnaire?.published ?? null;
+  const etablissement_formateur_published = etablissementFormateur?.published ?? null;
+  const lieu_formation_published = etablissementLieu?.published ?? null;
 
   const variante_a_distance = !fields.cle_ministere_educatif.includes("-99999#LAD")
-    ? (
+    ? ((
         await Formation.findOne({
           published: true,
           cle_ministere_educatif: fields.cle_ministere_educatif.split("-")[0] + "-99999#LAD",
         }).lean()
-      )?.cle_ministere_educatif
+      )?.cle_ministere_educatif ?? null)
     : null;
 
   const variantes_en_presentiel = fields.cle_ministere_educatif.includes("-99999#LAD")
@@ -55,7 +55,44 @@ const computeRelationFields = async (fields) => {
       ).map((formation) => ({ cle: formation.cle_ministere_educatif, localite: formation.localite }))
     : [];
 
-  return {
+  const candidatureRelation = await CandidatureRelation.findOne({
+    siret_responsable: fields.etablissement_gestionnaire_siret,
+    siret_formateur: fields.etablissement_formateur_siret,
+  });
+
+  let affelnet_candidature_status = null;
+
+  switch (true) {
+    case fields.affelnet_perimetre && !candidatureRelation:
+      affelnet_candidature_status = "Offres non concernées (nouveaux organismes)";
+      break;
+    case fields.affelnet_perimetre &&
+      candidatureRelation.statut_diffusion_generique === "✅ Candidatures toutes téléchargées":
+      affelnet_candidature_status = "Candidatures téléchargées";
+      break;
+    case fields.affelnet_perimetre &&
+      candidatureRelation.statut_diffusion_generique === "⚠️ Mise à jour non téléchargée":
+      affelnet_candidature_status = "Candidatures partiellement téléchargées";
+      break;
+    case fields.affelnet_perimetre &&
+      candidatureRelation.statut_diffusion_generique === "⚠️ Candidatures non téléchargées":
+      affelnet_candidature_status = candidatureRelation.intervention_since_last_session
+        ? "Candidatures non téléchargées, avec modification de contact effectuée depuis"
+        : "Candidatures non téléchargées, sans modification de contact effectuée depuis";
+  }
+
+  const previous = {
+    etablissement_gestionnaire_id: fields.etablissement_gestionnaire_id,
+    etablissement_formateur_id: fields.etablissement_formateur_id,
+    lieu_formation_id: fields.lieu_formation_id,
+    etablissement_gestionnaire_published: fields.etablissement_gestionnaire_published,
+    etablissement_formateur_published: fields.etablissement_formateur_published,
+    lieu_formation_published: fields.lieu_formation_published,
+    variante_a_distance: fields.variante_a_distance,
+    variantes_en_presentiel: fields.variantes_en_presentiel,
+    affelnet_candidature_status: fields.affelnet_candidature_status,
+  };
+  const next = {
     etablissement_gestionnaire_id,
     etablissement_formateur_id,
     lieu_formation_id,
@@ -64,7 +101,22 @@ const computeRelationFields = async (fields) => {
     lieu_formation_published,
     variante_a_distance,
     variantes_en_presentiel,
+    affelnet_candidature_status,
   };
+
+  const differences = diff(previous, next);
+
+  logger.debug(
+    { type: "job" },
+    {
+      cle_ministere_educatif: fields.cle_ministere_educatif,
+      // previous,
+      // next,
+      differences,
+    }
+  );
+
+  return next;
 };
 
 const recomputeFields = async (fields, oldFields, { forceRecompute = false } = { forceRecompute: false }) => {
