@@ -132,6 +132,13 @@ const affelnetSchema = {
     default: false,
     description: "Affelnet : visible",
   },
+
+  // CANDIDATURES
+  affelnet_candidature_status: {
+    type: String,
+    default: null,
+    description: "Statut de téléchargement des candidatures Affelnet",
+  },
 };
 
 module.exports = { affelnetSchema };

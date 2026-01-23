@@ -57,6 +57,7 @@ function getMapping(schema, inPrefix = "", requireAsciiFolding = false) {
     //   isMappingNeedingGeoPoint = true;
     // } else {
     switch (mongooseType) {
+      case "ObjectId":
       case "ObjectID":
       case "String": {
         properties[key] = {
@@ -77,6 +78,8 @@ function getMapping(schema, inPrefix = "", requireAsciiFolding = false) {
         break;
       case "Array":
         switch (true) {
+          case schema.paths[key].caster.instance === "ObjectId":
+          case schema.paths[key].caster.instance === "ObjectID":
           case schema.paths[key].caster.instance === "String":
             properties[key] = {
               type: "text",

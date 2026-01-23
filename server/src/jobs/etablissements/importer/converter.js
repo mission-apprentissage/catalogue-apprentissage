@@ -56,20 +56,28 @@ const computeRelationFields = async (fields) => {
 
   const previous = {
     etablissement_siege_id: fields.etablissement_siege_id,
-    email_direction: fields.email_direction,
+    // email_direction: fields.email_direction,
     formations_ids: fields.formations_ids,
     formations_uais: fields.formations_uais,
   };
   const next = {
     etablissement_siege_id,
-    email_direction,
+    // email_direction,
     formations_ids,
     formations_uais,
   };
 
   const differences = diff(previous, next);
 
-  logger.debug({ type: "job" }, { siret: fields.siret, previous, next, differences });
+  logger.debug(
+    { type: "job" },
+    {
+      siret: fields.siret,
+      // previous,
+      // next,
+      differences,
+    }
+  );
 
   return next;
 };

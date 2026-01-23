@@ -71,7 +71,7 @@ module.exports = {
       },
     },
     diff: {
-      omit: ["updates_history", "updated_at"],
+      omit: ["updates_history", "updated_at", "etablissement_siege_id", "formations_ids", "formations_uais"],
     },
   }),
   ParcoursupFormation: createModel("parcoursupformations", schemas.get("parcoursupFormation")),
