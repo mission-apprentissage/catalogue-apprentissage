@@ -115,10 +115,7 @@ module.exports = () => {
     tryCatch(async (req, res) => {
       const payload = sanitize(req.body);
 
-      let user = {};
-      if (req.user) {
-        user = req.session.passport.user;
-      }
+      const user = req.session?.passport?.user;
 
       logger.info({ type: "http" }, "Create perimeter rule", { user, payload });
 
@@ -170,10 +167,7 @@ module.exports = () => {
       const payload = sanitize(req.body);
       const sanitizedParams = sanitize(req.params);
 
-      let user = {};
-      if (req.user) {
-        user = req.session.passport.user;
-      }
+      const user = req.session?.passport?.user;
 
       const id = sanitizedParams.id;
       if (!id) {
@@ -220,10 +214,7 @@ module.exports = () => {
       const payload = sanitize(req.body);
       const sanitizedParams = sanitize(req.params);
 
-      let user = {};
-      if (req.user) {
-        user = req.session.passport.user;
-      }
+      const user = req.session?.passport?.user;
 
       const { id, num_academie } = sanitizedParams;
       if (!id || !num_academie) {
@@ -271,10 +262,7 @@ module.exports = () => {
     tryCatch(async (req, res) => {
       const sanitizedParams = sanitize(req.params);
 
-      let user = {};
-      if (req.user) {
-        user = req.session.passport.user;
-      }
+      const user = req.session?.passport?.user;
 
       const { id, num_academie } = sanitizedParams;
       if (!id || !num_academie) {
@@ -322,10 +310,7 @@ module.exports = () => {
     tryCatch(async (req, res) => {
       const sanitizedParams = sanitize(req.params);
 
-      let user = {};
-      if (req.user) {
-        user = req.session.passport.user;
-      }
+      const user = req.session?.passport?.user;
 
       const id = sanitizedParams.id;
       if (!id) {

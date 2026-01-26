@@ -43,7 +43,7 @@ module.exports = () => {
    * GET /candidature/relation - Get a relation by responsable and formateur sirets
    */
   router.get("/candidature/relation", async (req, res) => {
-    const user = req.user;
+    const user = req.session?.passport?.user;
 
     const isAuthorized = hasAccessTo(user, "page_other/api_candidature_relation_find");
 
@@ -75,7 +75,7 @@ module.exports = () => {
    * PUT /candidature/relation - Mark a relation as having an intervention since last session
    */
   router.put("/candidature/relation", async (req, res) => {
-    const user = req.user;
+    const user = req.session?.passport?.user;
 
     const isAuthorized = hasAccessTo(user, "page_other/api_candidature_relation_update");
 
@@ -118,7 +118,7 @@ module.exports = () => {
    * GET /candidature/relations - Get all relations for a responsable siret
    */
   router.get("/candidature/relations", async (req, res) => {
-    const user = req.user;
+    const user = req.session?.passport?.user;
 
     const isAuthorized = hasAccessTo(user, "page_other/api_candidature_relation_find");
 
@@ -147,7 +147,7 @@ module.exports = () => {
    * PUT /candidature/relations - Mark all relations for a responsable siret as having an intervention since last session
    */
   router.put("/candidature/relations", async (req, res) => {
-    const user = req.user;
+    const user = req.session?.passport?.user;
 
     const isAuthorized = hasAccessTo(user, "page_other/api_candidature_relation_update");
 

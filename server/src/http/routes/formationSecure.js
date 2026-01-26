@@ -87,8 +87,9 @@ module.exports = () => {
     res.json(result);
   });
 
-  const handleRejection = tryCatch(async ({ user, params }, res) => {
-    const sanitizedParams = sanitize(params);
+  const handleRejection = tryCatch(async (req, res) => {
+    const user = req.session?.passport?.user;
+    const sanitizedParams = sanitize(req.params);
     const itemId = sanitizedParams.id;
     const date = new Date();
 
@@ -141,8 +142,9 @@ module.exports = () => {
     res.json(result);
   });
 
-  const unhandleRejection = tryCatch(async ({ user, params }, res) => {
-    const sanitizedParams = sanitize(params);
+  const unhandleRejection = tryCatch(async (req, res) => {
+    const user = req.session?.passport?.user;
+    const sanitizedParams = sanitize(req.params);
     const itemId = sanitizedParams.id;
 
     const formation = await Formation.findById(itemId);
@@ -202,9 +204,10 @@ module.exports = () => {
     res.json(result);
   });
 
-  const reinitParcoursupStatut = tryCatch(async ({ user, params, body }, res) => {
-    const sanitizedParams = sanitize(params);
-    const sanitizedBody = sanitize(body);
+  const reinitParcoursupStatut = tryCatch(async (req, res) => {
+    const user = req.session?.passport?.user;
+    const sanitizedParams = sanitize(req.params);
+    const sanitizedBody = sanitize(req.body);
     const itemId = sanitizedParams.id;
     const comment = sanitizedBody.comment;
     const date = new Date();
@@ -337,7 +340,9 @@ module.exports = () => {
   router.get(
     "/future-pro",
     tryCatch(async (req, res) => {
-      if (!hasAccessTo(req.user, "page_other/future-pro")) {
+      const user = req.session?.passport?.user;
+
+      if (!hasAccessTo(user, "page_other/future-pro")) {
         return Boom.unauthorized();
       }
 

@@ -13,6 +13,8 @@ const { AFFELNET_STATUS } = require("../../../constants/status.js");
 
 describe(__filename, () => {
   const date = new Date("2022-09-01");
+
+  console.log(date);
   const query = {
     published: true,
     affelnet_statut: AFFELNET_STATUS.PRET_POUR_INTEGRATION,
@@ -24,7 +26,7 @@ describe(__filename, () => {
   });
 
   beforeEach(async () => {
-    await Formation.deleteMany({});
+    await Formation.deleteMany();
 
     // allHistoryIsEnAttenteAfterDate YES
     // lastHistoryIsEnAttenteBeforeDate YES
@@ -209,6 +211,8 @@ describe(__filename, () => {
       const formation_5 = await Formation.findOne({ cle_ministere_educatif: "cle_5" });
       const check5 = lastHistoryIsEnAttenteBeforeDate(formation_5, date);
 
+      assert.strictEqual(await Formation.countDocuments(), 5);
+
       assert.strictEqual(check1, true);
       assert.strictEqual(check2, true);
       assert.strictEqual(check3, false);
@@ -224,6 +228,8 @@ describe(__filename, () => {
     });
 
     it("should reinit affelnet statut", async () => {
+      assert.strictEqual(await Formation.countDocuments(), 5);
+
       const countFormationsBefore = await Formation.countDocuments(query);
 
       assert.strictEqual(countFormationsBefore, 3);
@@ -238,6 +244,8 @@ describe(__filename, () => {
 
   describe("afReinitStatus", () => {
     it("should reinit affelnet statut", async () => {
+      assert.strictEqual(await Formation.countDocuments(), 5);
+
       const countFormationsBefore = await Formation.countDocuments(query);
 
       assert.strictEqual(countFormationsBefore, 3);

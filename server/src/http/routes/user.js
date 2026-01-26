@@ -97,7 +97,10 @@ module.exports = ({ users, mailer, db: { db } }) => {
         throw Boom.conflict(`Impossible de créer, l'email ${options.email.toLowerCase()} est déjà utilisé.`);
       }
 
-      const user = await users.createUser(username, password, { ...options, created_by: req.user.email });
+      const user = await users.createUser(username, password, {
+        ...options,
+        created_by: req.session?.passport?.user.email,
+      });
 
       await mailer.sendEmail(
         user.email,
@@ -129,7 +132,7 @@ module.exports = ({ users, mailer, db: { db } }) => {
         fonction: req.body.options.fonction,
         roles: req.body.options.roles,
         acl: req.body.options.acl,
-        updated_by: req.user.email,
+        updated_by: req.session?.passport?.user?.email,
       });
 
       await closeSessionsOfThisUser(db, username);
