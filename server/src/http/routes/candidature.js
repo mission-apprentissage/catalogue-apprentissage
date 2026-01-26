@@ -1,12 +1,43 @@
 const express = require("express");
 const Joi = require("joi");
-const { CandidatureRelation } = require("../../common/models");
+const { CandidatureRelation, Formation } = require("../../common/models");
 const { siretFormat } = require("../../common/models/format");
 const logger = require("../../common/logger");
 const { hasAccessTo } = require("../../common/utils/rolesUtils");
 
 module.exports = () => {
   const router = express.Router();
+
+  const updateRelatedFormations = async (candidatureRelation, filter) => {
+    for (formation of await Formation.find({ published: true, ...filter })) {
+      let affelnet_candidature_status = null;
+
+      switch (true) {
+        case formation.affelnet_perimetre && !candidatureRelation:
+          affelnet_candidature_status = "Offres non concernées (nouveaux organismes)";
+          break;
+        case formation.affelnet_perimetre &&
+          candidatureRelation.statut_diffusion_generique === "✅ Candidatures toutes téléchargées":
+          affelnet_candidature_status = "Candidatures téléchargées";
+          break;
+        case formation.affelnet_perimetre &&
+          candidatureRelation.statut_diffusion_generique === "⚠️ Mise à jour non téléchargée":
+          affelnet_candidature_status = "Candidatures partiellement téléchargées";
+          break;
+        case formation.affelnet_perimetre &&
+          candidatureRelation.statut_diffusion_generique === "⚠️ Candidatures non téléchargées":
+          affelnet_candidature_status = candidatureRelation.intervention_since_last_session
+            ? "Candidatures non téléchargées, avec modification de contact effectuée depuis"
+            : "Candidatures non téléchargées, sans modification de contact effectuée depuis";
+      }
+
+      await Formation.updateOne(
+        { _id: formation._id },
+        { $set: { affelnet_candidature_status } },
+        { returnDocument: "after" }
+      );
+    }
+  };
 
   /**
    * GET /candidature/relation - Get a relation by responsable and formateur sirets
@@ -75,6 +106,11 @@ module.exports = () => {
 
     const candidatureRelation = await CandidatureRelation.findOne({ siret_responsable, siret_formateur });
 
+    await updateRelatedFormations(candidatureRelation, {
+      etablissement_gestionnaire_siret: siret_responsable,
+      etablissement_formateur_siret: siret_formateur,
+    });
+
     res.json({ data: candidatureRelation, message: "Candidature relation updated" });
   });
 
@@ -138,6 +174,10 @@ module.exports = () => {
     );
 
     const candidatureRelations = await CandidatureRelation.find({ siret_responsable });
+
+    for (const candidatureRelation of candidatureRelations) {
+      await updateRelatedFormations(candidatureRelation, { etablissement_gestionnaire_siret: siret_responsable });
+    }
 
     res.json({ data: candidatureRelations, message: "Candidature relations updated" });
   });
