@@ -725,7 +725,7 @@ export default () => {
                         !candidatureRelation?.intervention_since_last_session && (
                           <Alert mt={4} type={"warning"}>
                             <Text>
-                              <Text as="span">
+                              <Text as="b">
                                 Candidatures non téléchargées lors de la précédente campagne de diffusion pour cet
                                 organisme{" "}
                                 {formation.etablissement_formateur_siret ===
@@ -736,17 +736,15 @@ export default () => {
                                 )}
                                 , toutes offres confondues.{" "}
                               </Text>
-
-                              <Link
-                                ml={2}
-                                textDecoration={"underline"}
-                                isExternal
-                                href={`${process.env.REACT_APP_CANDIDATURE_URL}/admin/etablissement/${candidatureRelation.siret_responsable}#${candidatureRelation.siret_formateur}`}
-                              >
-                                Vérifier et modifier le destinataire&nbsp;
-                                <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} />
-                              </Link>
                             </Text>
+                            <Link
+                              textDecoration={"underline"}
+                              isExternal
+                              href={`${process.env.REACT_APP_CANDIDATURE_URL}/admin/etablissement/${candidatureRelation.siret_responsable}#${candidatureRelation.siret_formateur}`}
+                            >
+                              Vérifier et modifier le destinataire&nbsp;
+                              <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} />
+                            </Link>
                             <Text>
                               <Text as="i" fontSize={"zeta"} color={"grey.600"}>
                                 L’accès au site des candidatures vous permet de modifier le destinataire si vous en avez
