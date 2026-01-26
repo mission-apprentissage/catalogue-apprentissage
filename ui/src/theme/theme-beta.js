@@ -6,7 +6,7 @@ const colors = {
   redmarianne: "#e1000f",
   success: "#0d6635",
   error: "#b60000",
-  warning: "#fa5c00",
+  warning: "#d64d00",
   info: "#3a55d1",
   infolight: "#bccdff",
   galt: "#f9f8f6",
