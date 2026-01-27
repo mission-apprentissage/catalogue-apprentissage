@@ -940,6 +940,10 @@ export interface Formation {
    * Affelnet : visible
    */
   affelnet_perimetre_prise_rdv?: boolean;
+  /**
+   * Statut de téléchargement des candidatures Affelnet
+   */
+  affelnet_candidature_status?: string | null;
   _id?: Types.ObjectId;
   created_at?: Date;
   updated_at?: Date;
