@@ -1198,6 +1198,10 @@ module.exports = {
         type: "boolean",
         description: "Affelnet : visible",
       },
+      affelnet_candidature_status: {
+        type: "string",
+        description: "Statut de téléchargement des candidatures Affelnet",
+      },
       _id: {
         type: "string",
       },

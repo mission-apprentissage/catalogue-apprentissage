@@ -4,38 +4,35 @@ const { CandidatureRelation, Formation } = require("../../common/models");
 const { siretFormat } = require("../../common/models/format");
 const logger = require("../../common/logger");
 const { hasAccessTo } = require("../../common/utils/rolesUtils");
+const formation = require("./formation");
 
 module.exports = () => {
   const router = express.Router();
 
-  const updateRelatedFormations = async (candidatureRelation, filter) => {
-    for (formation of await Formation.find({ published: true, ...filter })) {
-      let affelnet_candidature_status = null;
-
+  const updateRelatedFormations = async (candidatureRelation) => {
+    for (const formation of await Formation.find({
+      published: true,
+      affelnet_perimetre: true,
+      etablissement_gestionnaire_siret: candidatureRelation.siret_responsable,
+      etablissement_formateur_siret: candidatureRelation.siret_formateur,
+    })) {
       switch (true) {
-        case formation.affelnet_perimetre && !candidatureRelation:
-          affelnet_candidature_status = "Offres non concernées (nouveaux organismes)";
+        case !candidatureRelation:
+          formation.affelnet_candidature_status = "Offres non concernées (nouveaux organismes)";
           break;
-        case formation.affelnet_perimetre &&
-          candidatureRelation.statut_diffusion_generique === "✅ Candidatures toutes téléchargées":
-          affelnet_candidature_status = "Candidatures téléchargées";
+        case candidatureRelation.statut_diffusion_generique === "✅ Candidatures toutes téléchargées":
+          formation.affelnet_candidature_status = "Candidatures téléchargées";
           break;
-        case formation.affelnet_perimetre &&
-          candidatureRelation.statut_diffusion_generique === "⚠️ Mise à jour non téléchargée":
-          affelnet_candidature_status = "Candidatures partiellement téléchargées";
+        case candidatureRelation.statut_diffusion_generique === "⚠️ Mise à jour non téléchargée":
+          formation.affelnet_candidature_status = "Candidatures partiellement téléchargées";
           break;
-        case formation.affelnet_perimetre &&
-          candidatureRelation.statut_diffusion_generique === "⚠️ Candidatures non téléchargées":
-          affelnet_candidature_status = candidatureRelation.intervention_since_last_session
+        case candidatureRelation.statut_diffusion_generique === "⚠️ Candidatures non téléchargées":
+          formation.affelnet_candidature_status = candidatureRelation.intervention_since_last_session
             ? "Candidatures non téléchargées, avec modification de contact effectuée depuis"
             : "Candidatures non téléchargées, sans modification de contact effectuée depuis";
       }
 
-      await Formation.updateOne(
-        { _id: formation._id },
-        { $set: { affelnet_candidature_status } },
-        { returnDocument: "after" }
-      );
+      await formation.save();
     }
   };
 
@@ -106,10 +103,7 @@ module.exports = () => {
 
     const candidatureRelation = await CandidatureRelation.findOne({ siret_responsable, siret_formateur });
 
-    await updateRelatedFormations(candidatureRelation, {
-      etablissement_gestionnaire_siret: siret_responsable,
-      etablissement_formateur_siret: siret_formateur,
-    });
+    await updateRelatedFormations(candidatureRelation);
 
     res.json({ data: candidatureRelation, message: "Candidature relation updated" });
   });
@@ -176,7 +170,7 @@ module.exports = () => {
     const candidatureRelations = await CandidatureRelation.find({ siret_responsable });
 
     for (const candidatureRelation of candidatureRelations) {
-      await updateRelatedFormations(candidatureRelation, { etablissement_gestionnaire_siret: siret_responsable });
+      await updateRelatedFormations(candidatureRelation);
     }
 
     res.json({ data: candidatureRelations, message: "Candidature relations updated" });
