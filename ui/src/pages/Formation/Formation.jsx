@@ -47,6 +47,7 @@ import { UaiHistoryModalButton } from "../../common/components/formation/UaiHist
 import { ReinitStatutModalButton } from "../../common/components/formation/ReinitStatutModalButton";
 import { ResponsableEmailModalButton } from "../../common/components/formation/ResponsableEmailModalButton";
 import { DateContext } from "../../DateContext";
+import useConfig from "../../common/hooks/useConfig";
 
 const CATALOGUE_API = `${process.env.REACT_APP_BASE_URL}/api`;
 
@@ -376,6 +377,7 @@ export default () => {
   const [responsable, setResponsable] = useState();
   const [candidatureRelation, setCandidatureRelation] = useState();
   const [loading, setLoading] = useState(false);
+  const config = useConfig();
 
   const [edition, setEdition] = useState(null);
   const navigate = useNavigate();
@@ -756,7 +758,7 @@ export default () => {
                           </Alert>
                         )}
                     </>
-                  ) : (
+                  ) : config.diffusion ? (
                     <Alert mt={4} type={"info"}>
                       <Text>
                         <Text as="b">
@@ -782,6 +784,8 @@ export default () => {
                         </Text>
                       )}
                     </Alert>
+                  ) : (
+                    <></>
                   ))}
 
                 {((formation.parcoursup_perimetre &&

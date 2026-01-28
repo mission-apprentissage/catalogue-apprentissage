@@ -79,6 +79,7 @@ module.exports = {
   SandboxFormation: createModel("sandboxformation", schemas.get("formation")),
   Statistique: createModel("statistique", schemas.get("statistique")),
   Alert: createModel("alert", schemas.get("alert")),
+  Config: createModel("config", schemas.get("config")),
   ReglePerimetre: createModel("regleperimetre", schemas.get("reglePerimetre")),
   Consumption: createModel("consumption", schemas.get("consumption")),
   DualControlEtablissement: createModel("dualcontroletablissement", schemas.get("dualControlEtablissement")),

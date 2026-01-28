@@ -4,7 +4,6 @@ const { CandidatureRelation, Formation } = require("../../common/models");
 const { siretFormat } = require("../../common/models/format");
 const logger = require("../../common/logger");
 const { hasAccessTo } = require("../../common/utils/rolesUtils");
-const formation = require("./formation");
 
 module.exports = () => {
   const router = express.Router();

@@ -275,7 +275,6 @@ module.exports = () => {
    */
   router.put(
     "/etablissement/:id",
-
     tryCatch(async (req, res) => {
       const user = req.session.passport.user;
       const payload = sanitize(req.body, SAFE_UPDATE_OPERATORS);

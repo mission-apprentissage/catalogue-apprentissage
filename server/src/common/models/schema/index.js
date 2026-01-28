@@ -18,6 +18,7 @@ const reglePerimetreSchema = require("./reglePerimetre");
 const roleSchema = require("./role");
 const statistiqueSchema = require("./statistique");
 const userSchema = require("./user");
+const configSchema = require("./config");
 
 const bcnFormationDiplomesSchema = require("./bcnFormationDiplomes");
 const bcnLettreSpecialiteSchema = require("./bcnLettreSpecialite");
@@ -40,6 +41,7 @@ const schemasMap = new Map(
     campagneStart: [campagneStartSchema, { timestamps }],
     candidatureFormation: [candidatureFormationSchema, { timestamps }],
     candidatureRelation: [candidatureRelationSchema, { timestamps }],
+    config: [configSchema, { timestamps }],
     consoleStat: [consoleStatSchema, {}],
     consumption: [consumptionSchema, {}],
     dualControlEtablissement: [dualControlEtablissementSchema, {}],

@@ -1,4 +1,5 @@
 const express = require("express");
+const rateLimit = require("express-rate-limit");
 const compression = require("compression");
 const cors = require("cors");
 const session = require("express-session");
@@ -16,30 +17,31 @@ const tryCatch = require("./middlewares/tryCatchMiddleware");
 // const corsMiddleware = require("./middlewares/corsMiddleware");
 const permissionsMiddleware = require("./middlewares/permissionsMiddleware");
 const packageJson = require("../../package.json");
-const formation = require("./routes/formation");
-const candidature = require("./routes/candidature");
-const report = require("./routes/report");
-const auth = require("./routes/auth");
-const authSecure = require("./routes/authSecure");
-const user = require("./routes/user");
-const role = require("./routes/role");
-const password = require("./routes/password");
-const stats = require("./routes/stats");
-const dates = require("./routes/dates");
-const esSearch = require("./routes/esSearch");
-const esMultiSearchNoIndex = require("./routes/esMultiSearchNoIndex");
-const parcoursup = require("./routes/parcoursup");
-const etablissement = require("./routes/etablissement");
-const upload = require("./routes/upload");
-const alert = require("./routes/alert");
-const perimetrePriseRdv = require("./routes/perimetrePriseRdv");
-const reglePerimetre = require("./routes/reglePerimetre");
-const reglePerimetreSecure = require("./routes/reglePerimetreSecure");
 const swaggerSchema = require("../common/models/swaggerSchema");
-const rateLimit = require("express-rate-limit");
-const uaiAffelnet = require("./routes/uaiAffelnet");
 
 require("../common/passport-config");
+
+const formationRoutes = require("./routes/formation");
+const candidatureRoutes = require("./routes/candidature");
+const reportRoutes = require("./routes/report");
+const authRoutes = require("./routes/auth");
+const authSecureRoutes = require("./routes/authSecure");
+const userRoutes = require("./routes/user");
+const roleRoutes = require("./routes/role");
+const passwordRoutes = require("./routes/password");
+const statsRoutes = require("./routes/stats");
+const datesRoutes = require("./routes/dates");
+const esSearchRoutes = require("./routes/esSearch");
+const esMultiSearchNoIndexRoutes = require("./routes/esMultiSearchNoIndex");
+const parcoursupRoutes = require("./routes/parcoursup");
+const etablissementRoutes = require("./routes/etablissement");
+const uploadRoutes = require("./routes/upload");
+const alertRoutes = require("./routes/alert");
+const perimetrePriseRdvRoutes = require("./routes/perimetrePriseRdv");
+const reglePerimetreRoutes = require("./routes/reglePerimetre");
+const reglePerimetreSecureRoutes = require("./routes/reglePerimetreSecure");
+const uaiAffelnetRoutes = require("./routes/uaiAffelnet");
+const configRoutes = require("./routes/config");
 
 const options = {
   definition: {
@@ -151,54 +153,63 @@ module.exports = async (components, verbose = true) => {
         return res.json(swaggerSpecification);
       }),
     ],
-    ["/auth", authLimiter, authSecure(components)],
-    ["/auth", apiLimiter, auth(components)],
-    ["/password", authLimiter, password(components)],
+    ["/auth", authLimiter, authSecureRoutes(components)],
+    ["/auth", apiLimiter, authRoutes(components)],
+    ["/password", authLimiter, passwordRoutes(components)],
   ];
 
   const securedRoutes = [
-    ["/entity", apiPerimetreLimiter, anyAuthMiddleware, reglePerimetre()],
-    ["/es/search", elasticLimiter, anyAuthMiddleware, esSearch()],
-    ["/search", elasticLimiter, anyAuthMiddleware, esMultiSearchNoIndex()],
-    ["/entity", apiLimiter, anyAuthMiddleware, formation()],
-    ["/entity", apiLimiter, anyAuthMiddleware, report()],
-    ["/entity", apiLimiter, anyAuthMiddleware, etablissement(components)],
-    ["/parcoursup", apiLimiter, anyAuthMiddleware, parcoursup(components)],
-    ["/entity", apiLimiter, anyAuthMiddleware, alert()],
+    ["/entity", apiPerimetreLimiter, anyAuthMiddleware, reglePerimetreRoutes()],
+    ["/es/search", elasticLimiter, anyAuthMiddleware, esSearchRoutes()],
+    ["/search", elasticLimiter, anyAuthMiddleware, esMultiSearchNoIndexRoutes()],
+    ["/entity", apiLimiter, anyAuthMiddleware, formationRoutes()],
+    ["/entity", apiLimiter, anyAuthMiddleware, reportRoutes()],
+    ["/entity", apiLimiter, anyAuthMiddleware, etablissementRoutes(components)],
+    ["/parcoursup", apiLimiter, anyAuthMiddleware, parcoursupRoutes(components)],
+    ["/entity", apiLimiter, anyAuthMiddleware, alertRoutes()],
     [
       "/admin",
       apiLimiter,
       anyAuthMiddleware,
       permissionsMiddleware({ isAdmin: true }, ["page_gestion_utilisateurs"]),
-      user(components),
+      userRoutes(components),
     ],
     [
       "/admin",
       apiLimiter,
       anyAuthMiddleware,
       permissionsMiddleware({ isAdmin: true }, ["page_gestion_utilisateurs", "page_gestion_roles"]),
-      role(components),
+      roleRoutes(components),
     ],
-    ["/stats", apiLimiter, anyAuthMiddleware, stats(components)],
-    ["/upload", apiLimiter, permissionsMiddleware({ isAdmin: true }, ["page_upload"]), upload()],
-    ["/entity", apiLimiter, anyAuthMiddleware, reglePerimetreSecure()],
-    ["/entity", apiLimiter, anyAuthMiddleware, candidature()],
+    ["/stats", apiLimiter, anyAuthMiddleware, statsRoutes(components)],
+    [
+      "/upload",
+      apiLimiter,
+      anyAuthMiddleware,
+      permissionsMiddleware({ isAdmin: true }, ["page_upload"]),
+      uploadRoutes(),
+    ],
+    ["/entity", apiLimiter, anyAuthMiddleware, reglePerimetreSecureRoutes()],
+    ["/entity", apiLimiter, anyAuthMiddleware, candidatureRoutes()],
 
-    ["/constants", apiLimiter, anyAuthMiddleware, dates()],
+    ["/constants", apiLimiter, anyAuthMiddleware, datesRoutes()],
 
     [
       "/perimetre-prise-rdv.json",
       apiLimiter,
+      anyAuthMiddleware,
       permissionsMiddleware({ isAdmin: true }, ["page_other/perimetre_prise_rdv"]),
-      perimetrePriseRdv(),
+      perimetrePriseRdvRoutes(),
     ],
 
     [
       "/uai-affelnet",
       apiLimiter,
+      anyAuthMiddleware,
       permissionsMiddleware({ isAdmin: true }, ["page_other/api-uai-affelnet"]),
-      uaiAffelnet(),
+      uaiAffelnetRoutes(),
     ],
+    ["", apiLimiter, anyAuthMiddleware, configRoutes()],
   ];
 
   prefixes.map((prefix) => {

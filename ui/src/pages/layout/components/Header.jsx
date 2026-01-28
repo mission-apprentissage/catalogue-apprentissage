@@ -101,6 +101,13 @@ const Header = () => {
                             Message de maintenance
                           </MenuItem>
                         )}
+                        {isUserAdmin(auth) && (
+                          <MenuItem as={NavLink} to="/admin/config">
+                            Configuration de l'application
+                          </MenuItem>
+                        )}
+
+                        <MenuDivider />
                       </MenuGroup>
                       <MenuDivider />
                     </>
