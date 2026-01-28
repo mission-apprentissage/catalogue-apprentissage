@@ -343,24 +343,6 @@ module.exports = {
         type: "boolean",
         description: "Est publié",
       },
-      last_update_at: {
-        type: "string",
-        description: "Date de dernières mise à jour",
-        format: "date-time",
-      },
-      updates_history: {
-        type: "array",
-        description: "Historique des mises à jours",
-        items: {
-          type: "object",
-          properties: {},
-          required: [],
-        },
-      },
-      update_error: {
-        type: "string",
-        description: "Erreur lors de la mise à jour de la formation",
-      },
       tags: {
         type: "array",
         description: "Tableau de tags (2020, 2021, RCO, etc.)",
@@ -399,6 +381,52 @@ module.exports = {
       opco_siren: {
         type: "string",
         description: "Siren de l'opérateur de compétence",
+      },
+      email_direction: {
+        type: "string",
+        description: "Email de la direction de l'établissement",
+      },
+      editedFields: {
+        type: "object",
+        description: "Champs édités par un utilisateur",
+        properties: {
+          email_direction: {
+            type: "string",
+            description: "Email de la direction de l'établissement édité par un utilisateur",
+          },
+          _id: {
+            type: "string",
+          },
+        },
+      },
+      updates_history: {
+        type: "array",
+        description: "Historique des mises à jours",
+        items: {
+          type: "object",
+          properties: {
+            from: {
+              type: "object",
+              description: "Valeurs avant mise à jour",
+              properties: {},
+            },
+            to: {
+              type: "object",
+              description: "Valeurs après mise à jour",
+              properties: {},
+            },
+          },
+          required: [],
+        },
+      },
+      last_update_at: {
+        type: "string",
+        description: "Date de dernières mise à jour",
+        format: "date-time",
+      },
+      last_update_who: {
+        type: "string",
+        description: "Qui a réalisé la dernière modification",
       },
       _id: {
         type: "string",

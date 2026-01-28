@@ -1,11 +1,17 @@
 const express = require("express");
 const Joi = require("joi");
+const Boom = require("boom");
+const { isValidObjectId } = require("mongoose");
 const { oleoduc, transformIntoJSON, transformIntoCSV } = require("oleoduc");
 const tryCatch = require("../middlewares/tryCatchMiddleware");
 const { sendJsonStream, sendCsvStream } = require("../../common/utils/httpUtils");
 const { paginate } = require("../../common/utils/mongooseUtils");
 const { Etablissement } = require("../../common/models");
-const { sanitize, SAFE_FIND_OPERATORS } = require("../../common/utils/sanitizeUtils");
+const { sanitize, SAFE_FIND_OPERATORS, SAFE_UPDATE_OPERATORS } = require("../../common/utils/sanitizeUtils");
+const { hasAccessTo } = require("../../common/utils/rolesUtils");
+const logger = require("../../common/logger");
+const { siretFormat } = require("../../common/models/format");
+const { diffEtablissement, buildUpdatesHistory } = require("../../logic/common/utils/diffUtils");
 
 /**
  * Sample entity route module for GET
@@ -210,12 +216,9 @@ module.exports = () => {
         Object.assign(query, defaultFilter);
       }
 
-      const retrievedData = await Etablissement.countDocuments(query);
-      if (retrievedData) {
-        res.json(retrievedData);
-      } else {
-        res.json({ message: `Item doesn't exist` });
-      }
+      const count = await Etablissement.countDocuments(query);
+
+      res.json(count);
     })
   );
 
@@ -234,11 +237,12 @@ module.exports = () => {
         Object.assign(query, defaultFilter);
       }
 
-      const retrievedData = await Etablissement.findOne(query);
-      if (retrievedData) {
-        return res.json(retrievedData);
+      const etablissement = await Etablissement.findOne(query);
+
+      if (!etablissement) {
+        throw Boom.notFound(`Aucun établissement ne correspond aux critères transmis.`);
       }
-      return res.status(404).send({ message: `Etablissement doesn't exist` });
+      return res.json(etablissement);
     })
   );
 
@@ -250,21 +254,92 @@ module.exports = () => {
     tryCatch(async (req, res) => {
       const sanitizedParams = sanitize(req.params);
       const itemId = sanitizedParams.id;
-      try {
-        const retrievedDataBySIRET = await Etablissement.findOne({ siret: itemId }).lean();
-        if (retrievedDataBySIRET) {
-          return res.json(retrievedDataBySIRET);
-        }
 
-        const retrievedDataById = await Etablissement.findById(itemId).lean();
-        if (retrievedDataById) {
-          return res.json(retrievedDataById);
-        }
-
-        res.status(404).json({ message: `Etablissement ${itemId} doesn't exist` });
-      } catch (e) {
-        res.status(404).json({ message: `Etablissement ${itemId} doesn't exist` });
+      if (!(siretFormat.test(itemId) || isValidObjectId(itemId))) {
+        throw Boom.badRequest("L'identifiant de l'établissement n'est pas valide");
       }
+
+      const etablissement =
+        (await Etablissement.findOne({ siret: itemId }).lean()) ?? (await Etablissement.findById(itemId).lean());
+
+      if (!etablissement) {
+        throw Boom.notFound(`L'établissement ${itemId} n'existe pas.`);
+      }
+
+      return res.json(etablissement);
+    })
+  );
+
+  /**
+   * Update etablissement by id /etablissement/{id} PUT
+   */
+  router.put(
+    "/etablissement/:id",
+
+    tryCatch(async (req, res) => {
+      const user = req.session.passport.user;
+      const payload = sanitize(req.body, SAFE_UPDATE_OPERATORS);
+      const sanitizedParams = sanitize(req.params);
+      const itemId = sanitizedParams.id;
+
+      if (!(siretFormat.test(itemId) || isValidObjectId(itemId))) {
+        throw Boom.badRequest("L'identifiant de l'établissement n'est pas valide");
+      }
+
+      const etablissement =
+        (await Etablissement.findOne({ siret: itemId }, { updates_history: 0 })) ??
+        (await Etablissement.findById(itemId, { updates_history: 0 }));
+
+      if (!etablissement) {
+        throw Boom.notFound(`L'établissement ${itemId} n'existe pas.`);
+      }
+
+      if (!hasAccessTo(user, "page_formation/gestion_publication", etablissement.num_academie)) {
+        throw Boom.unauthorized();
+      }
+
+      logger.info({ type: "http" }, "Updating etablissement: ", payload);
+
+      const updatedEtablissement = { ...etablissement };
+
+      if (payload.email_direction) {
+        logger.info(
+          { type: "http" },
+          `Updating email_direction for etablissement ${etablissement.siret} to ${payload.email_direction}`
+        );
+
+        updatedEtablissement.email_direction = payload.email_direction;
+        updatedEtablissement.editedFields = {
+          ...updatedEtablissement.editedFields,
+          email_direction: payload.email_direction,
+        };
+        updatedEtablissement.last_update_who = user.email;
+        updatedEtablissement.last_update_at = new Date();
+      }
+
+      const { updates, keys, length } = diffEtablissement(etablissement, updatedEtablissement);
+
+      console.log({ updates, keys, length });
+
+      const result = await Etablissement.findOneAndUpdate(
+        { _id: etablissement._id },
+        {
+          $set: updates,
+          ...(length
+            ? {
+                $push: {
+                  updates_history: buildUpdatesHistory(etablissement, updates, keys),
+                },
+              }
+            : {}),
+        },
+        {
+          new: true,
+          runValidators: true,
+        }
+      );
+
+      res.json(result);
     })
   );
 
