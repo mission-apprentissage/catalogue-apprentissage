@@ -114,7 +114,6 @@ const formation = {
   rco_published: true,
   updates_history: [],
   last_update_who: null,
-  update_error: null,
   lieu_formation_adresse: "Zone Megazone de Moselle Est Parc d'Activités du district de Freyming-Merlebach",
   etablissement_lieu_formation_siret: null,
   id_formation: "01_GE108189",

@@ -17,7 +17,6 @@ const tryCatch = require("./middlewares/tryCatchMiddleware");
 const permissionsMiddleware = require("./middlewares/permissionsMiddleware");
 const packageJson = require("../../package.json");
 const formation = require("./routes/formation");
-const formationSecure = require("./routes/formationSecure");
 const candidature = require("./routes/candidature");
 const report = require("./routes/report");
 const auth = require("./routes/auth");
@@ -180,7 +179,6 @@ module.exports = async (components, verbose = true) => {
       permissionsMiddleware({ isAdmin: true }, ["page_gestion_utilisateurs", "page_gestion_roles"]),
       role(components),
     ],
-    ["/entity", apiLimiter, anyAuthMiddleware, formationSecure()],
     ["/stats", apiLimiter, anyAuthMiddleware, stats(components)],
     ["/upload", apiLimiter, permissionsMiddleware({ isAdmin: true }, ["page_upload"]), upload()],
     ["/entity", apiLimiter, anyAuthMiddleware, reglePerimetreSecure()],

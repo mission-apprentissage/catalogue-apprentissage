@@ -45,6 +45,7 @@ import { OrganismesBlock } from "../../common/components/formation/OrganismesBlo
 import { PublishModalButton } from "../../common/components/formation/PublishModalButton";
 import { UaiHistoryModalButton } from "../../common/components/formation/UaiHistoryModalButton";
 import { ReinitStatutModalButton } from "../../common/components/formation/ReinitStatutModalButton";
+import { ResponsableEmailModalButton } from "../../common/components/formation/ResponsableEmailModalButton";
 import { DateContext } from "../../DateContext";
 
 const CATALOGUE_API = `${process.env.REACT_APP_BASE_URL}/api`;
@@ -756,17 +757,29 @@ export default () => {
                         )}
                     </>
                   ) : (
-                    <></>
-                    // <Alert mt={4} type={"infoLight"}>
-                    //   Aucune information de téléchargement des candidatures n'a été diffusée pour cet organisme{" "}
-                    //   {formation.etablissement_formateur_siret === formation.etablissement_gestionnaire_siret ? (
-                    //     <>responsable-formateur</>
-                    //   ) : (
-                    //     <>formateur</>
-                    //   )}{" "}
-                    //   (sauf en cas de modification de Siret survenu entre temps). Si des offres sont publiées pour la
-                    //   prochaine campagne, le courriel utilisé pour la diffusion sera : {responsable?.email_direction} .
-                    // </Alert>
+                    <Alert mt={4} type={"infoLight"}>
+                      <Text>
+                        Aucune information de téléchargement des candidatures n'a été diffusée pour cet organisme{" "}
+                        {formation.etablissement_formateur_siret === formation.etablissement_gestionnaire_siret ? (
+                          <>responsable-formateur</>
+                        ) : (
+                          <>formateur</>
+                        )}{" "}
+                        (sauf en cas de modification de Siret survenu entre temps).
+                      </Text>
+
+                      {!!responsable?.email_direction && (
+                        <Text>
+                          Si des offres sont publiées pour la prochaine campagne, le courriel utilisé pour la diffusion
+                          sera : <Text as="b">{responsable?.email_direction}</Text>.{" "}
+                          <ResponsableEmailModalButton
+                            formation={formation}
+                            responsable={responsable}
+                            callback={fetchData}
+                          />
+                        </Text>
+                      )}
+                    </Alert>
                   ))}
 
                 {((formation.parcoursup_perimetre &&

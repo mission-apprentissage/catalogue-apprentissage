@@ -445,22 +445,6 @@ const etablissementSchema = {
     default: false,
     description: "Est publié",
   },
-  last_update_at: {
-    type: Date,
-    default: Date.now,
-    description: "Date de dernières mise à jour",
-  },
-  updates_history: {
-    noIndex: true,
-    type: [Object],
-    default: [],
-    description: "Historique des mises à jours",
-  },
-  update_error: {
-    type: String,
-    default: null,
-    description: "Erreur lors de la mise à jour de la formation",
-  },
 
   tags: {
     type: [String],
@@ -525,6 +509,7 @@ const etablissementSchema = {
   },
 
   updates_history: {
+    noIndex: true,
     type: [updateHistorySchema],
     default: [],
     description: "Historique des mises à jours",
@@ -532,7 +517,7 @@ const etablissementSchema = {
 
   last_update_at: {
     type: Date,
-    default: null,
+    default: Date.now,
     description: "Date de dernières mise à jour",
   },
   last_update_who: {

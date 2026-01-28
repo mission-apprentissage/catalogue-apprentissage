@@ -1,4 +1,4 @@
-const { diff: deepObjectDiff } = require("deep-object-diff");
+const { diff } = require("deep-object-diff");
 
 /**
  * Fonction permettant la comparaison champ à champ de deux règles de périmètre.
@@ -71,7 +71,42 @@ const diffFormation = (previousFormationP, nextFormationP) => {
     ...nextFormation
   } = nextFormationP;
 
-  const compare = deepObjectDiff(previousFormation, nextFormation);
+  const compare = diff(previousFormation, nextFormation);
+  const keys = Object.keys(compare);
+
+  return { updates: keys.length ? compare : null, keys, length: keys.length };
+};
+
+/**
+ * Fonction par défaut pour comparer deux entités mongoose
+ *
+ * @param {*} previousEntity
+ * @param {*} nextEntity
+ * @returns {updates: Object, keys: [String], length: Number}
+ */
+const diffEtablissement = (previousEntity, nextEntity) => {
+  const {
+    _id: _id1,
+    __v: __v1,
+    updates_history: updates_history1,
+    created_at: created_at1,
+    updated_at: updated_at1,
+    last_update_at: last_update_at1,
+
+    ...previousEntityContent
+  } = previousEntity;
+  const {
+    _id: _id2,
+    __v: __v2,
+    updates_history: updates_history2,
+    created_at: created_at2,
+    updated_at: updated_at2,
+    last_update_at: last_update_at2,
+
+    ...nextEntityContent
+  } = nextEntity;
+
+  const compare = diff(previousEntityContent, nextEntityContent);
   const keys = Object.keys(compare);
 
   return { updates: keys.length ? compare : null, keys, length: keys.length };
@@ -102,7 +137,7 @@ const diffEntity = (previousEntity, nextEntity) => {
     ...nextEntityContent
   } = nextEntity;
 
-  const compare = deepObjectDiff(previousEntityContent, nextEntityContent);
+  const compare = diff(previousEntityContent, nextEntityContent);
   const keys = Object.keys(compare);
 
   return { updates: keys.length ? compare : null, keys, length: keys.length };
@@ -121,4 +156,4 @@ const buildUpdatesHistory = (origin, updates, keys, date = new Date()) => {
   return [{ from, to: { ...updates }, updated_at: date }];
 };
 
-module.exports = { diffReglePerimetre, diffFormation, diffEntity, buildUpdatesHistory };
+module.exports = { diffReglePerimetre, diffFormation, diffEtablissement, diffEntity, buildUpdatesHistory };

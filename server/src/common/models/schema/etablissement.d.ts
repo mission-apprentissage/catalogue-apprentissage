@@ -6,6 +6,17 @@
  */
 const { Types } = require("mongoose");
 
+/**
+ * Champs édités par un utilisateur
+ */
+export type EditedFields = {
+  /**
+   * Email de la direction de l'établissement édité par un utilisateur
+   */
+  email_direction?: string | null;
+  _id?: Types.ObjectId;
+} | null;
+
 export interface Etablissement {
   /**
    * Cet établissement est le siége sociale
@@ -336,18 +347,6 @@ export interface Etablissement {
    */
   published?: boolean;
   /**
-   * Date de dernières mise à jour
-   */
-  last_update_at?: Date;
-  /**
-   * Historique des mises à jours
-   */
-  updates_history?: unknown[];
-  /**
-   * Erreur lors de la mise à jour de la formation
-   */
-  update_error?: string | null;
-  /**
    * Tableau de tags (2020, 2021, RCO, etc.)
    */
   tags?: string[];
@@ -383,7 +382,39 @@ export interface Etablissement {
    * Siren de l'opérateur de compétence
    */
   opco_siren?: string | null;
+  /**
+   * Email de la direction de l'établissement
+   */
+  email_direction?: string | null;
+  editedFields?: EditedFields;
+  /**
+   * Historique des mises à jours
+   */
+  updates_history?: ItemOfUpdatesHistory[];
+  /**
+   * Date de dernières mise à jour
+   */
+  last_update_at?: Date;
+  /**
+   * Qui a réalisé la dernière modification
+   */
+  last_update_who?: string | null;
   _id?: Types.ObjectId;
   created_at?: Date;
   updated_at?: Date;
+}
+export interface ItemOfUpdatesHistory {
+  /**
+   * Valeurs avant mise à jour
+   */
+  from?: {
+    [k: string]: unknown;
+  };
+  /**
+   * Valeurs après mise à jour
+   */
+  to?: {
+    [k: string]: unknown;
+  };
+  _id?: Types.ObjectId;
 }
