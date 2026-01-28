@@ -135,7 +135,6 @@ const etablissement = {
   catalogue_published: true,
   published: true,
   updates_history: [],
-  update_error: "error: Siren non trouvé.",
   tags: ["2020", "2022"],
   rco_uai: "0312755B",
   rco_adresse: null,
