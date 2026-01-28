@@ -6,7 +6,7 @@ Ce mode d’emploi traite exclusivement de l’utilisation du catalogue apprenti
 Les aspects réglementaires et l’exploitation du module de paramétrage Parcoursup sont traités dans la documentation diffusée par la Dgesip.
 En cas d’erreur ou omission constatée dans ce mode d’emploi, et plus généralement pour tout besoin relatif à l’utilisation du catalogue, vous pouvez contacter :
 
-- soit l’équipe technique et fonctionnelle à l’adresse [catalogue-apprentissage@education.gouv.fr](mailto:catalogue-apprentissage@education.gouv.fr)
+- soit l’équipe technique et fonctionnelle à l’adresse [catalogue-apprentissage@education.gouv.fr"](mailto:catalogue-apprentissage@education.gouv.fr")
 - soit la Moss, via la messagerie Parcoursup
 
 # 2\. Présentation du catalogue
