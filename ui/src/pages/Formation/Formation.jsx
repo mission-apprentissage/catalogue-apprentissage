@@ -757,21 +757,23 @@ export default () => {
                         )}
                     </>
                   ) : (
-                    <Alert mt={4} type={"infoLight"}>
+                    <Alert mt={4} type={"info"}>
                       <Text>
-                        Aucune information de téléchargement des candidatures n'a été diffusée pour cet organisme{" "}
-                        {formation.etablissement_formateur_siret === formation.etablissement_gestionnaire_siret ? (
-                          <>responsable-formateur</>
-                        ) : (
-                          <>formateur</>
-                        )}{" "}
-                        (sauf en cas de modification de Siret survenu entre temps).
+                        <Text as="b">
+                          Aucune information de téléchargement des candidatures n'a été diffusée pour cet organisme{" "}
+                          {formation.etablissement_formateur_siret === formation.etablissement_gestionnaire_siret ? (
+                            <>responsable-formateur</>
+                          ) : (
+                            <>formateur</>
+                          )}{" "}
+                          (sauf en cas de modification de Siret survenu entre temps).
+                        </Text>
                       </Text>
 
                       {!!responsable?.email_direction && (
                         <Text>
                           Si des offres sont publiées pour la prochaine campagne, le courriel utilisé pour la diffusion
-                          sera : <Text as="b">{responsable?.email_direction}</Text>.{" "}
+                          sera : {responsable?.email_direction}.{" "}
                           <ResponsableEmailModalButton
                             formation={formation}
                             responsable={responsable}

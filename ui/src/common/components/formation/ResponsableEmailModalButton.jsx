@@ -1,4 +1,3 @@
-import React from "react";
 import { Link, useDisclosure } from "@chakra-ui/react";
 import { ResponsableEmailModal } from "./ResponsableEmailModal";
 
@@ -7,7 +6,7 @@ export const ResponsableEmailModalButton = ({ responsable, formation, callback }
 
   return (
     <>
-      <Link fontSize={"zeta"} color={"grey.600"} textDecoration={"underline"} onClick={onOpen}>
+      <Link textDecoration={"underline"} onClick={onOpen}>
         Modifier
       </Link>
 
