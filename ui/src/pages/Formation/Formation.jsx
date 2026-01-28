@@ -719,6 +719,21 @@ export default () => {
                   </Flex>
                 )}
 
+                {((formation.parcoursup_perimetre &&
+                  // formation.parcoursup_previous_session &&
+                  !formation.parcoursup_session) ||
+                  (formation.affelnet_perimetre &&
+                    // formation.affelnet_previous_session &&
+                    !formation.affelnet_session)) &&
+                  !formation.cle_me_remplace_par?.length && (
+                    <Alert mt={4} type="warning">
+                      La formation pourrait être dans le périmètre{" "}
+                      {formation.parcoursup_perimetre ? "Parcoursup" : "Affelnet"}, mais ne possède pas de date de début
+                      correspondant à la prochaine rentrée. S'il s'agit d'un problème de collecte, veuillez faire le
+                      signalement auprès du Carif-Oref.
+                    </Alert>
+                  )}
+
                 {hasAccessTo(user, "page_other/api_candidature_relation_find") &&
                   formation.affelnet_perimetre &&
                   (candidatureRelation ? (
@@ -788,20 +803,6 @@ export default () => {
                     <></>
                   ))}
 
-                {((formation.parcoursup_perimetre &&
-                  // formation.parcoursup_previous_session &&
-                  !formation.parcoursup_session) ||
-                  (formation.affelnet_perimetre &&
-                    // formation.affelnet_previous_session &&
-                    !formation.affelnet_session)) &&
-                  !formation.cle_me_remplace_par?.length && (
-                    <Alert mt={4} type="warning">
-                      La formation pourrait être dans le périmètre{" "}
-                      {formation.parcoursup_perimetre ? "Parcoursup" : "Affelnet"}, mais ne possède pas de date de début
-                      correspondant à la prochaine rentrée. S'il s'agit d'un problème de collecte, veuillez faire le
-                      signalement auprès du Carif-Oref.
-                    </Alert>
-                  )}
                 {formation.variante_a_distance && (
                   <Alert mt={4} type={"info"}>
                     La formation est également proposée dans une{" "}
@@ -840,14 +841,16 @@ export default () => {
                     )}
                   </Alert>
                 )}
+
                 {hasAccessTo(user, "page_formation/voir_status_publication_ps") &&
                   [PARCOURSUP_STATUS.PRET_POUR_INTEGRATION, PARCOURSUP_STATUS.REJETE].includes(
                     formation.parcoursup_statut
                   ) &&
                   !!formation.parcoursup_error && <RejectionBlock formation={formation} />}
+
                 {hasAccessTo(user, "page_formation/voir_status_publication_ps") &&
                   formation.parcoursup_raison_depublication && (
-                    <Alert mt={4} type={"warning"}>
+                    <Alert mt={4} type={"info"}>
                       Motif de non publication
                       {!!parcoursup_date_depublication && (
                         <> ({new Date(parcoursup_date_depublication).toLocaleDateString("fr-FR")})</>
@@ -860,7 +863,7 @@ export default () => {
                   )}
                 {hasAccessTo(user, "page_formation/voir_status_publication_af") &&
                   formation.affelnet_raison_depublication && (
-                    <Alert mt={4} type={"warning"}>
+                    <Alert mt={4} type={"info"}>
                       Motif de non publication
                       {!!affelnet_date_depublication && (
                         <> ({new Date(affelnet_date_depublication).toLocaleDateString("fr-FR")})</>
