@@ -777,7 +777,7 @@ export default () => {
                     <Alert mt={4} type={"info"}>
                       <Text>
                         <Text as="b">
-                          Aucune information de téléchargement des candidatures n'a été diffusée pour cet organisme{" "}
+                          Aucune candidature n'a été diffusée pour cet organisme{" "}
                           {formation.etablissement_formateur_siret === formation.etablissement_gestionnaire_siret ? (
                             <>responsable-formateur</>
                           ) : (
