@@ -680,7 +680,7 @@ export default () => {
                       justifyContent={"space-between"}
                       flexDirection={["column", "column", "row"]}
                     >
-                      {[PARCOURSUP_STATUS.FERME, COMMON_STATUS.PRET_POUR_INTEGRATION].includes(
+                      {[PARCOURSUP_STATUS.ERROR, PARCOURSUP_STATUS.FERME, COMMON_STATUS.PRET_POUR_INTEGRATION].includes(
                         formation.parcoursup_statut
                       ) &&
                         hasAccessTo(user, "page_formation/envoi_parcoursup") && (
@@ -689,7 +689,9 @@ export default () => {
                           </Button>
                         )}
 
-                      {[PARCOURSUP_STATUS.PUBLIE, PARCOURSUP_STATUS.REJETE].includes(formation.parcoursup_statut) &&
+                      {[PARCOURSUP_STATUS.ERROR, PARCOURSUP_STATUS.PUBLIE, PARCOURSUP_STATUS.REJETE].includes(
+                        formation.parcoursup_statut
+                      ) &&
                         hasAccessTo(user, "page_formation/reinit_parcoursup") && (
                           <ReinitStatutModalButton formation={formation} setFormation={setFormation} />
                         )}
