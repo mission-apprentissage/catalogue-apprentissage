@@ -18,7 +18,7 @@ const userSchema = Joi.object({
     academie: Joi.string().required(),
     roles: Joi.array().required(),
     permissions: Joi.object({
-      isAdmin: Joi.boolean().required(),
+      isAdmin: Joi.boolean(),
     }).unknown(),
   }).unknown(),
 });

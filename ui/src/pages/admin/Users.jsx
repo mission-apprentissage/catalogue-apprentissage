@@ -283,7 +283,11 @@ export const UserLine = ({ user, roles, refreshSearch }) => {
                 roles,
                 acl,
                 permissions: {
-                  isAdmin: accessAll,
+                  ...(isUserAdmin(auth)
+                    ? {
+                        isAdmin: accessAll,
+                      }
+                    : {}),
                 },
               },
             };
