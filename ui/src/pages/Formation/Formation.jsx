@@ -780,7 +780,7 @@ export default () => {
                           </Alert>
                         )}
                     </>
-                  ) : config.diffusion ? (
+                  ) : !config.diffusion ? (
                     <Alert mt={4} type={"info"}>
                       <Text>
                         <Text as="b">
