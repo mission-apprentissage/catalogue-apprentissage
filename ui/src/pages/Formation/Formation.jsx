@@ -726,11 +726,18 @@ export default () => {
                     // formation.affelnet_previous_session &&
                     !formation.affelnet_session)) &&
                   !formation.cle_me_remplace_par?.length && (
-                    <Alert mt={4} type="warning">
-                      La formation pourrait être dans le périmètre{" "}
-                      {formation.parcoursup_perimetre ? "Parcoursup" : "Affelnet"}, mais ne possède pas de date de début
-                      correspondant à la prochaine rentrée. S'il s'agit d'un problème de collecte, veuillez faire le
-                      signalement auprès du Carif-Oref.
+                    <Alert mt={4} type="error">
+                      <Text>
+                        <Text as="b">
+                          La formation pourrait être dans le périmètre{" "}
+                          {formation.parcoursup_perimetre ? "Parcoursup" : "Affelnet"}, mais ne possède pas de date de
+                          début correspondant à la prochaine rentrée.
+                        </Text>
+                      </Text>
+                      <Text>
+                        S’il s’agit d’une erreur, veuillez en faire le signalement auprès du Carif-Oref, afin que cette
+                        offre soit mise à jour et puisse être publiée.
+                      </Text>
                     </Alert>
                   )}
 
@@ -774,31 +781,89 @@ export default () => {
                         )}
                     </>
                   ) : !config.diffusion ? (
-                    <Alert mt={4} type={"info"}>
-                      <Text>
-                        <Text as="b">
-                          Aucune candidature n'a été diffusée pour cet organisme{" "}
-                          {formation.etablissement_formateur_siret === formation.etablissement_gestionnaire_siret ? (
-                            <>responsable-formateur</>
-                          ) : (
-                            <>formateur</>
-                          )}{" "}
-                          (sauf en cas de modification de Siret survenu entre temps).
-                        </Text>
-                      </Text>
-
+                    <>
                       {!!responsable?.email_direction && (
-                        <Text>
-                          Si des offres sont publiées pour la prochaine campagne, le courriel utilisé pour la diffusion
-                          sera : {responsable?.email_direction}.{" "}
+                        <Alert mt={4} type={"info"}>
+                          <Text>
+                            <Text as="b">
+                              Aucune candidature n'a été diffusée pour cet organisme{" "}
+                              {formation.etablissement_formateur_siret ===
+                              formation.etablissement_gestionnaire_siret ? (
+                                <>responsable-formateur</>
+                              ) : (
+                                <>formateur</>
+                              )}{" "}
+                              (sauf en cas de modification de Siret survenu entre temps).
+                            </Text>
+                          </Text>
+
+                          <Text>
+                            Si des offres sont publiées pour la prochaine campagne, le courriel utilisé pour la
+                            diffusion sera : {responsable?.email_direction}.{" "}
+                            <ResponsableEmailModalButton
+                              formation={formation}
+                              responsable={responsable}
+                              callback={fetchData}
+                            />
+                          </Text>
+                        </Alert>
+                      )}
+
+                      {!responsable?.email_direction && responsable?.emails_potentiels?.length === 0 && (
+                        <Alert mt={4} type={"error"}>
+                          <Text>
+                            <Text as="b">
+                              Aucune adresse courriel n’est fournie par le Carif-Oref pour l’organisme responsable de
+                              cette offre.
+                            </Text>
+                          </Text>
+                          Une adresse courriel sera impérative pour permettre la diffusion des candidatures. Si vous en
+                          avez connaissance,
                           <ResponsableEmailModalButton
                             formation={formation}
                             responsable={responsable}
                             callback={fetchData}
+                            text="veuillez renseigner l’adresse courriel"
                           />
-                        </Text>
+                          .
+                        </Alert>
                       )}
-                    </Alert>
+
+                      {!responsable?.email_direction && responsable?.emails_potentiels?.length >= 2 && (
+                        <Alert mt={4} type={"error"}>
+                          <Text>
+                            <Text as="b">
+                              Plusieurs adresses courriel sont fournies par le Carif-Oref pour l’organisme responsable
+                              de cette offre.
+                            </Text>
+                            <UnorderedList>
+                              {responsable?.emails_potentiels?.map((email) => (
+                                <ListItem>{email}</ListItem>
+                              ))}
+                            </UnorderedList>
+                          </Text>
+                          <Text>
+                            La diffusion des candidatures ne pourra être effectuée que sur une seule adresse.{" "}
+                            <ResponsableEmailModalButton
+                              formation={formation}
+                              responsable={responsable}
+                              callback={fetchData}
+                              text="Veuillez renseigner l’adresse courriel à retenir"
+                            />
+                            .
+                          </Text>
+
+                          <Text fontSize="zeta" color={"grey.600"}>
+                            Lors de la phase préparatoire à la diffusion des candidatures (fin mai), cette adresse sera
+                            utilisée pour informer l’organisme responsable de la diffusion prochaine des candidatures
+                            (début juin).
+                          </Text>
+                          <Text fontSize="zeta" color={"grey.600"}>
+                            Cette adresse pourra être modifiée ultérieurement sur le site de diffusion des candidatures.
+                          </Text>
+                        </Alert>
+                      )}
+                    </>
                   ) : (
                     <></>
                   ))}
