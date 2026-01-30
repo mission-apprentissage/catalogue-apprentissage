@@ -64,7 +64,7 @@ const computeRelationFields = async (fields) => {
 
   switch (true) {
     case fields.affelnet_perimetre && !candidatureRelation:
-      affelnet_candidature_status = "Offres non concernées (nouveaux organismes)";
+      affelnet_candidature_status = "Offres non affichées sur le SLO sur la précédente campagne";
       break;
     case fields.affelnet_perimetre &&
       candidatureRelation.statut_diffusion_generique === "✅ Candidatures toutes téléchargées":
