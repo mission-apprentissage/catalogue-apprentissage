@@ -17,29 +17,34 @@ const updateRelationFields = async () => {
 };
 
 const computeRelationFields = async (fields) => {
-  // console.log();
+  console.log();
 
   const etablissement_siege_id =
     (await Etablissement.findOne({ siret: fields.etablissement_siege_siret }))?._id ?? null;
 
-  potentialEmails = new Set(
-    (
-      await Formation.find(
-        {
-          published: true,
-          catalogue_published: true,
-          affelnet_perimetre: true,
-          etablissement_gestionnaire_siret: fields.siret,
-        },
-        { _id: 0, etablissement_gestionnaire_courriel: 1 }
-      ).lean()
-    ).map((f) => f.etablissement_gestionnaire_courriel)
-  );
+  const emails_potentiels = [
+    ...new Set(
+      (
+        await Formation.find(
+          {
+            published: true,
+            catalogue_published: true,
+            affelnet_perimetre: true,
+            affelnet_session: true,
+            etablissement_gestionnaire_siret: fields.siret,
+          },
+          { _id: 0, etablissement_gestionnaire_courriel: 1 }
+        ).lean()
+      )
+        .filter((f) => !!f.etablissement_gestionnaire_courriel?.length)
+        .map((f) => f.etablissement_gestionnaire_courriel)
+    ),
+  ];
 
-  // logger.debug({ type: "job" }, { siret: fields.siret, potentialEmails });
+  // logger.debug({ type: "job" }, { siret: fields.siret, emails_potentiels });
 
   const email_direction =
-    fields?.editedFields?.email_direction ?? (potentialEmails.size === 1 ? [...potentialEmails][0] : null);
+    fields?.editedFields?.email_direction ?? (emails_potentiels.length === 1 ? [...emails_potentiels][0] : null);
 
   const formations = await Formation.find({
     published: true,
@@ -58,12 +63,14 @@ const computeRelationFields = async (fields) => {
   const previous = {
     etablissement_siege_id: fields.etablissement_siege_id,
     email_direction: fields.email_direction,
+    emails_potentiels: fields.emails_potentiels,
     formations_ids: fields.formations_ids,
     formations_uais: fields.formations_uais,
   };
   const next = {
     etablissement_siege_id,
     email_direction,
+    emails_potentiels,
     formations_ids,
     formations_uais,
   };

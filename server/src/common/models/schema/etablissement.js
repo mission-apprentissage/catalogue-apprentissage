@@ -501,6 +501,13 @@ const etablissementSchema = {
     description: "Email de la direction de l'établissement",
   },
 
+  emails_potentiels: {
+    type: [String],
+    noIndex: true,
+    default: [],
+    description: "Emails de contact potentiels",
+  },
+
   editedFields: {
     type: editedFieldSchema,
     noIndex: true,

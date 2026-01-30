@@ -30,7 +30,7 @@ const ResponsableEmailModal = ({ isOpen, onClose, formation, responsable, callba
 
   const updates_history = [
     ...responsable.updates_history?.sort(sortDescending),
-    ...(responsable?.email_direction
+    ...(responsable?.email_direction && responsable?.emails_potentiels?.length === 1
       ? [
           {
             from: {},
