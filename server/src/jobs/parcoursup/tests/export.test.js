@@ -242,7 +242,7 @@ describe(__filename, () => {
 
     await createFormation(f);
 
-    assert.strictEqual(f.parcoursup_statut, PARCOURSUP_STATUS.PRET_POUR_INTEGRATION);
+    assert.strictEqual(f.parcoursup_statut, PARCOURSUP_STATUS.ERROR);
     assert.strictEqual(f.parcoursup_error, "400 erreur de création");
   });
 
