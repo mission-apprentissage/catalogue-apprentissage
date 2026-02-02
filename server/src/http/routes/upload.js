@@ -12,7 +12,7 @@ const {
   afImportCandidatureFormations,
 } = require("../../jobs/affelnet/import");
 const { afCoverage } = require("../../jobs/affelnet/coverage");
-const { rebuildEsIndex } = require("../../jobs/esIndex/esIndex");
+const { esSyncIndex } = require("../../jobs/elastic/esSyncIndex");
 const { hasAccessTo } = require("../../common/utils/rolesUtils");
 const { Formation } = require("../../common/models");
 const { afConsoleStats } = require("../../jobs/affelnet/stats");
@@ -114,7 +114,7 @@ module.exports = () => {
               await afCoverage();
               Formation.startAllMongoosaticHooks();
               await enableAlertMessage();
-              await rebuildEsIndex("formation");
+              await esSyncIndex("formation");
               await disableAlertMessage();
               await afConsoleStats();
             };

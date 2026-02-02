@@ -146,9 +146,10 @@ let isHooksPaused = false;
 const postDocumentSave = (doc) => {
   const logger = require("../../logger");
 
+  if (isHooksPaused) return;
+
   logger.debug?.({ type: "mongoosastic" }, "POST DOCUMENT SAVE");
 
-  if (isHooksPaused) return;
   if (doc) {
     const _doc = new doc.constructor(doc);
     return _doc.index();
@@ -158,9 +159,10 @@ const postDocumentSave = (doc) => {
 const postDocumentRemove = (doc) => {
   const logger = require("../../logger");
 
+  if (isHooksPaused) return;
+
   logger.debug?.({ type: "mongoosastic" }, "POST DOCUMENT REMOVE");
 
-  if (isHooksPaused) return;
   if (doc) {
     const _doc = new doc.constructor(doc);
     return _doc.unIndex();
@@ -170,9 +172,9 @@ const postDocumentRemove = (doc) => {
 async function postQuerySave() {
   const logger = require("../../logger");
 
-  logger.debug?.({ type: "mongoosastic" }, "POST QUERY SAVE");
-
   if (isHooksPaused) return;
+
+  logger.debug?.({ type: "mongoosastic" }, "POST QUERY SAVE");
 
   const doc = await this.model.findOne(this._conditions);
 
@@ -184,9 +186,9 @@ async function postQuerySave() {
 async function postQuerySaveMany(query) {
   const logger = require("../../logger");
 
-  logger.debug?.({ type: "mongoosastic" }, "POST QUERY SAVE MANY");
-
   if (isHooksPaused) return;
+
+  logger.debug?.({ type: "mongoosastic" }, "POST QUERY SAVE MANY");
 
   const docs = await this.model.find(this._conditions).cursor();
 
@@ -198,9 +200,9 @@ async function postQuerySaveMany(query) {
 async function preQueryRemove() {
   const logger = require("../../logger");
 
-  logger.debug?.({ type: "mongoosastic" }, "PRE QUERY REMOVE");
-
   if (isHooksPaused) return;
+
+  logger.debug?.({ type: "mongoosastic" }, "PRE QUERY REMOVE");
 
   const doc = await this.model.findOne(this._conditions);
 
@@ -212,9 +214,9 @@ async function preQueryRemove() {
 async function preQueryRemoveMany(query) {
   const logger = require("../../logger");
 
-  logger.debug?.({ type: "mongoosastic" }, "PRE QUERY REMOVE MANY");
-
   if (isHooksPaused) return;
+
+  logger.debug?.({ type: "mongoosastic" }, "PRE QUERY REMOVE MANY");
 
   const docs = await this.model.find(this._conditions).cursor();
 
@@ -265,6 +267,8 @@ module.exports.mongoosastic = (schema, options) => {
 
   // ElasticSearch Client
   schema.statics.esClient = esClient;
+
+  schema.statics.indexName = indexName;
 
   schema.statics.createMapping = async function createMapping(requireAsciiFolding = false) {
     try {
@@ -385,16 +389,22 @@ module.exports.mongoosastic = (schema, options) => {
   schema.statics.pauseAllMongoosaticHooks = function pauseAllMongoosaticHooks() {
     const logger = require("../../logger");
 
+    logger.info(
+      { type: "mongoosastic" },
+      `Mongoose Hooks have been paused for ${indexName}, previously: ${isHooksPaused ? "paused" : "running"}`
+    );
     isHooksPaused = true;
-    logger.debug({ type: "mongoosastic" }, `Mongoose Hooks have been paused for ${indexName}`);
     // console.log(`Mongoose Hooks have been paused for ${indexName}`);
   };
 
   schema.statics.startAllMongoosaticHooks = function startAllMongoosaticHooks() {
     const logger = require("../../logger");
 
+    logger.info(
+      { type: "mongoosastic" },
+      `Mongoose Hooks have been activated for ${indexName}, previously: ${isHooksPaused ? "paused" : "running"}`
+    );
     isHooksPaused = false;
-    logger.debug({ type: "mongoosastic" }, `Mongoose Hooks have been activated for ${indexName}`);
     // console.log(`Mongoose Hooks have been activated for ${indexName}`);
   };
 

@@ -3,7 +3,7 @@ const path = require("path");
 const { runScript, enableAlertMessage, disableAlertMessage } = require("./scriptWrapper");
 const logger = require("../common/logger");
 const { Formation, Etablissement } = require("../common/models");
-const { rebuildEsIndex } = require("./esIndex/esIndex");
+const { esSyncIndex } = require("./elastic/esSyncIndex");
 const { parcoursupJobs } = require("./parcoursup");
 const { affelnetJobs } = require("./affelnet");
 const { etablissementsJobs } = require("./etablissements");
@@ -19,13 +19,13 @@ runScript(async ({ db }) => {
     logger.info({ type: "job" }, `ALL JOBS ⏳`);
 
     Etablissement.pauseAllMongoosaticHooks();
+    Formation.pauseAllMongoosaticHooks();
 
     // Etablissements
     await etablissementsJobs(); // ~ 20 minutes
     await sleep(10000);
 
     // Formations
-    Formation.pauseAllMongoosaticHooks();
     await formationsJobs();
     await sleep(10000);
 
@@ -41,12 +41,12 @@ runScript(async ({ db }) => {
 
     // Elastic
     await enableAlertMessage();
-    await rebuildEsIndex("etablissements"); // ~ 5 minutes // maj elastic search (recherche des établissements)
+    await esSyncIndex("etablissements"); // ~ 5 minutes // maj elastic search (recherche des établissements)
     await disableAlertMessage();
     Etablissement.startAllMongoosaticHooks();
 
     await enableAlertMessage();
-    await rebuildEsIndex("formations"); // ~ 5 minutes // maj elastic search (recherche des formations)
+    await esSyncIndex("formations"); // ~ 5 minutes // maj elastic search (recherche des formations)
     await disableAlertMessage();
     Formation.startAllMongoosaticHooks();
 
@@ -54,5 +54,8 @@ runScript(async ({ db }) => {
   } catch (error) {
     logger.error({ type: "job" }, error);
     logger.error({ type: "job" }, `ALL JOBS ❌`);
+
+    Etablissement.startAllMongoosaticHooks();
+    Formation.startAllMongoosaticHooks();
   }
 });

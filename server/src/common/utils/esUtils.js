@@ -2,7 +2,9 @@ const logger = require("../logger");
 
 const { getElasticInstance } = require("../esClient");
 
-const rebuildIndex = async (index, schema, { filter, skipFound } = { skipFound: false, filter: {} }) => {
+const rebuildIndex = async (schema, { filter, skipFound } = { skipFound: false, filter: {} }) => {
+  const index = schema.indexName;
+
   logger.info({ type: "utils" }, `-- REBULDING ${index} INDEX ⏳`);
   let client = getElasticInstance();
 
@@ -21,7 +23,9 @@ const rebuildIndex = async (index, schema, { filter, skipFound } = { skipFound: 
   logger.info({ type: "utils" }, `-- REBULDING ${index} INDEX ✅`);
 };
 
-const deleteIndex = async (index) => {
+const deleteIndex = async (schema) => {
+  const index = schema.indexName;
+
   logger.info({ type: "utils" }, `-- DELETING ${index} INDEX ⏳`);
 
   let client = getElasticInstance();

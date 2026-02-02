@@ -27,7 +27,12 @@ const affelnetJobs = async () => {
 module.exports = { affelnetJobs };
 
 if (process.env.standaloneJobs) {
-  runScript(async () => {
-    await affelnetJobs();
-  });
+  runScript(
+    async () => {
+      await affelnetJobs();
+    },
+    {
+      pauseHooks: "formations",
+    }
+  );
 }

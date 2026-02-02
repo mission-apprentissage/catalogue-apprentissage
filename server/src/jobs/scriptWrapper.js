@@ -5,6 +5,8 @@ const logger = require("../common/logger");
 const config = require("config");
 const { access, mkdir } = require("fs").promises;
 const { Alert } = require("../common/models/index");
+const { esStartHook } = require("./elastic/esStartHook");
+const { esPauseHook } = require("./elastic/esPauseHook");
 
 process.on("unhandledRejection", (e) => console.log(e));
 process.on("uncaughtException", (e) => console.log(e));
@@ -80,8 +82,10 @@ module.exports = {
    * @param {() => void} job
    * @param {object} [options]
    * @param {boolean} options.alert Display alert on front
+   * @param {String} options.pauseHooks Pause Mongoosastic hooks for the specified model. "all" for all models.
    */
   runScript: async (job, options) => {
+    options?.pauseHooks && esPauseHook(options?.pauseHooks);
     try {
       const timer = createTimer();
       timer.start();
@@ -99,6 +103,7 @@ module.exports = {
       options?.alert && (await disableAlertMessage());
       await exit(e);
     }
+    options?.pauseHooks && esStartHook(options?.pauseHooks);
   },
   enableAlertMessage,
   disableAlertMessage,

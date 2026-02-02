@@ -31,7 +31,12 @@ const parcoursupJobs = async () => {
 module.exports = { parcoursupJobs };
 
 if (process.env.standaloneJobs) {
-  runScript(async () => {
-    await parcoursupJobs();
-  });
+  runScript(
+    async () => {
+      await parcoursupJobs();
+    },
+    {
+      pauseHooks: "formations",
+    }
+  );
 }

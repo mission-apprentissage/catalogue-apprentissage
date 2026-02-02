@@ -56,7 +56,12 @@ const afPerimetre = async () => {
 module.exports = { afPerimetre };
 
 if (process.env.standalone) {
-  runScript(async () => {
-    await afPerimetre();
-  });
+  runScript(
+    async () => {
+      await afPerimetre();
+    },
+    {
+      pauseHooks: "formations",
+    }
+  );
 }

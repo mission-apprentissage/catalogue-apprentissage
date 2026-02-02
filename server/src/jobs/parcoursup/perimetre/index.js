@@ -53,7 +53,12 @@ const psPerimetre = async () => {
 module.exports = { psPerimetre };
 
 if (process.env.standalone) {
-  runScript(async () => {
-    await psPerimetre();
-  });
+  runScript(
+    async () => {
+      await psPerimetre();
+    },
+    {
+      pauseHooks: "formations",
+    }
+  );
 }

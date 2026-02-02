@@ -1,7 +1,7 @@
 const { runScript, enableAlertMessage, disableAlertMessage } = require("./scriptWrapper");
 const logger = require("../common/logger");
 const { Formation, CampagneStart } = require("../common/models");
-const { rebuildEsIndex } = require("./esIndex/esIndex");
+const { esSyncIndex } = require("./elastic/esSyncIndex");
 const { psStartCampagne } = require("./parcoursup/startCampagne");
 const { afStartCampagne } = require("./affelnet/startCampagne");
 const { psPerimetre } = require("./parcoursup/perimetre");
@@ -36,7 +36,7 @@ runScript(async ({}) => {
     Formation.startAllMongoosaticHooks();
 
     await enableAlertMessage();
-    await rebuildEsIndex("formations");
+    await esSyncIndex("formations");
     await disableAlertMessage();
 
     logger.info({ type: "job" }, `START CAMPAGNE ✅`);
