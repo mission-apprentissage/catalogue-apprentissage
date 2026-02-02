@@ -397,6 +397,8 @@ const excludedRNCPs = [
   // "RNCP39399",
 ];
 
+const excludedSIRETs = ["94981602900019", "94998347200018"];
+
 const run = async () => {
   const sessionStartDate = await getSessionStartDate();
   const sessionEndDate = await getSessionEndDate();
@@ -411,6 +413,14 @@ const run = async () => {
           $nin: excludedRNCPs,
         },
       },
+      {
+        etablissement_gestionnaire_siret: {
+          $nin: excludedSIRETs,
+        },
+        etablissement_formateur_siret: {
+          $nin: excludedSIRETs,
+        },
+      },
       notOutdatedRule,
     ],
   };
@@ -418,6 +428,32 @@ const run = async () => {
   const campagneCount = await Formation.countDocuments(filterSessionDate);
 
   logger.debug({ type: "job" }, `${campagneCount} formations possèdent des dates de début pour la campagne en cours.`);
+
+  await Formation.updateMany(
+    {
+      parcoursup_perimetre: true,
+      parcoursup_session: true,
+      $or: [
+        {
+          etablissement_gestionnaire_siret: {
+            $in: excludedSIRETs,
+          },
+        },
+        {
+          etablissement_formateur_siret: {
+            $in: excludedSIRETs,
+          },
+        },
+      ],
+    },
+    {
+      $set: {
+        parcoursup_statut: "non publié",
+        parcoursup_raison_depublication: "Non autorisé (Drafpica, Draaf, Moss, SAIO)",
+        parcoursup_raison_depublication_precision: "Déréférencement 2025 suite rappel à la charte",
+      },
+    }
+  );
 
   /** 0. On initialise parcoursup_id à null si l'information n'existe pas sur la formation */
   logger.debug({ type: "job" }, "Etape 0.");
