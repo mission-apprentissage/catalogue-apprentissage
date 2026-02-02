@@ -1,4 +1,14 @@
+const mongoose = require("mongoose");
 const { validateUAI } = require("../../utils/uaiUtils");
+const { updateHistorySchema } = require("./updateHistory");
+
+const editedFieldSchema = mongoose.Schema({
+  email_direction: {
+    type: String,
+    default: null,
+    description: "Email de la direction de l'établissement édité par un utilisateur",
+  },
+});
 
 const etablissementSchema = {
   siege_social: {
@@ -7,7 +17,7 @@ const etablissementSchema = {
     description: "Cet établissement est le siége sociale",
   },
   etablissement_siege_id: {
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
     default: null,
     description: "Identifiant établissement siége",
   },
@@ -348,7 +358,7 @@ const etablissementSchema = {
   },
 
   formations_ids: {
-    type: [String],
+    type: [mongoose.Schema.Types.ObjectId],
     default: [],
     description: "Id des formations rattachées",
   },
@@ -498,6 +508,37 @@ const etablissementSchema = {
     type: String,
     default: null,
     description: "Siren de l'opérateur de compétence",
+  },
+
+  email_direction: {
+    type: String,
+    noIndex: true,
+    default: null,
+    description: "Email de la direction de l'établissement",
+  },
+
+  editedFields: {
+    type: editedFieldSchema,
+    noIndex: true,
+    default: null,
+    description: "Champs édités par un utilisateur",
+  },
+
+  updates_history: {
+    type: [updateHistorySchema],
+    default: [],
+    description: "Historique des mises à jours",
+  },
+
+  last_update_at: {
+    type: Date,
+    default: null,
+    description: "Date de dernières mise à jour",
+  },
+  last_update_who: {
+    type: String,
+    default: null,
+    description: "Qui a réalisé la dernière modification",
   },
 };
 

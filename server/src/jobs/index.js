@@ -4,21 +4,19 @@ const { runScript, enableAlertMessage, disableAlertMessage } = require("./script
 const logger = require("../common/logger");
 const { Formation, Etablissement } = require("../common/models");
 const { rebuildEsIndex } = require("./esIndex/esIndex");
-const { bcnJobs } = require("./bcn");
 const { parcoursupJobs } = require("./parcoursup");
 const { affelnetJobs } = require("./affelnet");
 const { etablissementsJobs } = require("./etablissements");
 const { formationsJobs } = require("./formations");
 const { collectPreviousSeasonStats } = require("./formations/previousSeasonStats");
+const { updateRelationFields: updateEtablissementRelationFields } = require("./etablissements/importer/converter");
+const { updateRelationFields: updateFormationRelationFields } = require("./formations/importer/converter");
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 runScript(async ({ db }) => {
   try {
     logger.info({ type: "job" }, `ALL JOBS ⏳`);
-
-    // await bcnJobs();
-    // await sleep(10000);
 
     Etablissement.pauseAllMongoosaticHooks();
 
@@ -36,6 +34,10 @@ runScript(async ({ db }) => {
     await affelnetJobs(); // ~ 15 minutes  // maj des rapprochements & étiquettes périmètre & calcul stats
     await collectPreviousSeasonStats({ store: false, compare: true }); // ~ 5 minutes // maj des stats de la saison précédente
     await sleep(10000);
+
+    // Relations
+    await updateEtablissementRelationFields();
+    await updateFormationRelationFields();
 
     // Elastic
     await enableAlertMessage();
