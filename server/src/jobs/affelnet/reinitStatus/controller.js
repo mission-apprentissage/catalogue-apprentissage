@@ -11,7 +11,7 @@ const { AFFELNET_STATUS } = require("../../../constants/status");
  */
 const allHistoryIsEnAttenteAfterDate = (formation, date) => {
   return formation.updates_history
-    ?.filter((history) => new Date(history.updated_at) >= new Date(date))
+    ?.filter((history) => new Date(history.updated_at).getTime() >= new Date(date).getTime())
     ?.every(
       (history) => !history.to?.affelnet_statut || history.to?.affelnet_statut === AFFELNET_STATUS.PRET_POUR_INTEGRATION
     );
@@ -24,13 +24,19 @@ const allHistoryIsEnAttenteAfterDate = (formation, date) => {
  * @param {Date} date
  * @returns
  */
-const lastHistoryIsEnAttenteBeforeDate = (formation, date) =>
-  formation.updates_history
-    ?.filter((history) => !!history.to.affelnet_statut)
-    ?.filter((history) => new Date(history.updated_at) < new Date(date))
-    ?.reverse()[0]?.to.affelnet_statut === AFFELNET_STATUS.PRET_POUR_INTEGRATION;
+const lastHistoryIsEnAttenteBeforeDate = (formation, date) => {
+  console.log(formation.updates_history?.filter((history) => !!history.to.affelnet_statut));
+
+  return (
+    formation.updates_history
+      ?.filter((history) => !!history.to.affelnet_statut)
+      ?.filter((history) => new Date(history.updated_at).getTime() < new Date(date).getTime())
+      ?.reverse()[0]?.to.affelnet_statut === AFFELNET_STATUS.PRET_POUR_INTEGRATION
+  );
+};
 
 /**
+ * Réinitialise les demande de publication Affelnet qui ont eu lieu depuis une date donnée.
  *
  * @param {Date} date La date à partir de laquelle les formations ayant été passées au statut Affelnet "prêt pour intégration" vont repassé à "non publiable en l'état".
  */

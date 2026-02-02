@@ -15,12 +15,8 @@ module.exports = () => {
   router.post(
     "/send-ws",
     tryCatch(async (req, res) => {
+      const user = req.session?.passport?.user;
       const payload = sanitize(req.body);
-
-      let user = {};
-      if (req.user) {
-        user = req.session?.passport?.user;
-      }
 
       const { id } = payload;
       const formation = await Formation.findById(id);
@@ -33,7 +29,7 @@ module.exports = () => {
         throw Boom.forbidden('La formation n\'est pas "prêt pour intégration"');
       }
 
-      const formationUpdated = await createFormation(formation, user.email);
+      const formationUpdated = await createFormation(formation, user?.email);
       if (formationUpdated.parcoursup_error) {
         return res.status(500).json({ message: formationUpdated.parcoursup_error });
       }

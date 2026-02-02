@@ -85,6 +85,8 @@ module.exports = () => {
     "/",
     tryCatch(async (req, res) => {
       upload(req, res, async (err) => {
+        const user = req.session?.passport?.user;
+
         if (err) {
           return res.status(500).json(err);
         }
@@ -96,11 +98,11 @@ module.exports = () => {
 
         let callback;
 
-        // console.log({ filename, user: req.user });
+        // console.log({ filename, user: req.session?.passport?.user; });
 
         switch (filename) {
           case DOCUMENTS.get("affelnet-formations").filename:
-            if (!hasAccessTo(req.user, DOCUMENTS.get("affelnet-formations").acl)) {
+            if (!hasAccessTo(user, DOCUMENTS.get("affelnet-formations").acl)) {
               return res.status(403).json({
                 error: `Vous ne disposez pas des droits nécessaires pour déposer ce fichier`,
               });
@@ -119,7 +121,7 @@ module.exports = () => {
             break;
 
           case DOCUMENTS.get("kit-apprentissage").filename: {
-            if (!hasAccessTo(req.user, DOCUMENTS.get("kit-apprentissage").acl)) {
+            if (!hasAccessTo(user, DOCUMENTS.get("kit-apprentissage").acl)) {
               return res.status(403).json({
                 error: `Vous ne disposez pas des droits nécessaires pour déposer ce fichier`,
               });
@@ -148,7 +150,7 @@ module.exports = () => {
           }
 
           case DOCUMENTS.get("parcoursup-mefs").filename: {
-            if (!hasAccessTo(req.user, DOCUMENTS.get("parcoursup-mefs").acl)) {
+            if (!hasAccessTo(user, DOCUMENTS.get("parcoursup-mefs").acl)) {
               return res.status(403).json({
                 error: `Vous ne disposez pas des droits nécessaires pour déposer ce fichier`,
               });
@@ -177,7 +179,7 @@ module.exports = () => {
           }
 
           case DOCUMENTS.get("candidature-relations").filename: {
-            if (!hasAccessTo(req.user, DOCUMENTS.get("candidature-relations").acl)) {
+            if (!hasAccessTo(user, DOCUMENTS.get("candidature-relations").acl)) {
               return res.status(403).json({
                 error: `Vous ne disposez pas des droits nécessaires pour déposer ce fichier`,
               });
@@ -191,7 +193,7 @@ module.exports = () => {
           }
 
           // case DOCUMENTS.get("candidature-formations").filename: {
-          //   if (!hasAccessTo(req.user, DOCUMENTS.get("candidature-formations").acl)) {
+          //   if (!hasAccessTo(user, DOCUMENTS.get("candidature-formations").acl)) {
           //     return res.status(403).json({
           //       error: `Vous ne disposez pas des droits nécessaires pour déposer ce fichier`,
           //     });

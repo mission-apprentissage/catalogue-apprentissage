@@ -9,27 +9,21 @@ const roleSchema = Joi.object({
   acl: Joi.array().required(),
 });
 
-const closeSessionsOfThisRole = async (db, name) =>
-  new Promise((resolve, reject) => {
-    db.collection("sessions", function (err, collection) {
-      collection.find({}).toArray(function (err, data) {
-        const sessionIdToDelete = [];
-        for (let index = 0; index < data.length; index++) {
-          const element = data[index];
-          const session = JSON.parse(element.session);
-          if (session.passport.user.roles?.includes(name)) {
-            sessionIdToDelete.push(element._id);
-          }
-        }
-        collection.deleteMany({ _id: { $in: sessionIdToDelete } }, function (err, r) {
-          if (err) {
-            return reject(err);
-          }
-          resolve(r);
-        });
-      });
-    });
+const closeSessionsOfThisRole = async (db, name) => {
+  const sessions = db.collection("sessions").find({});
+
+  const sessionIdToDelete = [];
+
+  sessions.forEach(({ id, session }) => {
+    const value = JSON.parse(session);
+
+    if (value.passport.user.roles?.includes(name)) {
+      sessionIdToDelete.push(element._id);
+    }
   });
+
+  await db.collection("sessions").deleteMany({ _id: { $in: sessionIdToDelete } });
+};
 
 module.exports = ({ db: { db } }) => {
   const router = express.Router();

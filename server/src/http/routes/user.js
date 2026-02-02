@@ -85,6 +85,8 @@ module.exports = ({ users, mailer, db: { db } }) => {
   router.post(
     "/user",
     tryCatch(async (req, res) => {
+      const auth = req.session?.passport?.user;
+
       await userSchema.validateAsync(req.body, { abortEarly: false });
 
       const { username, password, options } = req.body;
@@ -99,11 +101,11 @@ module.exports = ({ users, mailer, db: { db } }) => {
         throw Boom.conflict(`Impossible de créer, l'email ${options.email.toLowerCase()} est déjà utilisé.`);
       }
 
-      if (typeof req.body.options.permissions.isAdmin !== "undefined" && !isUserAdmin(req.user)) {
+      if (typeof req.body.options.permissions.isAdmin !== "undefined" && !isUserAdmin(auth)) {
         throw Boom.forbidden("Seul un administrateur peut attribuer le rôle d'administrateur.");
       }
 
-      const user = await users.createUser(username, password, { ...options, created_by: req.user.email });
+      const user = await users.createUser(username, password, { ...options, created_by: auth?.email });
 
       await mailer.sendEmail(
         user.email,
@@ -149,7 +151,7 @@ module.exports = ({ users, mailer, db: { db } }) => {
         fonction: req.body.options.fonction,
         roles: req.body.options.roles,
         acl: req.body.options.acl,
-        updated_by: req.user.email,
+        updated_by: req.session?.passport?.user?.email,
       });
 
       await closeSessionsOfThisUser(db, username);

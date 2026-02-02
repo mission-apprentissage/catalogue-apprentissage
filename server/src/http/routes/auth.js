@@ -27,7 +27,7 @@ module.exports = ({ users }) => {
     "/current-session",
     tryCatch(async (req, res) => {
       if (req.user) {
-        let { user } = req.session.passport;
+        const user = req.session.passport.user;
         return res.json(user);
       }
       const payload = await users.structureUser({ username: "anonymous", roles: ["public"], acl: [] });
