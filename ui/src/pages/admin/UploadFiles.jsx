@@ -60,7 +60,7 @@ const DOCUMENTS = [
   },
   {
     filename: "export-candidature-relations.csv",
-    label: "Export des relations depuis le site des Candidatures Affelnet",
+    label: "Export des établissements depuis le site des Candidatures Affelnet",
     acl: "page_upload/candidature-relations",
     instruction: (
       <>
@@ -71,8 +71,8 @@ const DOCUMENTS = [
               Transmission des listes de candidats &nbsp;
               <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} />
             </Link>
-            , un administrateur doit utiliser la fonction <Text as="b">exporter par relation (csv)</Text>, sans filtrage
-            par academie.
+            , un administrateur doit utiliser la fonction <Text as="b">exporter par établissements (csv)</Text>, sans
+            filtrage par academie.
           </li>
           <li>Le fichier doit ensuite être déposer ici.</li>
         </ul>
