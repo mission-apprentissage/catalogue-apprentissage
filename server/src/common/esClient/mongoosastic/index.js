@@ -188,9 +188,11 @@ async function postQuerySaveMany(query) {
 
   if (isHooksPaused) return;
 
-  const docs = await this.model.find(this._conditions);
+  const docs = await this.model.find(this._conditions).cursor();
 
-  docs.forEach((doc) => doc.index());
+  for await (const doc of docs) {
+    await doc.index();
+  }
 }
 
 async function preQueryRemove() {
@@ -214,9 +216,11 @@ async function preQueryRemoveMany(query) {
 
   if (isHooksPaused) return;
 
-  const docs = await this.model.find(this._conditions);
+  const docs = await this.model.find(this._conditions).cursor();
 
-  docs.forEach((doc) => doc.unIndex());
+  for await (const doc of docs) {
+    await doc.index();
+  }
 }
 
 /**
