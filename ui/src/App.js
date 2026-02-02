@@ -4,10 +4,11 @@ import { Route, Routes, useNavigate, Navigate, RouterProvider, createBrowserRout
 import ScrollToTop from "./common/components/ScrollToTop";
 import useAuth from "./common/hooks/useAuth";
 import { _get, _post } from "./common/httpClient";
-import { hasAccessTo, hasAccessToAtLeastOneOf, hasOnlyOneAcademyRight } from "./common/utils/rolesUtils";
+import { hasAccessTo, hasAccessToAtLeastOneOf, hasOnlyOneAcademyRight, isUserAdmin } from "./common/utils/rolesUtils";
 import { DateContext } from "./DateContext";
 import { ACADEMIES } from "./constants/academies";
 import { PLATEFORME } from "./constants/plateforme";
+import { Config } from "./pages/admin/Config";
 
 // Route-based code splitting @see https://reactjs.org/docs/code-splitting.html#route-based-code-splitting
 // const HomePage = lazy(() => import("./pages/HomePage"));
@@ -128,6 +129,20 @@ const Root = () => {
             <Route path="/forgotten-password" element={<ForgottenPasswordPage />} />
 
             {/* Administration */}
+
+            {auth && isUserAdmin(auth) ? (
+              <Route
+                path="/admin/config"
+                element={
+                  <RequireAuth>
+                    <Config />
+                  </RequireAuth>
+                }
+              ></Route>
+            ) : (
+              <React.Fragment />
+            )}
+
             {auth && hasAccessTo(auth, "page_gestion_utilisateurs") ? (
               <Route
                 path="/admin/users"
