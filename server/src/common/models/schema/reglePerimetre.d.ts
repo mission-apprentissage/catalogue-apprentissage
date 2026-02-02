@@ -32,6 +32,7 @@ export interface ReglePerimetre {
     | "à publier (vérifier accès direct postbac)"
     | "à publier (soumis à validation Recteur)"
     | "à publier (sous condition habilitation)"
+    | "échec d'envoi"
     | "à définir"
     | "à publier (soumis à validation)";
   /**

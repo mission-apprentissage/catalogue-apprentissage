@@ -33,6 +33,7 @@ export interface PreviousSeasonFormation {
     | "à publier (soumis à validation Recteur)"
     | "à publier (sous condition habilitation)"
     | "rejet de publication"
+    | "échec d'envoi"
     | "fermé";
   /**
    * Dans le périmètre affelnet

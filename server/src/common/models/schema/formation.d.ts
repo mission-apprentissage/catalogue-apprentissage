@@ -713,6 +713,7 @@ export interface Formation {
     | "à publier (soumis à validation Recteur)"
     | "à publier (sous condition habilitation)"
     | "rejet de publication"
+    | "échec d'envoi"
     | "fermé";
   /**
    * Statut initial parcoursup
@@ -728,6 +729,7 @@ export interface Formation {
     | "à publier (soumis à validation Recteur)"
     | "à publier (sous condition habilitation)"
     | "rejet de publication"
+    | "échec d'envoi"
     | "fermé";
   /**
    * Statut parcoursup à la fin de la précédente campagne
@@ -743,6 +745,7 @@ export interface Formation {
     | "à publier (soumis à validation Recteur)"
     | "à publier (sous condition habilitation)"
     | "rejet de publication"
+    | "échec d'envoi"
     | "fermé";
   /**
    * Statut parcoursup avant éxécution des règles de périmètre
@@ -758,6 +761,7 @@ export interface Formation {
     | "à publier (soumis à validation Recteur)"
     | "à publier (sous condition habilitation)"
     | "rejet de publication"
+    | "échec d'envoi"
     | "fermé";
   /**
    * Parcoursup : historique des statuts

@@ -109,7 +109,7 @@ const LoginPage = () => {
                     <Button variant="primary" type="submit">
                       Connexion
                     </Button>
-                    <Link to="/forgotten-password" as={NavLink} color="grey.500">
+                    <Link to="/forgotten-password" as={NavLink} textDecoration="underline">
                       Mot de passe oublié
                     </Link>
                   </HStack>
