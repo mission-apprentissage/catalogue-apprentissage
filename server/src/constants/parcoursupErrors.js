@@ -34,7 +34,7 @@ const parcoursupErrors = [
   },
   {
     regexp:
-      /Erreur lors de la creation : Ce type de formation est marqué "Fermé" dans la BCN. Vous ne pouvez donc pas créer une formation de ce type./,
+      /Ce type de formation est marqué "Fermé" dans la BCN. Vous ne pouvez donc pas créer une formation de ce type./,
     description:
       "La formation est obsolète au niveau de la BCN. Vérifier que le code MEF utilisé dans le catalogue correspond au code MEF le plus récent pour cette formation.",
     action: `Vous pouvez faire un message dans la rubrique contact parcoursup en indiquant le ou les codes BCN trouvés.`,
@@ -97,7 +97,7 @@ const parcoursupErrors = [
   },
   {
     regexp:
-      /Erreur lors de la creation : Il n'est pas possible de créer une formation sur un établissement d'inscription qui n'a pas de rôle d'inscription./,
+      /Il n'est pas possible de créer une formation sur un établissement d'inscription qui n'a pas de rôle d'inscription./,
     description: "Le rôle défini dans Parcoursup pour cet établissement ne permet pas une publication de l’offre.",
     action: `Vous devez vérifier voir modifier le rôle de l'établissement dans la partie Données administratives du site de gestion Parcoursup et vous assurer que l'établissement dispose d'un rôle d'établissement d'accueil avant de demander à nouveau la publication.`,
   },
@@ -110,8 +110,8 @@ const parcoursupErrors = [
 
   {
     regexp:
-      /Erreur lors de la creation : Il n'est pas possible de créer une formation sur un établissement d'affectation qui n'a pas de rôle d'Affectation+/,
-    description: "Le rôle “établissement accueil” n’a pas pu être activé dans Parcoursup.",
+      /Il n'est pas possible de créer une formation sur un établissement d'affectation qui n'a pas de rôle d'Affectation./,
+    description: 'Le rôle "établissement accueil" n’a pas pu être activé dans Parcoursup.',
     action: `Envoyez un message dans la rubrique contact Parcoursup avec l’URL catalogue de l’offre.`,
   },
 ];
