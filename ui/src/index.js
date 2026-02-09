@@ -28,5 +28,5 @@ root.render(
     <ChakraProvider theme={theme} resetCSS>
       <App />
     </ChakraProvider>
-  </StricMode>
+  </StrictMode>
 );
