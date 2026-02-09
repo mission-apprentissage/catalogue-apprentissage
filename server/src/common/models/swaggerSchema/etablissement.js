@@ -386,6 +386,13 @@ module.exports = {
         type: "string",
         description: "Email de la direction de l'établissement",
       },
+      emails_potentiels: {
+        type: "array",
+        description: "Emails de contact potentiels",
+        items: {
+          type: "string",
+        },
+      },
       editedFields: {
         type: "object",
         description: "Champs édités par un utilisateur",

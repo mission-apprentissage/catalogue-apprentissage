@@ -386,6 +386,10 @@ export interface Etablissement {
    * Email de la direction de l'établissement
    */
   email_direction?: string | null;
+  /**
+   * Emails de contact potentiels
+   */
+  emails_potentiels?: string[];
   editedFields?: EditedFields;
   /**
    * Historique des mises à jours
