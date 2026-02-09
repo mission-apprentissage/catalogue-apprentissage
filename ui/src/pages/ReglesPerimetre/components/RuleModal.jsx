@@ -380,7 +380,7 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
                       {values.name}
                     </Text>
                     <Text ml={4} mt={2} as={"span"} fontSize="1rem" fontWeight={400}>
-                      Dernière modification le {formatDate(rule.last_update_at)} par {rule.last_update_who}
+                      Dernière modification le {formatDate(rule?.last_update_at)} par {rule?.last_update_who}
                     </Text>
                   </>
                 )}
@@ -663,7 +663,7 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
                     <Box key={updated_at} py={4} borderBottom={"1px solid"} borderColor={"grey.300"}>
                       <Text fontWeight={700} mb={2}>
                         Le {formatDate(updated_at)} à {new Date(updated_at).toLocaleTimeString("fr-FR")} par{" "}
-                        {to.last_update_who ?? rule.last_update_who}
+                        {to?.last_update_who ?? rule?.last_update_who}
                       </Text>
                       <Flex>
                         <Flex flexBasis={"50%"} pr={2}>
