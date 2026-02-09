@@ -2,15 +2,14 @@ const { findLastStatutUpdateDate } = require("../src/common/utils/historyUtils")
 
 module.exports = {
   async up(db) {
-    const collection = db.collection("formations");
-    const cursor = await collection.find({});
+    const formations = db.collection("formations");
 
-    for await (const formation of cursor) {
+    for await (const formation of formations.find()) {
       const last_statut_update_date = findLastStatutUpdateDate(formation);
 
       console.log(last_statut_update_date);
 
-      await collection.updateOne(
+      await formations.updateOne(
         { _id: formation._id },
         {
           $set: { last_statut_update_date },
@@ -20,8 +19,8 @@ module.exports = {
   },
 
   async down(db) {
-    const collection = db.collection("formations");
-    collection.updateMany(
+    const formations = db.collection("formations");
+    formations.updateMany(
       {},
       {
         $unset: { last_statut_update_date: 1 },

@@ -5,9 +5,7 @@ module.exports = {
     const collectionPSFormations = db.collection("psformations");
     const collectionFormations = db.collection("formations");
 
-    const cursor = await collectionPSFormations.find({ statut_reconciliation: "VALIDE" });
-
-    for await (const psFormation of cursor) {
+    for await (const psFormation of collectionPSFormations.find({ statut_reconciliation: "VALIDE" })) {
       const { id_parcoursup, validated_formation_ids } = psFormation;
 
       if (validated_formation_ids?.length > 0) {

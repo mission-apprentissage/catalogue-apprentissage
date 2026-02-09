@@ -14,7 +14,7 @@ const { updateRelationFields: updateFormationRelationFields } = require("./forma
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
-runScript(async ({ db }) => {
+runScript(async () => {
   try {
     logger.info({ type: "job" }, `ALL JOBS ⏳`);
 

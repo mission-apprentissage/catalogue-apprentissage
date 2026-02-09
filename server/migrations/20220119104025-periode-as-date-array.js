@@ -2,11 +2,10 @@ const { extractPeriodeArray } = require("../src/common/utils/rcoUtils");
 
 module.exports = {
   async up(db) {
-    const collection = db.collection("formations");
-    const cursor = await collection.find({});
+    const formations = db.collection("formations");
 
-    for await (const formation of cursor) {
-      await collection.updateOne(
+    for await (const formation of formations.find({})) {
+      await formations.updateOne(
         { _id: formation._id },
         {
           $set: {
@@ -18,11 +17,10 @@ module.exports = {
   },
 
   async down(db) {
-    const collection = db.collection("formations");
-    const cursor = await collection.find({});
+    const formations = db.collection("formations");
 
-    for await (const formation of cursor) {
-      await collection.updateOne(
+    for await (const formation of formations.find({})) {
+      await formations.updateOne(
         { _id: formation._id },
         {
           $set: {

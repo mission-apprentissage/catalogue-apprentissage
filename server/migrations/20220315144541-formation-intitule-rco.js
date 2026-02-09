@@ -1,13 +1,11 @@
 module.exports = {
   async up(db) {
-    const formationCollection = db.collection("formations");
-    const rcoFormationCollection = db.collection("rcoformations");
+    const formations = db.collection("formations");
+    const rcoFormations = db.collection("rcoformations");
 
-    const cursor = await rcoFormationCollection.find({});
-
-    for await (const rcoFormation of cursor) {
+    for await (const rcoFormation of rcoFormations.find()) {
       console.log(`${rcoFormation.cle_ministere_educatif} -> ${rcoFormation.intitule_formation}`);
-      await formationCollection.updateMany(
+      await formations.updateMany(
         { cle_ministere_educatif: rcoFormation.cle_ministere_educatif },
         { $set: { intitule_rco: rcoFormation.intitule_formation } }
       );
@@ -15,7 +13,7 @@ module.exports = {
   },
 
   async down(db) {
-    const formationCollection = db.collection("formations");
-    await formationCollection.updateMany({}, [{ $unset: ["intitule_rco"] }]);
+    const formations = db.collection("formations");
+    await formations.updateMany({}, [{ $unset: ["intitule_rco"] }]);
   },
 };

@@ -2,10 +2,9 @@ const { DateTime } = require("luxon");
 
 module.exports = {
   async up(db) {
-    const collection = db.collection("formations");
-    const cursor = await collection.find({});
+    const formations = db.collection("formations");
 
-    for await (const formation of cursor) {
+    for await (const formation of formations.find()) {
       if (formation.rncp_details) {
         await collection.updateOne(
           { _id: formation._id },
@@ -22,12 +21,11 @@ module.exports = {
   },
 
   async down(db) {
-    const collection = db.collection("formations");
-    const cursor = await collection.find({});
+    const formations = db.collection("formations");
 
-    for await (const formation of cursor) {
+    for await (const formation of formations.find()) {
       if (formation.rncp_details) {
-        await collection.updateOne(
+        await formations.updateOne(
           { _id: formation._id },
           {
             $set: {

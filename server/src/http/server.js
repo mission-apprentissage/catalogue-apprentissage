@@ -99,9 +99,9 @@ module.exports = async (components, verbose = true) => {
   // app.use(corsMiddleware());
   verbose && app.use(logMiddleware());
 
-  if (config.env != "dev") {
-    app.set("trust proxy", 1);
-  }
+  // if (config.env != "dev") {
+  app.set("trust proxy", 1);
+  // }
 
   app.use(
     session({

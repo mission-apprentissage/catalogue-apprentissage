@@ -52,9 +52,7 @@ const run = async (date) => {
 
   console.info(`> ${totalBefore} formations '${AFFELNET_STATUS.PRET_POUR_INTEGRATION}' sur Affelnet`);
 
-  const cursor = await Formation.find(query).cursor();
-
-  for await (const formation of cursor) {
+  for await (const formation of Formation.find(query)) {
     if (allHistoryIsEnAttenteAfterDate(formation, date) && lastHistoryIsEnAttenteBeforeDate(formation, date)) {
       try {
         console.error(formation._id);

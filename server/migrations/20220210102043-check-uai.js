@@ -6,9 +6,8 @@ module.exports = {
       console.info("Checking for UAI in etablissements collection...");
       let count = 0;
       const etablissementCollection = db.collection("etablissements");
-      const cursor = await etablissementCollection.find({});
 
-      for await (const etablissement of cursor) {
+      for await (const etablissement of etablissementCollection.find({})) {
         const uai_valide = !etablissement.uai || (await isValideUAI(etablissement.uai));
         !uai_valide && console.log(`❌ ${etablissement.uai}`);
         !uai_valide && count++;
@@ -29,9 +28,8 @@ module.exports = {
       console.info("Checking for UAI in formations collection...");
       let count = 0;
       const formationCollection = db.collection("formations");
-      const cursor = await formationCollection.find({});
 
-      for await (const formation of cursor) {
+      for await (const formation of formationCollection.find({})) {
         const uai_formation_valide = !formation.uai_formation || (await isValideUAI(formation.uai_formation));
         !uai_formation_valide && console.log(`❌ ${formation.uai_formation}`);
         !uai_formation_valide && count++;

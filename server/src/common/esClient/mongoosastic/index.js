@@ -190,9 +190,7 @@ async function postQuerySaveMany(query) {
 
   logger.debug?.({ type: "mongoosastic" }, "POST QUERY SAVE MANY");
 
-  const docs = await this.model.find(this._conditions).cursor();
-
-  for await (const doc of docs) {
+  for await (const doc of this.model.find(this._conditions)) {
     await doc.index();
   }
 }
@@ -218,9 +216,7 @@ async function preQueryRemoveMany(query) {
 
   logger.debug?.({ type: "mongoosastic" }, "PRE QUERY REMOVE MANY");
 
-  const docs = await this.model.find(this._conditions).cursor();
-
-  for await (const doc of docs) {
+  for await (const doc of this.model.find(this._conditions)) {
     await doc.index();
   }
 }
@@ -323,7 +319,7 @@ module.exports.mongoosastic = (schema, options) => {
 
     const logger = require("../../logger");
 
-    logger.debug?.({ type: "mongoosastic", index: indexName, id: this._id }, "DOCUMENT INDEX");
+    logger.debug?.({ type: "mongoosastic", index: indexName, identifiant: this._id }, "DOCUMENT INDEX");
 
     return new Promise(async (resolve, reject) => {
       try {
@@ -350,7 +346,7 @@ module.exports.mongoosastic = (schema, options) => {
 
     const logger = require("../../logger");
 
-    logger.debug?.({ type: "mongoosastic", index: indexName, id: this._id }, "DOCUMENT UNINDEX");
+    logger.debug?.({ type: "mongoosastic", index: indexName, identifiant: this._id }, "DOCUMENT UNINDEX");
 
     return new Promise(async (resolve, reject) => {
       try {

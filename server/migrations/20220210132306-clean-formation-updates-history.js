@@ -1,10 +1,8 @@
 module.exports = {
   async up(db) {
-    const collection = db.collection("formations");
+    const formations = db.collection("formations");
 
-    const cursor = await collection.find({});
-
-    for await (const formation of cursor) {
+    for await (const formation of formations.find()) {
       // keep only user changes
       await collection.updateOne(
         { _id: formation._id },

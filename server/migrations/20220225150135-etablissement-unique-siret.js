@@ -1,15 +1,13 @@
 module.exports = {
   async up(db) {
-    const collection = db.collection("etablissements");
+    const etablissements = db.collection("etablissements");
 
-    const cursor = await collection.aggregate([
+    console.log("Etablissements dupliqués :");
+    for await (const etablissement of etablissements.aggregate([
       { $group: { _id: "$siret", count: { $sum: 1 } } },
       { $match: { _id: { $ne: null }, count: { $gt: 1 } } },
       { $project: { siret: "$_id", _id: 0 } },
-    ]);
-
-    console.log("Etablissements dupliqués :");
-    for await (const etablissement of cursor) {
+    ])) {
       console.log(etablissement);
     }
 

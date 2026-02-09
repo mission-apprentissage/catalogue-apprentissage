@@ -28,23 +28,24 @@ const getEmailTemplate = (type = "forgotten-password") => {
 };
 
 const closeSessionsOfThisUser = async (db, username) => {
-  const sessions = db.collection("sessions").find({});
-
   const sessionIdToDelete = [];
 
-  sessions.forEach(({ id, session }) => {
+  for await (const { _id, session } of db.collection("sessions").find()) {
     const value = JSON.parse(session);
 
     if (value.passport.user.sub === username) {
-      sessionIdToDelete.push(element._id);
+      sessionIdToDelete.push(_id);
     }
-  });
+  }
+
+  console.log({ sessionIdToDelete });
 
   await db.collection("sessions").deleteMany({ _id: { $in: sessionIdToDelete } });
 };
 
-module.exports = ({ users, mailer, db: { db } }) => {
+module.exports = ({ users, mailer, db }) => {
   const router = express.Router();
+  console.log({ db });
 
   router.get(
     "/",

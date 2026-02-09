@@ -1,38 +1,45 @@
 const { runScript } = require("../scriptWrapper");
 const { Etablissement, Formation } = require("../../common/models");
 const { validateUAI } = require("../../common/utils/uaiUtils");
+const logger = require("../../common/logger");
 
-const updateUaiValidity = async (collection, uaiField, uaiValidityField) => {
-  console.info(`Checking for UAI in collection...`);
-  const cursor = await collection.find().cursor();
-  let count = 0;
+const updateUaiValidity = async (model, uaiField, uaiValidityField) => {
+  logger.info({ type: "job" }, `Vérification de la validité des UAIs dans la collection ${model.collection.name} ⏳`);
 
-  for await (const entry of cursor) {
-    const valid = !entry[uaiField] || (await validateUAI(entry[uaiField]));
-    !valid && console.log(`❌ ${entry[uaiField]}`);
-    !valid && count++;
+  try {
+    let count = 0;
 
-    await collection.updateOne(
-      { _id: entry._id },
-      {
-        $set: {
-          [uaiValidityField]: valid,
-        },
-      }
+    for await (const entry of model.find()) {
+      const valid = !entry[uaiField] || (await validateUAI(entry[uaiField]));
+      !valid && logger.info({ type: "job" }, `❌ ${entry[uaiField]}`);
+      !valid && count++;
+
+      await model.updateOne(
+        { _id: entry._id },
+        {
+          $set: {
+            [uaiValidityField]: valid,
+          },
+        }
+      );
+    }
+    logger.info({ type: "job" }, `${count} UAI non valide(s) !`);
+    logger.info(
+      { type: "job" },
+      `Vérification de la validité des UAIs dans la collection ${model.collection.name}: ✅`
+    );
+  } catch (error) {
+    logger.error({ type: "job" }, error);
+    logger.error(
+      { type: "job" },
+      `Vérification de la validité des UAIs dans la collection ${model.collection.name}: ❌`
     );
   }
-  console.info(`${count} UAI not valid !`);
-  console.info(`Checking for UAI in collection: 🆗`);
-  console.info(`----------------------------------`);
 };
 
 const checkUai = async () => {
-  try {
-    await updateUaiValidity(Etablissement, "uai", "uai_valide");
-    await updateUaiValidity(Formation, "uai_formation", "uai_formation_valide");
-  } catch (error) {
-    console.error(error);
-  }
+  await updateUaiValidity(Etablissement, "uai", "uai_valide");
+  await updateUaiValidity(Formation, "uai_formation", "uai_formation_valide");
 };
 
 module.exports = checkUai;

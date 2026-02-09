@@ -9,7 +9,7 @@ module.exports = () => {
   const router = express.Router();
 
   const updateRelatedFormations = async (candidatureRelation) => {
-    for (const formation of await Formation.find({
+    for await (const formation of Formation.find({
       published: true,
       affelnet_perimetre: true,
       etablissement_gestionnaire_siret: candidatureRelation.siret_responsable,

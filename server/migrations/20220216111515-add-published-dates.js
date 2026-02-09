@@ -5,8 +5,7 @@ module.exports = {
   async up(db) {
     const collection = db.collection("formations");
 
-    const affelnetCursor = await collection.find({ affelnet_statut: COMMON_STATUS.PUBLIE });
-    for await (const formation of affelnetCursor) {
+    for await (const formation of collection.find({ affelnet_statut: COMMON_STATUS.PUBLIE })) {
       const publishedDate = findPublishedDate(formation, "affelnet");
       await collection.updateOne(
         { _id: formation._id },
@@ -18,8 +17,7 @@ module.exports = {
       );
     }
 
-    const parcoursupCursor = await collection.find({ parcoursup_statut: COMMON_STATUS.PUBLIE });
-    for await (const formation of parcoursupCursor) {
+    for await (const formation of collection.find({ parcoursup_statut: COMMON_STATUS.PUBLIE })) {
       const publishedDate = findPublishedDate(formation, "parcoursup");
       await collection.updateOne(
         { _id: formation._id },

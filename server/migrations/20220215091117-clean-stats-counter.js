@@ -2,7 +2,7 @@ module.exports = {
   async up(db) {
     const collection = db.collection("statistiques");
 
-    const result = await collection.aggregate([
+    for await (const item of collection.aggregate([
       {
         $group: {
           _id: "$source",
@@ -16,9 +16,7 @@ module.exports = {
           count: "$count",
         },
       },
-    ]);
-
-    for await (const item of result) {
+    ])) {
       await collection.insertOne(item);
     }
 

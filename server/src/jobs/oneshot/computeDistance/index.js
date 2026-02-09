@@ -14,15 +14,15 @@ const parseErrors = (messages) => {
 
 const computeDistance = async () => {
   let count = 0;
-  const cursor = await Formation.find({
+
+  for await (const formation of Formation.find({
     published: true,
     lieu_formation_geo_coordonnees: { $ne: null },
     lieu_formation_adresse: { $ne: null },
     localite: { $ne: null },
     code_postal: { $ne: null },
     code_commune_insee: { $ne: null },
-  }).cursor();
-  for await (const formation of cursor) {
+  })) {
     const addressData = {
       nom_voie: formation.lieu_formation_adresse,
       localite: formation.localite,

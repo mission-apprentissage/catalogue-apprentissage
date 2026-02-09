@@ -53,12 +53,7 @@ const storePreviousSeasonFormations = async () => {
     parcoursup_session: 1,
   };
 
-  /**
-   * @type {import("mongoose").QueryCursor<Formation>}
-   */
-  const cursor = Formation.find(query, select).lean().cursor();
-
-  for await (const formation of cursor) {
+  for await (const formation of Formation.find(query, select)) {
     await PreviousSeasonFormation.create({
       ...formation,
     });
@@ -73,11 +68,10 @@ const comparePreviousSeasonFormations = async (plateforme) => {
   const initialValues = { closed: 0, qualiopi_lost: 0, not_updated: 0, /*diplome: 0,*/ other: 0 };
   const filter = plateforme === "affelnet" ? { affelnet_perimetre: true } : { parcoursup_perimetre: true };
 
-  const cursor = PreviousSeasonFormation.find(filter).lean().cursor();
   const academyCauses = new Map();
   const today = new Date();
 
-  for await (const previousFormation of cursor) {
+  for await (const previousFormation of PreviousSeasonFormation.find(filter)) {
     const academyName =
       academies[`${previousFormation.num_academie}`.padStart(2, "0")]?.nom_academie ?? previousFormation.num_academie;
 

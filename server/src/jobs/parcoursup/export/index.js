@@ -171,8 +171,7 @@ const run = async () => {
   const id = args.find((arg) => arg.startsWith("--id"))?.split("=")?.[1];
   const query = id ? { _id: id } : filter;
 
-  let cursor = createCursor(query);
-  for await (const formation of cursor) {
+  for await (const formation of createCursor(query)) {
     await createFormation(formation);
     // await sleep(1000);
   }
