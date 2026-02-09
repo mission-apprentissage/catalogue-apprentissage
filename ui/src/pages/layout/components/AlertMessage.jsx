@@ -19,7 +19,21 @@ export const AlertMessage = () => {
           }
         },
       });
-      setAlerts(data?.filter((item) => item.enabled) ?? []);
+      setAlerts([
+        ...(process.env.REACT_APP_ENV !== "production"
+          ? [
+              {
+                enabled: true,
+                msg: (
+                  <>
+                    Environnement : <Text as="b">{process.env.REACT_APP_ENV}</Text>
+                  </>
+                ),
+              },
+            ]
+          : []),
+        ...(data?.filter((item) => item.enabled) ?? []),
+      ]);
     } catch (e) {
       console.error(e);
     }

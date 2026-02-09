@@ -4,6 +4,7 @@ const compression = require("compression");
 const cors = require("cors");
 const session = require("express-session");
 const { MongoStore } = require("connect-mongo");
+const Sentry = require("@sentry/node");
 const passport = require("passport");
 const config = require("config");
 const logger = require("../common/logger");
@@ -99,7 +100,7 @@ module.exports = async (components, verbose = true) => {
   // app.use(corsMiddleware());
   verbose && app.use(logMiddleware());
 
-  // if (config.env != "dev") {
+  // if (config.env != "local") {
   app.set("trust proxy", 1);
   // }
 
@@ -111,9 +112,9 @@ module.exports = async (components, verbose = true) => {
       // https://github.com/jdesboeufs/connect-mongo/blob/HEAD/MIGRATION_V4.md
       store: MongoStore.create({ client: db.getClient() }),
       cookie: {
-        secure: config.env === "dev" ? false : true,
-        maxAge: config.env === "dev" ? null : 30 * 24 * 60 * 60 * 1000,
-        sameSite: config.env === "dev" ? "lax" : "strict", // prevent csrf attack @see https://auth0.com/blog/cross-site-request-forgery-csrf/
+        secure: config.env === "local" ? false : true,
+        maxAge: config.env === "local" ? null : 30 * 24 * 60 * 60 * 1000,
+        sameSite: config.env === "local" ? "lax" : "strict", // prevent csrf attack @see https://auth0.com/blog/cross-site-request-forgery-csrf/
       },
     })
   );
@@ -253,6 +254,12 @@ module.exports = async (components, verbose = true) => {
   //     });
   //   })
   // );
+
+  app.get("/api/debug-sentry", () => {
+    throw new Error("Test sentry");
+  });
+
+  Sentry.setupExpressErrorHandler(app);
 
   app.use(errorMiddleware());
 

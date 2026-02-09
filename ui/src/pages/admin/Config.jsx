@@ -154,6 +154,14 @@ export const Config = () => {
             </>
           )}
         </Container>
+
+        {/* <button
+          onClick={() => {
+            throw new Error("This is your first error!");
+          }}
+        >
+          Test Sentry
+        </button> */}
       </Box>
     </Layout>
   );

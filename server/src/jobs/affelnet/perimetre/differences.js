@@ -22,8 +22,8 @@ const run = async () => {
     }
   ).lean();
 
-  config.env !== "dev" && logger.info({ type: "job" }, differences);
+  config.env !== "local" && logger.info({ type: "job" }, differences);
 
-  config.env === "dev" && console.table(differences);
+  config.env === "local" && console.table(differences);
 };
 module.exports = { run };

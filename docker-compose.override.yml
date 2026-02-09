@@ -14,10 +14,10 @@ services:
     build:
       context: ui
       dockerfile: Dockerfile.dev
-    env_file: ./ui/.env
     environment:
-      - FAST_REFRESH=false
+      - FAST_REFRESH=true
       - WDS_SOCKET_PORT=0
+    env_file: ./ui/.env
 
   server:
     restart: "no"
@@ -27,14 +27,14 @@ services:
     volumes:
       - ./server:/app:z # Allows source folders to be watched
       - catalogue_apprentissage_server_data:/data:z
-    env_file: ./server/.env
     build:
       context: server
       dockerfile: Dockerfile.dev
     environment:
-      - CATALOGUE_APPRENTISSAGE_ENV=dev
+      - CATALOGUE_APPRENTISSAGE_ENV=local
       - CATALOGUE_APPRENTISSAGE_LOG_LEVEL=debug
       - TZ=Europe/Paris
+    env_file: ./server/.env
 
   mongodb:
     restart: "no"

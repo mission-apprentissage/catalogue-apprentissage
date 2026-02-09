@@ -1,6 +1,6 @@
 {
   "appName": "Catalogue apprentissage App",
-  "env": "dev",
+  "env": "local",
   "publicUrl": "http://localhost",
   "mongodb": {
     "uri": "mongodb://127.0.0.1:27017/catalogue-apprentissage?retryWrites=true&w=majority"
@@ -28,6 +28,9 @@
   "outputDir": ".local/output",
   "rco": {
     "pwd": "CATALOGUE_APPRENTISSAGE_RCO_WS_PWD"
+  },
+  "sentry": {
+    "dsn": "CATALOGUE_APPRENTISSAGE_SENTRY_DSN"
   },
   "reportMailingList": "CATALOGUE_APPRENTISSAGE_REPORT_MAILING_LIST",
   "smtp": {

@@ -28,6 +28,9 @@
   "rco": {
     "pwd": "CATALOGUE_APPRENTISSAGE_RCO_WS_PWD"
   },
+  "sentry": {
+    "dsn": "CATALOGUE_APPRENTISSAGE_SENTRY_DSN"
+  },
   "reportMailingList": "CATALOGUE_APPRENTISSAGE_REPORT_MAILING_LIST",
   "smtp": {
     "host": "CATALOGUE_APPRENTISSAGE_SMTP_HOST",

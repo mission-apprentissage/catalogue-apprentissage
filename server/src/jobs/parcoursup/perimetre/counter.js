@@ -95,8 +95,8 @@ const run = async () => {
     },
   };
 
-  config.env !== "dev" && logger.info({ type: "job" }, results);
+  config.env !== "local" && logger.info({ type: "job" }, results);
 
-  config.env === "dev" && console.table(results);
+  config.env === "local" && console.table(results);
 };
 module.exports = { run };

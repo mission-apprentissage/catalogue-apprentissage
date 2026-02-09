@@ -45,7 +45,6 @@ const closeSessionsOfThisUser = async (db, username) => {
 
 module.exports = ({ users, mailer, db }) => {
   const router = express.Router();
-  console.log({ db });
 
   router.get(
     "/",
