@@ -100,9 +100,9 @@ module.exports = async (components, verbose = true) => {
   // app.use(corsMiddleware());
   verbose && app.use(logMiddleware());
 
-  // if (config.env != "local") {
-  app.set("trust proxy", 1);
-  // }
+  if (config.env != "local") {
+    app.set("trust proxy", 1);
+  }
 
   app.use(
     session({
@@ -210,7 +210,7 @@ module.exports = async (components, verbose = true) => {
       permissionsMiddleware({ isAdmin: true }, ["page_other/api-uai-affelnet"]),
       uaiAffelnetRoutes(),
     ],
-    ["", apiLimiter, anyAuthMiddleware, configRoutes()],
+    ["/entity", apiLimiter, anyAuthMiddleware, configRoutes()],
   ];
 
   prefixes.map((prefix) => {

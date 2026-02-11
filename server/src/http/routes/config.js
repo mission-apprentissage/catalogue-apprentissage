@@ -22,7 +22,7 @@ module.exports = () => {
   );
 
   router.put(
-    "/admin/config",
+    "/config",
     tryCatch(async (req, res) => {
       const auth = req.session?.passport?.user;
 
@@ -41,7 +41,7 @@ module.exports = () => {
   );
 
   router.patch(
-    "/admin/config",
+    "/config",
     tryCatch(async (req, res) => {
       const auth = req.session?.passport?.user;
 

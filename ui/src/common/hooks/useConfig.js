@@ -7,7 +7,7 @@ export const useConfig = () => {
   useEffect(() => {
     const fetchConfig = async () => {
       try {
-        const response = await _get("/api/config");
+        const response = await _get("/api/entity/config");
         setConfig(response);
       } catch (error) {
         console.error("Failed to fetch config:", error);

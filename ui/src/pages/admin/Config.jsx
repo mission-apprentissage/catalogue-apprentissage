@@ -52,7 +52,7 @@ export const Config = () => {
 
   const getOptions = useCallback(async () => {
     try {
-      const data = await _get("/api/config");
+      const data = await _get("/api/entity/config");
       // console.log(data);
       setOptions(data);
     } catch (e) {
@@ -79,7 +79,7 @@ export const Config = () => {
     onSubmit: (values, { setSubmitting }) => {
       return new Promise(async (resolve, reject) => {
         try {
-          const result = await _put("/api/admin/config", values);
+          const result = await _put("/api/entity/config", values);
           if (result) {
             toast({ description: "La configuration a été mise à jour." });
           }
