@@ -1,9 +1,11 @@
-const { Formation } = require("../../../common/models");
+const { Formation, Config } = require("../../../common/models");
 const { PARCOURSUP_STATUS } = require("../../../constants/status");
 const { cursor } = require("../../../common/utils/cursor");
 const logger = require("../../../common/logger");
 
 const run = async () => {
+  const config = await Config.findOne();
+
   await cursor(
     Formation.find({
       published: true,
@@ -38,7 +40,7 @@ const run = async () => {
           $set: {
             ...(isOnePredecesseurPublie
               ? {
-                  parcoursup_statut: !!process.env.CATALOGUE_APPRENTISSAGE_PARCOURSUP_EXPORT_ENABLED
+                  parcoursup_statut: config?.parcoursup_export
                     ? PARCOURSUP_STATUS.PRET_POUR_INTEGRATION
                     : PARCOURSUP_STATUS.PUBLIE,
                 }

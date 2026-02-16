@@ -2,7 +2,6 @@ import { useState, useEffect, useRef, useCallback, Fragment } from "react";
 import { flushSync } from "react-dom";
 import {
   Box,
-  Heading,
   FormControl,
   FormLabel,
   useToast,
@@ -12,6 +11,11 @@ import {
   Text,
   FormHelperText,
   Container,
+  NumberInput,
+  NumberInputField,
+  NumberInputStepper,
+  NumberIncrementStepper,
+  NumberDecrementStepper,
 } from "@chakra-ui/react";
 import { useFormik } from "formik";
 import { _get, _put } from "../../common/httpClient";
@@ -23,9 +27,19 @@ import { setTitle } from "../../common/utils/pageUtils";
 
 const configMap = new Map([
   [
-    "diffusion",
+    "rco_import",
+    {
+      label: "Activer la synchronisation au flux RCO",
+      type: "boolean",
+      description: <></>,
+    },
+  ],
+
+  [
+    "affelnet_diffusion",
     {
       label: "Activer la phase de diffusion des candidatures",
+      type: "boolean",
       description: (
         <>
           <Text>
@@ -41,20 +55,48 @@ const configMap = new Map([
       ),
     },
   ],
+
+  [
+    "parcoursup_export",
+    {
+      label: "Activer la publication des formations vers Parcoursup",
+      type: "boolean",
+      description: (
+        <>
+          <Text>Activer l'envoi des formations prêtes pour intégration vers le webservice Parcoursup.</Text>
+        </>
+      ),
+    },
+  ],
+
+  [
+    "parcoursup_limit",
+    {
+      label: "Nombre de formations envoyées quotidiennement à Parcoursup",
+      type: "number",
+      description: (
+        <>
+          <Text>
+            Le nombre de formations prêtes pour intégration qui seront envoyées à Parcoursup lors des envois nocturnes :
+          </Text>
+        </>
+      ),
+    },
+  ],
 ]);
 
 export const Config = () => {
-  const [options, setOptions] = useState({});
+  const [config, setConfig] = useState({});
 
   const toast = useToast();
   const [auth] = useAuth();
   const mountedRef = useRef(true);
 
-  const getOptions = useCallback(async () => {
+  const getConfig = useCallback(async () => {
     try {
       const data = await _get("/api/entity/config");
       // console.log(data);
-      setOptions(data);
+      setConfig(data);
     } catch (e) {
       console.error(e);
     }
@@ -63,7 +105,7 @@ export const Config = () => {
   useEffect(() => {
     const run = async () => {
       if (mountedRef.current) {
-        await getOptions();
+        await getConfig();
       }
     };
     run();
@@ -71,19 +113,16 @@ export const Config = () => {
     return () => {
       mountedRef.current = false;
     };
-  }, [getOptions]);
+  }, [getConfig]);
 
   const { handleSubmit, setFieldValue } = useFormik({
-    initialValues: options,
+    initialValues: config,
     allowReinitialize: true,
     onSubmit: (values, { setSubmitting }) => {
       return new Promise(async (resolve, reject) => {
         try {
-          const result = await _put("/api/entity/config", values);
-          if (result) {
-            toast({ description: "La configuration a été mise à jour." });
-          }
-          await getOptions();
+          setConfig(await _put("/api/entity/config", values));
+          // await getConfig();
         } catch (e) {
           console.error(e);
           toast({
@@ -114,34 +153,55 @@ export const Config = () => {
       </Box>
       <Box w="100%" minH="100vh" px={[1, 1, 12, 24]}>
         <Container maxW="7xl">
-          <Text textStyle="h2" color="grey.800" mt={5} mb={5}>
+          <Text textStyle="h2" color="grey.800" mt={5} mb={16}>
             {title}
           </Text>
 
           {!!configMap.size && (
             <>
-              <Heading as="h3" size="md" mb={4}>
-                Liste des options :
-              </Heading>
-
               <Box>
                 {[...configMap.entries()].map(([key, option]) => (
                   <Fragment key={key}>
-                    <FormControl key={key} name={key} alignItems="center">
-                      <Box display="flex" justifyContent="space-between">
+                    <FormControl key={key} name={key} alignItems="center" mb={8}>
+                      <Box display="flex" justifyContent="space-between" w="100%">
                         <FormLabel>{option.label}</FormLabel>
-                        <Switch
-                          size="md"
-                          m="auto"
-                          isChecked={options[key]}
-                          onChange={() => {
-                            flushSync(() => {
-                              setFieldValue(key, !options[key]);
-                            });
-                            void handleSubmit();
-                          }}
-                          aria-label={option.enabled ? "Désactiver" : "Activer"}
-                        />
+
+                        {option.type === "boolean" && (
+                          <Switch
+                            size="md"
+                            isChecked={config[key]}
+                            onChange={() => {
+                              flushSync(() => {
+                                setFieldValue(key, !config[key]);
+                              });
+                              void handleSubmit();
+                            }}
+                            aria-label={option.enabled ? "Désactiver" : "Activer"}
+                          />
+                        )}
+
+                        {option.type === "number" && (
+                          <NumberInput
+                            step={10}
+                            value={config[key]}
+                            min={0}
+                            max={10000}
+                            onChange={(value) => {
+                              if (value !== config[key]) {
+                                flushSync(() => {
+                                  setFieldValue(key, value);
+                                });
+                                void handleSubmit();
+                              }
+                            }}
+                          >
+                            <NumberInputField />
+                            <NumberInputStepper>
+                              <NumberIncrementStepper />
+                              <NumberDecrementStepper />
+                            </NumberInputStepper>
+                          </NumberInput>
+                        )}
                       </Box>
 
                       <FormHelperText fontSize={"zeta"} color={"gray.500"}>

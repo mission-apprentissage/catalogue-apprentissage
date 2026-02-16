@@ -1,6 +1,6 @@
 const { runScript } = require("../../scriptWrapper");
 const logger = require("../../../common/logger");
-const { Formation, User } = require("../../../common/models");
+const { Formation, User, Config } = require("../../../common/models");
 const parcoursupApi = require("../parcoursupApi");
 const { findLast } = require("lodash");
 const { PARCOURSUP_STATUS } = require("../../../constants/status");
@@ -11,8 +11,6 @@ const {
 } = require("../../../common/utils/parcoursupUtils");
 
 /** @typedef {import("../../../common/models/schema/formation").Formation} Formation */
-
-const limit = Number(process.env.CATALOGUE_APPRENTISSAGE_PARCOURSUP_LIMIT || 50);
 
 const filter = {
   catalogue_published: true,
@@ -78,7 +76,10 @@ const formatter = async ({
   };
 };
 
-const createCursor = (query = filter) => {
+const createCursor = async (query = filter) => {
+  const config = await Config.findOne();
+  const limit = config?.parcoursup_limit ?? 50;
+
   return Formation.find(query, select, { allowDiskUse: true }).sort(sort).limit(limit).cursor();
 };
 
@@ -171,7 +172,7 @@ const run = async () => {
   const id = args.find((arg) => arg.startsWith("--id"))?.split("=")?.[1];
   const query = id ? { _id: id } : filter;
 
-  for await (const formation of createCursor(query)) {
+  for await (const formation of await createCursor(query)) {
     await createFormation(formation);
     // await sleep(1000);
   }

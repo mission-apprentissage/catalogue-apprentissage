@@ -1,13 +1,16 @@
 const logger = require("../../common/logger");
+const { Config } = require("../../common/models");
 const { runScript } = require("../scriptWrapper");
 const { importer } = require("./importer");
 
 const etablissementsJobs = async () => {
+  const config = await Config.findOne();
+
   try {
     logger.info({ type: "job" }, `ETABLISSEMENTS JOBS ⏳`);
 
     // Import RCO
-    if (process.env.CATALOGUE_APPRENTISSAGE_RCO_IMPORT_ENABLED) {
+    if (config?.rco_import) {
       logger.debug("Import RCO enabled, starting...");
       await importer();
     } else {

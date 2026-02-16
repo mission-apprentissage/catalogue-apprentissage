@@ -787,7 +787,7 @@ export default () => {
                           </Alert>
                         )}
                     </>
-                  ) : !config.diffusion ? (
+                  ) : !config.affelnet_diffusion ? (
                     <>
                       {!!responsable?.email_direction && (
                         <Alert mt={4} type={"info"}>

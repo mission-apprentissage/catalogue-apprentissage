@@ -100,9 +100,9 @@ module.exports = async (components, verbose = true) => {
   // app.use(corsMiddleware());
   verbose && app.use(logMiddleware());
 
-  if (config.env != "local") {
-    app.set("trust proxy", 1);
-  }
+  // if (config.env != "local") {
+  app.set("trust proxy", 1);
+  // }
 
   app.use(
     session({
@@ -160,14 +160,18 @@ module.exports = async (components, verbose = true) => {
   ];
 
   const securedRoutes = [
-    ["/entity", apiPerimetreLimiter, anyAuthMiddleware, reglePerimetreRoutes()],
+    ["/constants", apiLimiter, anyAuthMiddleware, datesRoutes()],
     ["/es/search", elasticLimiter, anyAuthMiddleware, esSearchRoutes()],
     ["/search", elasticLimiter, anyAuthMiddleware, esMultiSearchNoIndexRoutes()],
+    ["/entity", anyAuthMiddleware, configRoutes()],
     ["/entity", apiLimiter, anyAuthMiddleware, formationRoutes()],
     ["/entity", apiLimiter, anyAuthMiddleware, reportRoutes()],
     ["/entity", apiLimiter, anyAuthMiddleware, etablissementRoutes(components)],
-    ["/parcoursup", apiLimiter, anyAuthMiddleware, parcoursupRoutes(components)],
     ["/entity", apiLimiter, anyAuthMiddleware, alertRoutes()],
+    ["/entity", apiLimiter, anyAuthMiddleware, candidatureRoutes()],
+    ["/entity", apiPerimetreLimiter, anyAuthMiddleware, reglePerimetreRoutes()],
+    ["/entity", apiLimiter, anyAuthMiddleware, reglePerimetreSecureRoutes()],
+
     [
       "/admin",
       apiLimiter,
@@ -179,7 +183,7 @@ module.exports = async (components, verbose = true) => {
       "/admin",
       apiLimiter,
       anyAuthMiddleware,
-      permissionsMiddleware({ isAdmin: true }, ["page_gestion_utilisateurs", "page_gestion_roles"]),
+      permissionsMiddleware({ isAdmin: true }, ["page_gestion_roles"]),
       roleRoutes(components),
     ],
     ["/stats", apiLimiter, anyAuthMiddleware, statsRoutes(components)],
@@ -190,10 +194,8 @@ module.exports = async (components, verbose = true) => {
       permissionsMiddleware({ isAdmin: true }, ["page_upload"]),
       uploadRoutes(),
     ],
-    ["/entity", apiLimiter, anyAuthMiddleware, reglePerimetreSecureRoutes()],
-    ["/entity", apiLimiter, anyAuthMiddleware, candidatureRoutes()],
 
-    ["/constants", apiLimiter, anyAuthMiddleware, datesRoutes()],
+    ["/parcoursup", apiLimiter, anyAuthMiddleware, parcoursupRoutes(components)],
 
     [
       "/perimetre-prise-rdv.json",
@@ -210,7 +212,6 @@ module.exports = async (components, verbose = true) => {
       permissionsMiddleware({ isAdmin: true }, ["page_other/api-uai-affelnet"]),
       uaiAffelnetRoutes(),
     ],
-    ["/entity", apiLimiter, anyAuthMiddleware, configRoutes()],
   ];
 
   prefixes.map((prefix) => {

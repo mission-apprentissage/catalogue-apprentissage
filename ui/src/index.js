@@ -1,4 +1,3 @@
-import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import * as Sentry from "@sentry/react";
 import { ChakraProvider } from "@chakra-ui/react";
@@ -24,9 +23,7 @@ if (process.env.REACT_APP_SENTRY_DSN) {
 const root = createRoot(document.getElementById("root"));
 
 root.render(
-  <StrictMode>
-    <ChakraProvider theme={theme} resetCSS>
-      <App />
-    </ChakraProvider>
-  </StrictMode>
+  <ChakraProvider theme={theme} resetCSS>
+    <App />
+  </ChakraProvider>
 );

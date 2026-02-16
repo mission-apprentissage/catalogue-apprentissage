@@ -23,6 +23,7 @@ export const AlertMessage = () => {
         ...(process.env.REACT_APP_ENV !== "production"
           ? [
               {
+                _id: "environment",
                 enabled: true,
                 msg: (
                   <>
