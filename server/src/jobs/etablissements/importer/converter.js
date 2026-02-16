@@ -17,8 +17,6 @@ const updateRelationFields = async () => {
 };
 
 const computeRelationFields = async (fields) => {
-  console.log();
-
   const etablissement_siege_id =
     (await Etablissement.findOne({ siret: fields.etablissement_siege_siret }))?._id ?? null;
 
