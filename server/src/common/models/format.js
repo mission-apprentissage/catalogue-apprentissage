@@ -8,7 +8,7 @@ const cfdFormat = /^[0-9]{8}$/;
 
 const rncpFormat = /^(RNCP)?[0-9]{2,5}$/;
 
-const cleMinistereEducatifFormat = /^[0-9]{6}P[0-9]{4}[0-9]{14}[0-9]{14}-[0-9]{5}#L[0-9A-Z]{2}$/;
+const cleMinistereEducatifFormat = /^[0-9]{6}P[0-9]{4}[0-9]{14}[0-9]{14}-[0-9A-Z]{5}#L[0-9A-Z]{2}$/;
 
 const urlFormat =
   /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/;
