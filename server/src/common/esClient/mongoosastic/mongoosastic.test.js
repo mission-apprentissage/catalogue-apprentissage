@@ -223,28 +223,28 @@ integrationTests(__filename, () => {
 
   /**
    * Les tests suivants peuvent être utilisé pour vérifier la synchronisation avec une instance elastic search en local.
-   * Pour executer, remplacer it par it.
+   * Pour executer, remplacer it.skip par it.
    */
 
   it.skip("synchronize with an elastic instance when calling create on a model", async () => {
-    Test.startAllMongoosaticHooks();
+    Test.startMongoosasticHooks();
 
     await Test.create({ message: "Test1" });
 
-    Test.pauseAllMongoosaticHooks();
+    Test.pauseMongoosasticHooks();
   });
 
   it.skip("synchronize with an elastic instance when calling findOneAndUpdate on a model", async () => {
     const loggerDebug = sinon.spy(logger, "debug");
 
-    Test.startAllMongoosaticHooks();
+    Test.startMongoosasticHooks();
 
     const test1 = await Test.create({ message: "To be changed" });
     const test2 = await Test.create({ message: "Not to be changed" });
 
     await Test.findOneAndUpdate({ _id: test1._id }, { $set: { message: "Changed" } });
 
-    Test.pauseAllMongoosaticHooks();
+    Test.pauseMongoosasticHooks();
 
     for (call of loggerDebug.getCalls()) {
       if (call.args.includes("POST QUERY SAVE")) {
@@ -256,14 +256,14 @@ integrationTests(__filename, () => {
   it.skip("synchronize with an elastic instance when calling findOneAndDelete on a model", async () => {
     const loggerDebug = sinon.spy(logger, "debug");
 
-    Test.startAllMongoosaticHooks();
+    Test.startMongoosasticHooks();
 
     const test1 = await Test.create({ message: "To be deleted" });
     const test2 = await Test.create({ message: "Not to be deleted" });
 
     await Test.findOneAndDelete({ _id: test1._id });
 
-    Test.pauseAllMongoosaticHooks();
+    Test.pauseMongoosasticHooks();
     for (call of loggerDebug.getCalls()) {
       if (call.args.includes("PRE QUERY REMOVE")) {
         console.log("call", call);
@@ -274,7 +274,7 @@ integrationTests(__filename, () => {
   it.skip("synchronize with an elastic instance when calling updateMany on a model", async () => {
     const loggerDebug = sinon.spy(logger, "debug");
 
-    Test.startAllMongoosaticHooks();
+    Test.startMongoosasticHooks();
 
     const test1 = await Test.create({ message: "Test 1" });
     const test2 = await Test.create({ message: "Test 2" });
@@ -284,7 +284,7 @@ integrationTests(__filename, () => {
 
     await Test.updateMany({ message: /^Test.*/ }, { $set: { message: "Toto" } });
 
-    Test.pauseAllMongoosaticHooks();
+    Test.pauseMongoosasticHooks();
     for (call of loggerDebug.getCalls()) {
       if (call.args.includes("PRE QUERY UPDATE MANY")) {
         console.log("call", call);
@@ -295,7 +295,7 @@ integrationTests(__filename, () => {
   it.skip("synchronize with an elastic instance when calling deleteOne on a model", async () => {
     const loggerDebug = sinon.spy(logger, "debug");
 
-    Test.startAllMongoosaticHooks();
+    Test.startMongoosasticHooks();
 
     const test1 = await Test.create({ message: "Test 1" });
     const test2 = await Test.create({ message: "Test 2" });
@@ -305,7 +305,7 @@ integrationTests(__filename, () => {
 
     await Test.deleteOne({ message: "Blabla" });
 
-    Test.pauseAllMongoosaticHooks();
+    Test.pauseMongoosasticHooks();
     for (call of loggerDebug.getCalls()) {
       if (call.args.includes("PRE QUERY REMOVE")) {
         console.log("call", call);
@@ -316,7 +316,7 @@ integrationTests(__filename, () => {
   it.skip("synchronize with an elastic instance when calling deleteMany on a model", async () => {
     const loggerDebug = sinon.spy(logger, "debug");
 
-    Test.startAllMongoosaticHooks();
+    Test.startMongoosasticHooks();
 
     const test1 = await Test.create({ message: "Test 1" });
     const test2 = await Test.create({ message: "Test 2" });
@@ -326,7 +326,7 @@ integrationTests(__filename, () => {
 
     await Test.deleteMany({ message: /^Test.*/ });
 
-    Test.pauseAllMongoosaticHooks();
+    Test.pauseMongoosasticHooks();
     for (call of loggerDebug.getCalls()) {
       if (call.args.includes("PRE QUERY REMOVE")) {
         console.log("call", call);

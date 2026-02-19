@@ -18,14 +18,13 @@ runScript(async () => {
   try {
     logger.info({ type: "job" }, `ALL JOBS ⏳`);
 
-    Etablissement.pauseAllMongoosaticHooks();
-    Formation.pauseAllMongoosaticHooks();
-
     // Etablissements
+    Etablissement.pauseMongoosasticHooks();
     await etablissementsJobs(); // ~ 20 minutes
     await sleep(10000);
 
     // Formations
+    Formation.pauseMongoosasticHooks();
     await formationsJobs();
     await sleep(10000);
 
@@ -42,20 +41,20 @@ runScript(async () => {
     // Elastic
     await enableAlertMessage();
     await esSyncIndex("etablissements"); // ~ 5 minutes // maj elastic search (recherche des établissements)
+    Etablissement.startMongoosasticHooks();
     await disableAlertMessage();
-    Etablissement.startAllMongoosaticHooks();
 
     await enableAlertMessage();
     await esSyncIndex("formations"); // ~ 5 minutes // maj elastic search (recherche des formations)
+    Formation.startMongoosasticHooks();
     await disableAlertMessage();
-    Formation.startAllMongoosaticHooks();
 
     logger.info({ type: "job" }, `ALL JOBS ✅`);
   } catch (error) {
     logger.error({ type: "job" }, error);
     logger.error({ type: "job" }, `ALL JOBS ❌`);
 
-    Etablissement.startAllMongoosaticHooks();
-    Formation.startAllMongoosaticHooks();
+    Etablissement.startMongoosasticHooks();
+    Formation.startMongoosasticHooks();
   }
 });

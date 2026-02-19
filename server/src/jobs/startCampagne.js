@@ -21,7 +21,7 @@ runScript(async ({}) => {
 
     logger.info(`Nouvelle date de début de campagne définie : ${await getCampagneStartDate()}`);
 
-    Formation.pauseAllMongoosaticHooks();
+    Formation.pauseMongoosasticHooks();
 
     await psStartCampagne();
     await psPerimetre();
@@ -31,9 +31,9 @@ runScript(async ({}) => {
     await afPerimetre();
     await afConsoleStats();
 
-    await collectPreviousSeasonStats({ store: false, compare: true });
+    Formation.startMongoosasticHooks();
 
-    Formation.startAllMongoosaticHooks();
+    await collectPreviousSeasonStats({ store: false, compare: true });
 
     await enableAlertMessage();
     await esSyncIndex("formations");

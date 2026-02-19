@@ -4,23 +4,23 @@ const esPauseHook = (index) => {
   switch (index) {
     case "formation":
     case "formations":
-      Formation.pauseAllMongoosaticHooks();
+      Formation.pauseMongoosasticHooks();
       break;
 
     case "etablissement":
     case "etablissements":
-      Etablissement.pauseAllMongoosaticHooks();
+      Etablissement.pauseMongoosasticHooks();
       break;
 
     case "user":
     case "users":
-      User.pauseAllMongoosaticHooks();
+      User.pauseMongoosasticHooks();
       break;
 
     case "all":
-      User.pauseAllMongoosaticHooks();
-      Formation.pauseAllMongoosaticHooks();
-      Etablissement.pauseAllMongoosaticHooks();
+      User.pauseMongoosasticHooks();
+      Formation.pauseMongoosasticHooks();
+      Etablissement.pauseMongoosasticHooks();
       break;
 
     default:

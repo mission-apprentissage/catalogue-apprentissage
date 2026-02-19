@@ -12,9 +12,9 @@ const setupAfterEach = () => {
 const setupBeforeAll = () => {
   // console.debug(`${__filename} - before`);
 
-  Formation.pauseAllMongoosaticHooks();
-  Etablissement.pauseAllMongoosaticHooks();
-  User.pauseAllMongoosaticHooks();
+  Formation.pauseMongoosasticHooks();
+  Etablissement.pauseMongoosasticHooks();
+  User.pauseMongoosasticHooks();
 
   showProgressBar(false);
 };
@@ -22,9 +22,9 @@ const setupBeforeAll = () => {
 const setupAfterAll = () => {
   // console.debug(`${__filename} - after`);
 
-  Formation.startAllMongoosaticHooks();
-  Etablissement.startAllMongoosaticHooks();
-  User.startAllMongoosaticHooks();
+  Formation.startMongoosasticHooks();
+  Etablissement.startMongoosasticHooks();
+  User.startMongoosasticHooks();
 
   showProgressBar(true);
 };

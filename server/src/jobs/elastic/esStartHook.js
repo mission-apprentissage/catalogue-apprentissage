@@ -4,23 +4,23 @@ const esStartHook = (index) => {
   switch (index) {
     case "formation":
     case "formations":
-      Formation.startAllMongoosaticHooks();
+      Formation.startMongoosasticHooks();
       break;
 
     case "etablissement":
     case "etablissements":
-      Etablissement.startAllMongoosaticHooks();
+      Etablissement.startMongoosasticHooks();
       break;
 
     case "user":
     case "users":
-      User.startAllMongoosaticHooks();
+      User.startMongoosasticHooks();
       break;
 
     case "all":
-      User.startAllMongoosaticHooks();
-      Formation.startAllMongoosaticHooks();
-      Etablissement.startAllMongoosaticHooks();
+      User.startMongoosasticHooks();
+      Formation.startMongoosasticHooks();
+      Etablissement.startMongoosasticHooks();
       break;
 
     default:

@@ -110,11 +110,11 @@ module.exports = () => {
 
             callback = async () => {
               await afImportFormations();
-              Formation.pauseAllMongoosaticHooks();
+              Formation.pauseMongoosasticHooks();
               await afCoverage();
-              Formation.startAllMongoosaticHooks();
+              Formation.startMongoosasticHooks();
               await enableAlertMessage();
-              await esSyncIndex("formation");
+              await esSyncIndex("formations");
               await disableAlertMessage();
               await afConsoleStats();
             };
