@@ -141,6 +141,84 @@ function getMapping(schema, inPrefix = "", requireAsciiFolding = false) {
   return { properties };
 }
 
+const postDocumentSave = (doc) => {
+  const logger = require("../../logger");
+
+  if (this.hooksPaused) return;
+
+  logger.debug?.({ type: "mongoosastic", index: this.indexName }, `POST DOCUMENT SAVE`);
+
+  if (doc) {
+    const _doc = new doc.constructor(doc);
+    return _doc.index();
+  }
+};
+
+const postDocumentRemove = (doc) => {
+  const logger = require("../../logger");
+
+  if (this.hooksPaused) return;
+
+  logger.debug?.({ type: "mongoosastic", index: this.indexName }, `POST DOCUMENT REMOVE`);
+
+  if (doc) {
+    const _doc = new doc.constructor(doc);
+    return _doc.unIndex();
+  }
+};
+
+async function postQuerySave() {
+  const logger = require("../../logger");
+
+  if (this.hooksPaused) return;
+
+  logger.debug?.({ type: "mongoosastic", index: this.indexName }, `POST QUERY SAVE`);
+
+  const doc = await this.model.findOne(this._conditions);
+
+  if (doc) {
+    doc.index();
+  }
+}
+
+async function postQuerySaveMany() {
+  const logger = require("../../logger");
+
+  if (this.hooksPaused) return;
+
+  logger.debug?.({ type: "mongoosastic", index: this.indexName }, `POST QUERY SAVE MANY`);
+
+  for await (const doc of this.model.find(this._conditions)) {
+    await doc.index();
+  }
+}
+
+async function preQueryRemove() {
+  const logger = require("../../logger");
+
+  if (this.hooksPaused) return;
+
+  logger.debug?.({ type: "mongoosastic", index: this.indexName }, `PRE QUERY REMOVE`);
+
+  const doc = await this.model.findOne(this._conditions);
+
+  if (doc) {
+    doc.unIndex();
+  }
+}
+
+async function preQueryRemoveMany() {
+  const logger = require("../../logger");
+
+  if (this.hooksPaused) return;
+
+  logger.debug?.({ type: "mongoosastic", index: this.indexName }, `PRE QUERY REMOVE MANY`);
+
+  for await (const doc of this.model.find(this._conditions)) {
+    await doc.unIndex();
+  }
+}
+
 /**
  * Use standard Mongoose Middleware hooks
  * to persist to Elasticsearch
@@ -151,84 +229,6 @@ function getMapping(schema, inPrefix = "", requireAsciiFolding = false) {
  *
  */
 function setUpMiddlewareHooks(inSchema) {
-  const postDocumentSave = (doc) => {
-    const logger = require("../../logger");
-
-    if (this.hooksPaused) return;
-
-    logger.debug?.({ type: "mongoosastic", index: this.indexName }, `POST DOCUMENT SAVE`);
-
-    if (doc) {
-      const _doc = new doc.constructor(doc);
-      return _doc.index();
-    }
-  };
-
-  const postDocumentRemove = (doc) => {
-    const logger = require("../../logger");
-
-    if (this.hooksPaused) return;
-
-    logger.debug?.({ type: "mongoosastic", index: this.indexName }, `POST DOCUMENT REMOVE`);
-
-    if (doc) {
-      const _doc = new doc.constructor(doc);
-      return _doc.unIndex();
-    }
-  };
-
-  async function postQuerySave() {
-    const logger = require("../../logger");
-
-    if (this.hooksPaused) return;
-
-    logger.debug?.({ type: "mongoosastic", index: this.indexName }, `POST QUERY SAVE`);
-
-    const doc = await this.model.findOne(this._conditions);
-
-    if (doc) {
-      doc.index();
-    }
-  }
-
-  async function postQuerySaveMany() {
-    const logger = require("../../logger");
-
-    if (this.hooksPaused) return;
-
-    logger.debug?.({ type: "mongoosastic", index: this.indexName }, `POST QUERY SAVE MANY`);
-
-    for await (const doc of this.model.find(this._conditions)) {
-      await doc.index();
-    }
-  }
-
-  async function preQueryRemove() {
-    const logger = require("../../logger");
-
-    if (this.hooksPaused) return;
-
-    logger.debug?.({ type: "mongoosastic", index: this.indexName }, `PRE QUERY REMOVE`);
-
-    const doc = await this.model.findOne(this._conditions);
-
-    if (doc) {
-      doc.unIndex();
-    }
-  }
-
-  async function preQueryRemoveMany() {
-    const logger = require("../../logger");
-
-    if (this.hooksPaused) return;
-
-    logger.debug?.({ type: "mongoosastic", index: this.indexName }, `PRE QUERY REMOVE MANY`);
-
-    for await (const doc of this.model.find(this._conditions)) {
-      await doc.unIndex();
-    }
-  }
-
   // Document middleware hooks
   inSchema.post(["save", "updateOne"], { document: true, query: false }, postDocumentSave);
   inSchema.post(["deleteOne"], { document: true, query: false }, postDocumentRemove);
@@ -316,18 +316,18 @@ module.exports.mongoosastic = (schema, options) => {
   };
 
   schema.methods.index = function schemaIndex(refresh = true) {
-    if (!this.indexName || !this._id || this.hooksPaused) {
+    if (!schema.statics.indexName || !this._id || schema.statics.hooksPaused) {
       return;
     }
 
     const logger = require("../../logger");
 
-    logger.debug?.({ type: "mongoosastic", index: this.indexName, identifiant: this._id }, "DOCUMENT INDEX");
+    logger.debug?.({ type: "mongoosastic", index: schema.statics.indexName, identifiant: this._id }, "DOCUMENT INDEX");
 
     return new Promise(async (resolve, reject) => {
       try {
         const _opts = {
-          index: this.indexName,
+          index: schema.statics.indexName,
           type: typeName,
           refresh: refresh,
           id: this._id.toString(),
@@ -335,7 +335,10 @@ module.exports.mongoosastic = (schema, options) => {
         };
         await esClient.index(_opts);
       } catch (error) {
-        logger.error?.({ type: "mongoosastic", error }, `Error indexing ${this.indexName} ${this._id.toString()}`);
+        logger.error?.(
+          { type: "mongoosastic", error },
+          `Error indexing ${schema.statics.indexName} ${this._id.toString()}`
+        );
         return reject();
       }
       resolve();
@@ -343,18 +346,21 @@ module.exports.mongoosastic = (schema, options) => {
   };
 
   schema.methods.unIndex = function schemaUnIndex() {
-    if (!this.indexName || !this._id || this.hooksPaused) {
+    if (!schema.statics.indexName || !this._id || schema.statics.hooksPaused) {
       return;
     }
 
     const logger = require("../../logger");
 
-    logger.debug?.({ type: "mongoosastic", index: this.indexName, identifiant: this._id }, "DOCUMENT UNINDEX");
+    logger.debug?.(
+      { type: "mongoosastic", index: schema.statics.indexName, identifiant: this._id },
+      "DOCUMENT UNINDEX"
+    );
 
     return new Promise(async (resolve, reject) => {
       try {
         const _opts = {
-          index: this.indexName,
+          index: schema.statics.indexName,
           type: typeName,
           refresh: true,
           id: this._id.toString(),
@@ -377,7 +383,7 @@ module.exports.mongoosastic = (schema, options) => {
             type: "mongoosastic",
             error,
           },
-          `Error unindexing ${this.indexName} ${this._id.toString()}`
+          `Error unindexing ${schema.statics.indexName} ${this._id.toString()}`
         );
         return reject();
       }
