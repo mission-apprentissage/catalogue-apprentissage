@@ -206,7 +206,7 @@ const psImport = async () => {
       }
     }
 
-    logger.debug({ closed, linked, canceled, published });
+    logger.debug({ type: "job" }, { closed, linked, canceled, published });
 
     await Formation.updateMany({ cle_ministere_educatif: { $nin: publishedCleME } }, { parcoursup_published: false });
 
