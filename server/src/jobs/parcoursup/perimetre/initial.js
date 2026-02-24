@@ -407,7 +407,7 @@ const run = async () => {
   };
 
   /** 1. On réinitialise les formations "à publier ..." à "non publiable en l'état" pour permettre le recalcule du statut initial */
-  logger.debug({ type: "job" }, "Etape 1.");
+  logger.info({ type: "job" }, "Etape 1.");
   await Formation.updateMany(
     {
       parcoursup_statut_initial: { $ne: PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT },
@@ -416,7 +416,7 @@ const run = async () => {
   );
 
   /** 2. On applique les règles de périmètres */
-  logger.debug({ type: "job" }, "Etape 2.");
+  logger.info({ type: "job" }, "Etape 2.");
 
   const filterStatus = {
     // parcoursup_statut_initial: {
@@ -452,13 +452,11 @@ const run = async () => {
 
           ...getQueryFromRule(rule, true),
         },
-        [
-          {
-            $set: {
-              parcoursup_statut_initial: rule.statut,
-            },
+        {
+          $set: {
+            parcoursup_statut_initial: rule.statut,
           },
-        ]
+        }
       );
     }));
 
@@ -487,13 +485,11 @@ const run = async () => {
 
           ...getQueryFromRule(rule, true),
         },
-        [
-          {
-            $set: {
-              parcoursup_statut_initial: rule.statut,
-            },
+        {
+          $set: {
+            parcoursup_statut_initial: rule.statut,
           },
-        ]
+        }
       );
     }));
 
@@ -518,13 +514,11 @@ const run = async () => {
 
           ...getQueryFromRule(rule, true),
         },
-        [
-          {
-            $set: {
-              parcoursup_statut_initial: rule.statut,
-            },
+        {
+          $set: {
+            parcoursup_statut_initial: rule.statut,
           },
-        ]
+        }
       );
     }));
 
@@ -546,13 +540,11 @@ const run = async () => {
           num_academie,
           ...getQueryFromRule(rule, true),
         },
-        [
-          {
-            $set: {
-              parcoursup_statut_initial: status,
-            },
+        {
+          $set: {
+            parcoursup_statut_initial: status,
           },
-        ]
+        }
       );
     });
   });

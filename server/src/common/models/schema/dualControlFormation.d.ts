@@ -95,11 +95,11 @@ export interface DualControlFormation {
   /**
    * Code formacode
    */
-  code_formacode?: unknown[];
+  code_formacode?: string[];
   /**
    * Libelle formacode
    */
-  libelle_formacode?: unknown[];
+  libelle_formacode?: string[];
   /**
    * Nom de l'académie
    */
@@ -537,18 +537,15 @@ export interface DualControlFormation {
 export interface ItemOfCertificateurs {
   certificateur?: string;
   siret_certificateur?: string;
-  _id?: Types.ObjectId;
 }
 export interface ItemOfRomes {
   rome?: string;
   libelle?: string;
-  _id?: Types.ObjectId;
 }
 export interface ItemOfPartenaires {
   Nom_Partenaire?: string;
   Siret_Partenaire?: string;
   Habilitation_Partenaire?: string;
-  _id?: Types.ObjectId;
 }
 export interface ItemOfBcnMefs_10 {
   mef10?: string;
@@ -558,10 +555,8 @@ export interface ItemOfBcnMefs_10 {
    * MEF périmé (fermeture avant le 31 août de l'année courante)
    */
   mef_outdated?: boolean;
-  _id?: Types.ObjectId;
 }
 export interface Modalite {
   duree?: string;
   annee?: string;
-  _id?: Types.ObjectId;
 }

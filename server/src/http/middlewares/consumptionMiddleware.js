@@ -1,3 +1,4 @@
+const { ReturnDocument } = require("mongodb");
 const logger = require("../../common/logger");
 const { Consumption } = require("../../common/models");
 
@@ -21,7 +22,6 @@ module.exports = async (req) => {
         },
         {
           upsert: true,
-          new: false,
         }
       );
     } catch (error) {

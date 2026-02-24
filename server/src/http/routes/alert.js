@@ -2,6 +2,7 @@ const express = require("express");
 const { Alert } = require("../../common/models/index");
 const tryCatch = require("../middlewares/tryCatchMiddleware");
 const { sanitize } = require("../../common/utils/sanitizeUtils");
+const { ReturnDocument } = require("mongodb");
 
 module.exports = () => {
   const router = express.Router();
@@ -46,7 +47,7 @@ module.exports = () => {
       }
 
       const result = await Alert.findOneAndUpdate({ _id: params.id }, payload, {
-        new: true,
+        returnDocument: "before",
       });
 
       return res.json(result);
@@ -58,7 +59,7 @@ module.exports = () => {
     tryCatch(async ({ body, params }, res) => {
       const payload = sanitize(body);
       const result = await Alert.findOneAndUpdate({ _id: params.id }, payload, {
-        new: false,
+        returnDocument: ReturnDocument.AFTER,
       });
 
       return res.json(result);

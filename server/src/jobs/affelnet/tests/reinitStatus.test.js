@@ -25,9 +25,7 @@ describe(__filename, () => {
     await connectToMongoForTests();
   });
 
-  beforeEach(async () => {
-    await Formation.deleteMany();
-
+  const initFormations = async () => {
     // allHistoryIsEnAttenteAfterDate YES
     // lastHistoryIsEnAttenteBeforeDate YES
     await Formation.create({
@@ -153,6 +151,10 @@ describe(__filename, () => {
       intitule_court: "formation 5",
       updates_history: [],
     });
+  };
+
+  beforeEach(async () => {
+    await initFormations();
   });
 
   afterEach(async () => {

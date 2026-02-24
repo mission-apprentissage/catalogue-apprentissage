@@ -74,7 +74,7 @@ module.exports = ({ db }) => {
         {
           acl: payload.acl,
         },
-        { new: true }
+        { returnDocument: ReturnDocument.AFTER }
       );
 
       await closeSessionsOfThisRole(db, name);

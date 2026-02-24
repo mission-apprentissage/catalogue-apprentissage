@@ -68,7 +68,7 @@ const formationSchema = {
         },
       },
     ],
-    default: null,
+    default: [],
     description:
       "Clés ME des variantes en présentiel de la présente formation (même clé mais finissant en #L01 / #L02...)",
   },

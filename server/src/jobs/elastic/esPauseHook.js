@@ -1,4 +1,4 @@
-const { Formation, Etablissement, User } = require("../../common/models/index");
+const { Formation, Etablissement, User } = require("../../common/models");
 
 const esPauseHook = (index) => {
   switch (index) {

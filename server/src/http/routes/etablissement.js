@@ -12,6 +12,7 @@ const { hasAccessTo } = require("../../common/utils/rolesUtils");
 const logger = require("../../common/logger");
 const { siretFormat } = require("../../common/models/format");
 const { diffEtablissement, buildUpdatesHistory } = require("../../logic/common/utils/diffUtils");
+const { ReturnDocument } = require("mongodb");
 
 /**
  * Sample entity route module for GET
@@ -333,7 +334,7 @@ module.exports = () => {
             : {}),
         },
         {
-          new: true,
+          returnDocument: ReturnDocument.AFTER,
           runValidators: true,
         }
       );

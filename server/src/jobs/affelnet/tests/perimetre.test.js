@@ -99,6 +99,11 @@ describe(`${__filename}`, () => {
       };
 
       describe(`handle formations that have never been published`, () => {
+        afterEach(async () => {
+          setupAfterEach();
+          await cleanAll();
+        });
+
         [AFFELNET_STATUS.A_PUBLIER, AFFELNET_STATUS.A_PUBLIER_VALIDATION].map(async (status) => {
           it(`should apply statut '${status}'`, async () => {
             await ReglePerimetre.create({

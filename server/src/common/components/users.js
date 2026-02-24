@@ -1,3 +1,4 @@
+const { ReturnDocument } = require("mongodb");
 const { User, Role } = require("../models/index");
 const sha512Utils = require("../utils/sha512Utils");
 const { pick, uniq, escapeRegExp } = require("lodash");
@@ -77,7 +78,7 @@ module.exports = async () => {
         throw new Error(`Unable to find user ${username}`);
       }
 
-      const result = await User.findOneAndUpdate({ _id: user._id }, data, { new: true });
+      const result = await User.findOneAndUpdate({ _id: user._id }, data, { returnDocument: ReturnDocument.AFTER });
 
       return result.toObject();
     },

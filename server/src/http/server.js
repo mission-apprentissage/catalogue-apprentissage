@@ -43,6 +43,7 @@ const reglePerimetreRoutes = require("./routes/reglePerimetre");
 const reglePerimetreSecureRoutes = require("./routes/reglePerimetreSecure");
 const uaiAffelnetRoutes = require("./routes/uaiAffelnet");
 const configRoutes = require("./routes/config");
+const { default: mongoose } = require("mongoose");
 
 const options = {
   definition: {
@@ -227,13 +228,17 @@ module.exports = async (components, verbose = true) => {
     tryCatch(async (req, res) => {
       verbose && logger.info({ type: "http" }, "/api called - healthcheck");
 
-      let mongodbStatus;
-      try {
-        await db.collection("formation").stats();
-        mongodbStatus = true;
-      } catch (e) {
-        mongodbStatus = false;
-        logger.error({ type: "http" }, "Healthcheck failed", e);
+      const mongodbStatus = mongoose?.connection?.readyState === 1;
+
+      switch (mongodbStatus) {
+        case true:
+          logger.info("Healthcheck OK");
+          break;
+        case false:
+          logger.error("Healthcheck KO : MongoDB connection is not ready");
+          break;
+        default:
+          logger.error("Healthcheck KO : MongoDB connection status is unknown");
       }
 
       return res.json({

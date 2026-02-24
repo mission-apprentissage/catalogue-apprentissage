@@ -125,7 +125,7 @@ export interface Formation {
   /**
    * Clés ME des variantes en présentiel de la présente formation (même clé mais finissant en #L01 / #L02...)
    */
-  variantes_en_presentiel?: ItemOfVariantesEnPresentiel[] | null;
+  variantes_en_presentiel?: ItemOfVariantesEnPresentiel[];
   /**
    * Code formation diplôme (education nationale)
    */
@@ -418,7 +418,9 @@ export interface Formation {
   /**
    * Partenaires
    */
-  partenaires?: unknown[];
+  partenaires?: {
+    [k: string]: unknown;
+  }[];
   /**
    * Badge siret actif/inactif
    */
@@ -762,7 +764,9 @@ export interface Formation {
   /**
    * Parcoursup : historique des statuts
    */
-  parcoursup_statut_history?: unknown[];
+  parcoursup_statut_history?: {
+    [k: string]: unknown;
+  }[];
   /**
    * Erreur lors de la création de la formation sur ParcourSup (via le WS)
    */
@@ -879,7 +883,9 @@ export interface Formation {
   /**
    * Affelnet : historique des statuts
    */
-  affelnet_statut_history?: unknown[];
+  affelnet_statut_history?: {
+    [k: string]: unknown;
+  }[];
   /**
    * identifiant Affelnet de la formation (code vœu)
    */
@@ -957,23 +963,19 @@ export interface ItemOfVariantesEnPresentiel {
    * Commune de la variante
    */
   localite?: string | null;
-  _id?: Types.ObjectId;
 }
 export interface ItemOfCertificateurs {
   certificateur?: string;
   siret_certificateur?: string;
-  _id?: Types.ObjectId;
 }
 export interface ItemOfRomes {
   rome?: string;
   libelle?: string;
-  _id?: Types.ObjectId;
 }
 export interface ItemOfPartenaires {
   Nom_Partenaire?: string;
   Siret_Partenaire?: string;
   Habilitation_Partenaire?: string;
-  _id?: Types.ObjectId;
 }
 export interface ItemOfUpdatesHistory {
   /**
@@ -988,7 +990,6 @@ export interface ItemOfUpdatesHistory {
   to?: {
     [k: string]: unknown;
   };
-  _id?: Types.ObjectId;
 }
 export interface ItemOfBcnMefs_10 {
   mef10?: string;
@@ -998,12 +999,10 @@ export interface ItemOfBcnMefs_10 {
    * MEF périmé (fermeture avant le 31 août de l'année courante)
    */
   mef_outdated?: boolean;
-  _id?: Types.ObjectId;
 }
 export interface Modalite {
   duree?: string;
   annee?: string;
-  _id?: Types.ObjectId;
 }
 export interface ItemOfParcoursupMefs_10 {
   mef10?: string;
@@ -1013,12 +1012,10 @@ export interface ItemOfParcoursupMefs_10 {
    * MEF périmé (fermeture avant le 31 août de l'année courante)
    */
   mef_outdated?: boolean;
-  _id?: Types.ObjectId;
 }
 export interface Modalite1 {
   duree?: string;
   annee?: string;
-  _id?: Types.ObjectId;
 }
 export interface ItemOfAffelnetMefs_10 {
   mef10?: string;
@@ -1028,10 +1025,8 @@ export interface ItemOfAffelnetMefs_10 {
    * MEF périmé (fermeture avant le 31 août de l'année courante)
    */
   mef_outdated?: boolean;
-  _id?: Types.ObjectId;
 }
 export interface Modalite2 {
   duree?: string;
   annee?: string;
-  _id?: Types.ObjectId;
 }

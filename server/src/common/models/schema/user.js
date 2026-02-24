@@ -73,7 +73,7 @@ const usersSchema = {
   },
   connection_history: {
     type: [Date],
-    default: null,
+    default: [],
     noIndex: true,
     description: "Historique des dates de connexion",
   },

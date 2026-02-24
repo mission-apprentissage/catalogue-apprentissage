@@ -420,5 +420,4 @@ export interface ItemOfUpdatesHistory {
   to?: {
     [k: string]: unknown;
   };
-  _id?: Types.ObjectId;
 }

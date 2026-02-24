@@ -4,6 +4,7 @@ const tryCatch = require("../middlewares/tryCatchMiddleware");
 const { sanitize } = require("../../common/utils/sanitizeUtils");
 const { isUserAdmin } = require("../../common/utils/rolesUtils");
 const Boom = require("boom");
+const { ReturnDocument } = require("mongodb");
 
 module.exports = () => {
   const router = express.Router();
@@ -33,7 +34,7 @@ module.exports = () => {
       const payload = sanitize(req.body);
 
       const result = await Config.findOneAndUpdate({}, payload, {
-        new: true,
+        returnDocument: ReturnDocument.AFTER,
       });
 
       return res.json(result);
@@ -51,7 +52,7 @@ module.exports = () => {
 
       const payload = sanitize(req.body);
       const result = await Config.findOneAndUpdate({}, payload, {
-        new: false,
+        returnDocument: ReturnDocument.AFTER,
       });
 
       return res.json(result);

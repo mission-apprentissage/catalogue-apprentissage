@@ -29,5 +29,4 @@ export interface ItemOfConsumers {
   caller?: string;
   callCount?: number;
   date?: Date;
-  _id?: Types.ObjectId;
 }

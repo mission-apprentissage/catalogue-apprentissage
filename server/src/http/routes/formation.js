@@ -14,6 +14,7 @@ const { updateOneTagsHistory } = require("../../logic/updaters/tagsHistoryUpdate
 const { validateUAI } = require("../../common/utils/uaiUtils");
 const { isValidObjectId } = require("mongoose");
 const { cleMinistereEducatifFormat } = require("../../common/models/format");
+const { ReturnDocument } = require("mongodb");
 
 /**
  * Sample entity route module for GET
@@ -352,7 +353,7 @@ module.exports = () => {
         ...(payload.uai_formation ? { uai_formation: payload.uai_formation.trim(), uai_formation_valide: true } : {}),
       },
       {
-        new: true,
+        returnDocument: ReturnDocument.AFTER,
         runValidators: true,
       }
     );
@@ -412,7 +413,7 @@ module.exports = () => {
         },
       },
       {
-        new: true,
+        returnDocument: ReturnDocument.AFTER,
         runValidators: true,
       }
     );
@@ -479,7 +480,7 @@ module.exports = () => {
         },
       },
       {
-        new: true,
+        returnDocument: ReturnDocument.AFTER,
         runValidators: true,
       }
     );
@@ -549,7 +550,7 @@ module.exports = () => {
         },
       },
       {
-        new: true,
+        returnDocument: ReturnDocument.AFTER,
         runValidators: true,
       }
     );

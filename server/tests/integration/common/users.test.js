@@ -2,10 +2,15 @@ const assert = require("assert");
 const integrationTests = require("../../utils/integrationTests");
 const users = require("../../../src/common/components/users");
 const { setupBeforeAll } = require("../../helpers/setup");
+const { User } = require("../../../src/common/models");
 
 integrationTests(__filename, () => {
   before(async () => {
     setupBeforeAll();
+  });
+
+  afterEach(async () => {
+    await User.deleteMany({});
   });
 
   it("Permet de créer un utilisateur", async () => {

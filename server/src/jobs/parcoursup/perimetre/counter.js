@@ -20,7 +20,7 @@ const run = async () => {
             parcoursup_statut: status,
             ...filterGeneral,
           }),
-          "catalogue non règlementaire": await Formation.countDocuments({
+          "catalogue non réglementaire": await Formation.countDocuments({
             parcoursup_statut: status,
             ...filterNonReglementaire,
           }),
@@ -70,7 +70,7 @@ const run = async () => {
   const results = {
     total: {
       "catalogue général": totalGeneral,
-      "catalogue non règlementaire": totalNonReglementaire,
+      "catalogue non réglementaire": totalNonReglementaire,
       "total (y compris archives)": total,
     },
 
@@ -78,19 +78,19 @@ const run = async () => {
 
     "dans le périmètre": {
       "catalogue général": totalGeneralPérimètre,
-      "catalogue non règlementaire": totalNonReglementairePérimètre,
+      "catalogue non réglementaire": totalNonReglementairePérimètre,
       "total (y compris archives)": totalPérimètre,
     },
 
     "dans le périmètre avec session ": {
       "catalogue général": totalGeneralPérimètreAvecSession,
-      "catalogue non règlementaire": totalNonReglementairePérimètreAvecSession,
+      "catalogue non réglementaire": totalNonReglementairePérimètreAvecSession,
       "total (y compris archives)": totalPérimètreAvecSession,
     },
 
     "hors périmètre": {
       "catalogue général": totalGeneralHorsPérimètre,
-      "catalogue non règlementaire": totalNonReglementaireHorsPérimètre,
+      "catalogue non réglementaire": totalNonReglementaireHorsPérimètre,
       "total (y compris archives)": totalHorsPérimètre,
     },
   };

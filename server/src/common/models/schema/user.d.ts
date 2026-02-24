@@ -62,7 +62,7 @@ export interface User {
   /**
    * Historique des dates de connexion
    */
-  connection_history?: Date[] | null;
+  connection_history?: Date[];
   /**
    * Utilisateur ayant créé celui-ci
    */

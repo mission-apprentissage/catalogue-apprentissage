@@ -7,7 +7,7 @@ module.exports = {
         description: "Cet établissement est le siége sociale",
       },
       etablissement_siege_id: {
-        type: "string",
+        type: "schemaobjectid",
         description: "Identifiant établissement siége",
       },
       etablissement_siege_siret: {
@@ -284,7 +284,7 @@ module.exports = {
         type: "array",
         description: "Id des formations rattachées",
         items: {
-          type: "string",
+          type: "schemaobjectid",
         },
       },
       formations_uais: {

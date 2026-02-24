@@ -111,7 +111,7 @@ export const CardListFormation = ({ data }) => {
           <Flex mt={4} justifyContent="space-between">
             <Text textStyle="xs">
               CFD: {data.cfd ?? "N/A"} - MEF:{" "}
-              {!!data.bcn_mefs_10.length ? data.bcn_mefs_10?.map((mef) => mef.mef10)?.join(", ") : "N/A"} -{" "}
+              {!!data.bcn_mefs_10?.length ? data.bcn_mefs_10?.map((mef) => mef.mef10)?.join(", ") : "N/A"} -{" "}
               {data.rncp_code ?? "N/A"}
             </Text>
 

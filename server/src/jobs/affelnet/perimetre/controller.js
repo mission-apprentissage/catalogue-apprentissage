@@ -29,11 +29,11 @@ const run = async () => {
   logger.debug({ type: "job" }, `${campagneCount} formations possèdent des dates de début pour la campagne en cours.`);
 
   /** 0. On initialise affelnet_id à null si l'information n'existe pas sur la formation */
-  logger.debug({ type: "job" }, "Etape 0.");
+  logger.info({ type: "job" }, "Etape 0.");
   await Formation.updateMany({ affelnet_id: { $exists: false } }, { $set: { affelnet_id: null } });
 
   /** 1. Application de la réglementation : réinitialisation des étiquettes pour les formations qui sortent du périmètre quelque soit le statut (sauf publié et non publié pour le moment) */
-  logger.debug({ type: "job" }, "Etape 1. Vérification des aspects réglementaires");
+  logger.info({ type: "job" }, "Etape 1. Vérification des aspects réglementaires");
   await Formation.updateMany(
     {
       $or: [
@@ -82,12 +82,14 @@ const run = async () => {
   );
 
   /** 2. On sauvegarde le précédent statut */
-  logger.debug({ type: "job" }, "Etape 2. Sauvegarde statut précédent");
+  logger.info({ type: "job" }, "Etape 2. Sauvegarde statut précédent");
 
-  await Formation.updateMany({}, [{ $set: { affelnet_last_statut: "$affelnet_statut" } }]);
+  await Formation.updateMany({}, [{ $set: { affelnet_last_statut: "$affelnet_statut" } }], {
+    updatePipeline: true,
+  });
 
   /** 3. On réinitialise les statuts des formations our permettre le recalcule du périmètre */
-  logger.debug({ type: "job" }, "Etape 3. Réinitialisation des statuts");
+  logger.info({ type: "job" }, "Etape 3. Réinitialisation des statuts");
 
   const filterStatus = {
     affelnet_statut: {
@@ -111,7 +113,7 @@ const run = async () => {
   );
 
   /** 4. On applique les règles de périmètres. */
-  logger.debug({ type: "job" }, "Etape 4. Application des règles");
+  logger.info({ type: "job" }, "Etape 4. Application des règles");
 
   // Les règles pour lesquelles on ne procède pas à des publications
   const statutsPublicationInterdite = [AFFELNET_STATUS.A_DEFINIR];
@@ -126,17 +128,18 @@ const run = async () => {
 
   reglesPublicationInterdite.length > 0 &&
     (await asyncForEach(reglesPublicationInterdite, async (rule) => {
-      // console.log(
-      //   `[national] ${rule.diplome} ${rule.nom_regle_complementaire ? `[${rule.nom_regle_complementaire}]` : ""} => ${rule.statut} [${await Formation.countDocuments(
-      //     {
-      //       ...filterReglement,
-      //       ...filterSessionDate,
-      //       ...filterStatus,
+      logger.debug(
+        { type: "job" },
+        `[national] ${rule.diplome} ${rule.nom_regle_complementaire ? `[${rule.nom_regle_complementaire}]` : ""} => ${rule.statut} [${await Formation.countDocuments(
+          {
+            ...filterReglement,
+            ...filterSessionDate,
+            ...filterStatus,
 
-      //       ...getQueryFromRule(rule, true),
-      //     }
-      //   )} formations concernées]`
-      // );
+            ...getQueryFromRule(rule, true),
+          }
+        )} formations concernées]`
+      );
 
       await Formation.updateMany(
         {
@@ -146,14 +149,12 @@ const run = async () => {
 
           ...getQueryFromRule(rule, true),
         },
-        [
-          {
-            $set: {
-              last_update_at: Date.now(),
-              affelnet_statut: rule.statut,
-            },
+        {
+          $set: {
+            last_update_at: Date.now(),
+            affelnet_statut: rule.statut,
           },
-        ]
+        }
       );
     }));
 
@@ -170,17 +171,18 @@ const run = async () => {
 
   reglesPublicationManuelle.length > 0 &&
     (await asyncForEach(reglesPublicationManuelle, async (rule) => {
-      // console.log(
-      //   `[national] ${rule.diplome} ${rule.nom_regle_complementaire ? `[${rule.nom_regle_complementaire}]` : ""} => ${rule.statut} [${await Formation.countDocuments(
-      //     {
-      //       ...filterReglement,
-      //       ...filterSessionDate,
-      //       ...filterStatus,
+      logger.debug(
+        { type: "job" },
+        `[national] ${rule.diplome} ${rule.nom_regle_complementaire ? `[${rule.nom_regle_complementaire}]` : ""} => ${rule.statut} [${await Formation.countDocuments(
+          {
+            ...filterReglement,
+            ...filterSessionDate,
+            ...filterStatus,
 
-      //       ...getQueryFromRule(rule, true),
-      //     }
-      //   )} formations concernées]`
-      // );
+            ...getQueryFromRule(rule, true),
+          }
+        )} formations concernées]`
+      );
 
       await Formation.updateMany(
         {
@@ -212,7 +214,8 @@ const run = async () => {
               },
             },
           },
-        ]
+        ],
+        { updatePipeline: true }
       );
     }));
 
@@ -229,17 +232,18 @@ const run = async () => {
 
   reglesPublicationAutomatique.length > 0 &&
     (await asyncForEach(reglesPublicationAutomatique, async (rule) => {
-      // console.log(
-      //   `[national] ${rule.diplome} ${rule.nom_regle_complementaire ? `[${rule.nom_regle_complementaire}]` : ""} => ${rule.statut} [${await Formation.countDocuments(
-      //     {
-      //       ...filterReglement,
-      //       ...filterSessionDate,
-      //       ...filterStatus,
+      logger.debug(
+        { type: "job" },
+        `[national] ${rule.diplome} ${rule.nom_regle_complementaire ? `[${rule.nom_regle_complementaire}]` : ""} => ${rule.statut} [${await Formation.countDocuments(
+          {
+            ...filterReglement,
+            ...filterSessionDate,
+            ...filterStatus,
 
-      //       ...getQueryFromRule(rule, true),
-      //     }
-      //   )} formations concernées]`
-      // );
+            ...getQueryFromRule(rule, true),
+          }
+        )} formations concernées]`
+      );
 
       await Formation.updateMany(
         {
@@ -279,7 +283,8 @@ const run = async () => {
               },
             },
           },
-        ]
+        ],
+        { updatePipeline: true }
       );
     }));
 
@@ -292,19 +297,20 @@ const run = async () => {
 
   await asyncForEach(academieRules, async (rule) => {
     await asyncForEach(Object.entries(rule.statut_academies), async ([num_academie, status]) => {
-      // console.log(
-      //   `[${num_academie}] ${rule.diplome} ${rule.nom_regle_complementaire ? `[${rule.nom_regle_complementaire}]` : ""} => ${status} [${await Formation.countDocuments(
-      //     {
-      //       ...filterReglement,
-      //       ...filterSessionDate,
-      //       ...filterStatus,
+      logger.debug(
+        { type: "job" },
+        `[${num_academie}] ${rule.diplome} ${rule.nom_regle_complementaire ? `[${rule.nom_regle_complementaire}]` : ""} => ${status} [${await Formation.countDocuments(
+          {
+            ...filterReglement,
+            ...filterSessionDate,
+            ...filterStatus,
 
-      //       num_academie,
+            num_academie,
 
-      //       ...getQueryFromRule(rule, true),
-      //     }
-      //   )} formations concernées]`
-      // );
+            ...getQueryFromRule(rule, true),
+          }
+        )} formations concernées]`
+      );
 
       await Formation.updateMany(
         {
@@ -352,13 +358,14 @@ const run = async () => {
               },
             },
           },
-        ]
+        ],
+        { updatePipeline: true }
       );
     });
   });
 
   /** 5. Vérification de la date de publication */
-  logger.debug({ type: "job" }, "Etape 5. Vérification de la date de publication");
+  logger.info({ type: "job" }, "Etape 5. Vérification de la date de publication");
   /** 5a. On s'assure que les dates de publication soient définies pour les formations publiées */
   await Formation.updateMany(
     {
@@ -378,7 +385,7 @@ const run = async () => {
   );
 
   /** 6. On met à jour l'historique des statuts. */
-  logger.debug({ type: "job" }, "Etape 6. Mise à jour de l'historique");
+  logger.info({ type: "job" }, "Etape 6. Mise à jour de l'historique");
   await updateManyTagsHistory("affelnet_statut");
 };
 

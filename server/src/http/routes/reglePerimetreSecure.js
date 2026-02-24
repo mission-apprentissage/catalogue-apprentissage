@@ -8,6 +8,7 @@ const { sanitize } = require("../../common/utils/sanitizeUtils");
 const { AFFELNET_STATUS, COMMON_STATUS, PARCOURSUP_STATUS } = require("../../constants/status");
 const logger = require("../../common/logger");
 const { hasAccessTo, hasAcademyRight } = require("../../common/utils/rolesUtils");
+const { ReturnDocument } = require("mongodb");
 
 /**
  * Schema for validation
@@ -214,7 +215,7 @@ module.exports = () => {
         };
       }
 
-      const updated = await ReglePerimetre.findByIdAndUpdate(id, updatedRule, { new: true });
+      const updated = await ReglePerimetre.findByIdAndUpdate(id, updatedRule, { returnDocument: ReturnDocument.AFTER });
       return res.json(updated);
     })
   );
@@ -263,7 +264,7 @@ module.exports = () => {
         };
       }
 
-      const updated = await ReglePerimetre.findByIdAndUpdate(id, updatedRule, { new: true });
+      const updated = await ReglePerimetre.findByIdAndUpdate(id, updatedRule, { returnDocument: ReturnDocument.AFTER });
       return res.json(updated);
     })
   );
@@ -311,7 +312,9 @@ module.exports = () => {
         };
       }
 
-      const updated = await ReglePerimetre.findByIdAndUpdate(id, updatedRule, { new: true });
+      const updated = await ReglePerimetre.findByIdAndUpdate(id, updatedRule, {
+        returnDocument: ReturnDocument.AFTER,
+      });
       return res.json(updated);
     })
   );
@@ -354,7 +357,7 @@ module.exports = () => {
         };
       }
 
-      const deleted = await ReglePerimetre.findByIdAndUpdate(id, updatedRule, { new: true });
+      const deleted = await ReglePerimetre.findByIdAndUpdate(id, updatedRule, { returnDocument: ReturnDocument.AFTER });
       return res.json(deleted);
     })
   );

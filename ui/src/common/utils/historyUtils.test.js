@@ -82,7 +82,8 @@ it("buildUpdatesHistory works as espected", () => {
   };
 
   const nextUpdateHistory = buildUpdatesHistory(original, { field: "nextValue" }, ["field"]);
-  expect(nextUpdateHistory[nextUpdateHistory.length - 1].from.field === "previousValue").toBeTruthy();
-  expect(nextUpdateHistory[nextUpdateHistory.length - 1].to.field === "nextValue").toBeTruthy();
-  expect(nextUpdateHistory[nextUpdateHistory.length - 1].updated_at).toBeTruthy();
+
+  expect(nextUpdateHistory?.from?.field === "previousValue").toBeTruthy();
+  expect(nextUpdateHistory?.to?.field === "nextValue").toBeTruthy();
+  expect(nextUpdateHistory?.updated_at).toBeTruthy();
 });

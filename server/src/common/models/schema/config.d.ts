@@ -7,7 +7,10 @@
 const { Types } = require("mongoose");
 
 export interface Config {
-  diffusion: boolean;
+  rco_import: boolean & number;
+  affelnet_diffusion: boolean;
+  parcoursup_export: boolean;
+  parcoursup_limit: number;
   _id?: Types.ObjectId;
   created_at?: Date;
   updated_at?: Date;

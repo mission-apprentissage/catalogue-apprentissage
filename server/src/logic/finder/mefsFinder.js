@@ -72,7 +72,7 @@ const computeMefs = async (fields, oldFields) => {
     });
 
     duree_incoherente =
-      !!fields.bcn_mefs_10.length &&
+      !!fields.bcn_mefs_10?.length &&
       fields.bcn_mefs_10.every(({ modalite }) => {
         return modalite.duree !== duree;
       });
@@ -85,7 +85,7 @@ const computeMefs = async (fields, oldFields) => {
     });
 
     annee_incoherente =
-      !!fields.bcn_mefs_10.length &&
+      !!fields.bcn_mefs_10?.length &&
       fields.bcn_mefs_10.every(({ modalite }) => {
         return modalite.annee !== annee;
       });

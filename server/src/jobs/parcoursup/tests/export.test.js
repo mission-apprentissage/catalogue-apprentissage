@@ -156,8 +156,9 @@ describe(__filename, () => {
   it("should filter only 6 formations", async () => {
     let cursor = createCursor();
     let index = 0;
-    while (await cursor.next()) {
+    for await (const item of cursor) {
       index += 1;
+      console.log(index);
     }
     assert.strictEqual(index, 6);
   });

@@ -64,7 +64,9 @@ export interface ReglePerimetre {
   /**
    * Historique des mises à jours
    */
-  updates_history?: unknown[];
+  updates_history?: {
+    [k: string]: unknown;
+  }[];
   /**
    * Date de dernière mise à jour
    */

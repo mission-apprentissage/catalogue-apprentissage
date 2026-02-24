@@ -1,10 +1,10 @@
 const assert = require("assert");
-const integrationTests = require("../../../../tests/utils/integrationTests");
-const { createModel } = require("../../models/createModel");
-const { setupBeforeEach, setupAfterEach } = require("../../../../tests/helpers/setup");
-const { cleanAll } = require("../../../../tests/utils/testUtils");
+const integrationTests = require("../../../../../tests/utils/integrationTests");
+const { createModel } = require("../../createModel");
+const { setupBeforeEach, setupAfterEach } = require("../../../../../tests/helpers/setup");
+const { cleanAll } = require("../../../../../tests/utils/testUtils");
 // const { mongoosastic, postDocumentSave, postQuerySave } = require(".");
-const logger = require("../../logger");
+const logger = require("../../../logger");
 const sinon = require("sinon");
 
 integrationTests(__filename, () => {

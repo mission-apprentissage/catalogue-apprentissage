@@ -58,13 +58,12 @@ const run = async () => {
 
           ...getQueryFromRule(rule, true),
         },
-        [
-          {
-            $set: {
-              affelnet_statut_a_definir: true,
-            },
+
+        {
+          $set: {
+            affelnet_statut_a_definir: true,
           },
-        ]
+        }
       );
     }));
 };
