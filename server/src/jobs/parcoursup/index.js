@@ -16,6 +16,7 @@ const parcoursupJobs = async () => {
     logger.info({ type: "job" }, `PARCOURSUP JOBS ⏳`);
 
     await psImport();
+
     await psPerimetre();
 
     if (config?.parcoursup_export) {

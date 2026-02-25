@@ -8,10 +8,6 @@
   "elasticSearch": {
     "node": "CATALOGUE_APPRENTISSAGE_ELASTICSEARCH_NODE"
   },
-  "aws": {
-    "accessKeyId": "CATALOGUE_APPRENTISSAGE_ACCESS_KEY_ID",
-    "secretAccessKey": "CATALOGUE_APPRENTISSAGE_SECRET_ACCESS_KEY"
-  },
   "auth": {
     "passwordHashRounds": "CATALOGUE_APPRENTISSAGE_AUTH_PASSWORD_HASH_ROUNDS",
     "password": {
@@ -25,13 +21,9 @@
   },
   "slackWebhookUrl": "CATALOGUE_APPRENTISSAGE_SLACK_WEBHOOK_URL",
   "outputDir": "CATALOGUE_APPRENTISSAGE_OUTPUT_DIR",
-  "rco": {
-    "pwd": "CATALOGUE_APPRENTISSAGE_RCO_WS_PWD"
-  },
   "sentry": {
     "dsn": "CATALOGUE_APPRENTISSAGE_SENTRY_DSN"
   },
-  "reportMailingList": "CATALOGUE_APPRENTISSAGE_REPORT_MAILING_LIST",
   "smtp": {
     "host": "CATALOGUE_APPRENTISSAGE_SMTP_HOST",
     "port": "CATALOGUE_APPRENTISSAGE_SMTP_PORT",

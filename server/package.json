@@ -21,7 +21,6 @@
     "startCampagne": "node src/jobs/startCampagne.js",
     "psup:export": "standalone=true node src/jobs/parcoursup/export/index.js",
     "uai:check": "standalone=true node src/jobs/checkUai/index.js",
-    "compute:distance": "standalone=true node src/jobs/oneshot/computeDistance/index.js",
     "bcn:jobs": "standaloneJobs=true node src/jobs/bcn/index.js ",
     "etablissements:jobs": "standaloneJobs=true node src/jobs/etablissements/index.js",
     "formations:jobs": "standaloneJobs=true node src/jobs/formations/index.js",

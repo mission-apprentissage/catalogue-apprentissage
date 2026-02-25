@@ -8,10 +8,6 @@
   "elasticSearch": {
     "node": "http://localhost:9200"
   },
-  "aws": {
-    "accessKeyId": "CATALOGUE_APPRENTISSAGE_ACCESS_KEY_ID",
-    "secretAccessKey": "CATALOGUE_APPRENTISSAGE_SECRET_ACCESS_KEY"
-  },
   "auth": {
     "passwordHashRounds": 1001,
     "password": {
@@ -32,7 +28,6 @@
   "sentry": {
     "dsn": "CATALOGUE_APPRENTISSAGE_SENTRY_DSN"
   },
-  "reportMailingList": "CATALOGUE_APPRENTISSAGE_REPORT_MAILING_LIST",
   "smtp": {
     "host": "CATALOGUE_APPRENTISSAGE_SMTP_HOST",
     "port": "CATALOGUE_APPRENTISSAGE_SMTP_PORT",

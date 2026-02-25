@@ -18,6 +18,7 @@ ENV REACT_APP_METABASE_SECRET_KEY=$CATALOGUE_APPRENTISSAGE_METABASE_SECRET_KEY
 ENV REACT_APP_SENTRY_DSN=$CATALOGUE_APPRENTISSAGE_SENTRY_DSN
 
 WORKDIR /app
+
 RUN corepack enable &&\
     corepack prepare yarn@stable --activate && \
     yarn set version 4.5.0 && \
@@ -30,16 +31,19 @@ COPY package.json yarn.lock*  ./
 
 ## DEPS
 FROM base AS deps
+
 RUN yarn install --immutable
 
 ## BUILD
 FROM base AS builder
+
 COPY --from=deps /app/node_modules/  ./node_modules/
 COPY .  ./
 RUN yarn build
 
 ## RUN
 FROM base AS runner
+
 COPY --from=deps /app/node_modules/  ./node_modules/
 COPY --from=builder /app/build  ./build/
 EXPOSE 3000
