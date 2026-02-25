@@ -34,27 +34,24 @@ runScript(async () => {
     await collectPreviousSeasonStats({ store: false, compare: true }); // ~ 5 minutes // maj des stats de la saison précédente
     await sleep(10000);
 
-    // Relations
+    // // Relations
     await updateEtablissementRelationFields();
+    Etablissement.startMongoosasticHooks();
     await updateFormationRelationFields();
+    Formation.startMongoosasticHooks();
 
     // Elastic
     await enableAlertMessage();
     await esSyncIndex("etablissements"); // ~ 5 minutes // maj elastic search (recherche des établissements)
-    Etablissement.startMongoosasticHooks();
     await disableAlertMessage();
 
     await enableAlertMessage();
     await esSyncIndex("formations"); // ~ 5 minutes // maj elastic search (recherche des formations)
-    Formation.startMongoosasticHooks();
     await disableAlertMessage();
 
     logger.info({ type: "job" }, `ALL JOBS ✅`);
   } catch (error) {
     logger.error({ type: "job" }, error);
     logger.error({ type: "job" }, `ALL JOBS ❌`);
-
-    Etablissement.startMongoosasticHooks();
-    Formation.startMongoosasticHooks();
   }
 });
