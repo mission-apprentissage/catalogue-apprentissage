@@ -123,7 +123,7 @@ module.exports = () => {
 
   // Create
   router.post(
-    "/perimetre/regle",
+    "/regle",
     tryCatch(async (req, res) => {
       const payload = sanitize(req.body);
 
@@ -174,7 +174,7 @@ module.exports = () => {
   );
 
   router.put(
-    "/perimetre/regle/:id",
+    "/regle/:id",
     tryCatch(async (req, res) => {
       const payload = sanitize(req.body);
       const sanitizedParams = sanitize(req.params);
@@ -221,7 +221,7 @@ module.exports = () => {
   );
 
   router.patch(
-    "/perimetre/regle/:id/:num_academie",
+    "/regle/:id/:num_academie",
     tryCatch(async (req, res) => {
       const payload = sanitize(req.body);
       const sanitizedParams = sanitize(req.params);
@@ -270,7 +270,7 @@ module.exports = () => {
   );
 
   router.delete(
-    "/perimetre/regle/:id/:num_academie",
+    "/regle/:id/:num_academie",
     tryCatch(async (req, res) => {
       const sanitizedParams = sanitize(req.params);
 
@@ -320,7 +320,7 @@ module.exports = () => {
   );
 
   router.delete(
-    "/perimetre/regle/:id",
+    "/regle/:id",
     tryCatch(async (req, res) => {
       const sanitizedParams = sanitize(req.params);
 

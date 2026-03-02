@@ -130,7 +130,7 @@ module.exports = async (components, verbose = true) => {
 
   const apiPerimetreLimiter = rateLimit({
     windowMs: 1000, // 1 second
-    max: 100, // 100 calls per IP per second
+    max: 200, // 100 calls per IP per second
   });
 
   const elasticLimiter = rateLimit({
@@ -165,13 +165,13 @@ module.exports = async (components, verbose = true) => {
     ["/es/search", elasticLimiter, anyAuthMiddleware, esSearchRoutes()],
     ["/search", elasticLimiter, anyAuthMiddleware, esMultiSearchNoIndexRoutes()],
     ["/entity", anyAuthMiddleware, configRoutes()],
+    ["/entity/perimetre", apiPerimetreLimiter, anyAuthMiddleware, reglePerimetreRoutes()],
+    ["/entity/perimetre", apiLimiter, anyAuthMiddleware, reglePerimetreSecureRoutes()],
     ["/entity", apiLimiter, anyAuthMiddleware, formationRoutes()],
     ["/entity", apiLimiter, anyAuthMiddleware, reportRoutes()],
     ["/entity", apiLimiter, anyAuthMiddleware, etablissementRoutes(components)],
     ["/entity", apiLimiter, anyAuthMiddleware, alertRoutes()],
     ["/entity", apiLimiter, anyAuthMiddleware, candidatureRoutes()],
-    ["/entity", apiPerimetreLimiter, anyAuthMiddleware, reglePerimetreRoutes()],
-    ["/entity", apiLimiter, anyAuthMiddleware, reglePerimetreSecureRoutes()],
 
     [
       "/admin",

@@ -20,8 +20,6 @@ const serialize = require("./serialize");
 const { cursor } = require("../../../utils/cursor");
 // https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/current/bulk_examples.html
 
-let isMappingNeedingGeoPoint = false;
-
 function timeout(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
@@ -52,10 +50,6 @@ function getMapping(schema, inPrefix = "", requireAsciiFolding = false) {
       continue;
     }
 
-    // if (/geo_/.test(key)) {
-    //   properties[key] = { type: "geo_point" };
-    //   isMappingNeedingGeoPoint = true;
-    // } else {
     switch (mongooseType) {
       case "ObjectId":
       case "ObjectID":
@@ -140,89 +134,10 @@ function getMapping(schema, inPrefix = "", requireAsciiFolding = false) {
 
     // console.log(key, JSON.stringify(properties[key]));
   }
-  // }
 
   // console.log(JSON.stringify(properties));
 
   return { properties };
-}
-
-const postDocumentSave = (doc) => {
-  if (this.hooksPaused) return;
-
-  const logger = require("../../../logger");
-
-  logger.debug?.({ type: "mongoosastic", index: this.indexName }, `POST DOCUMENT SAVE`);
-
-  if (doc) {
-    const _doc = new doc.constructor(doc);
-    return _doc.index();
-  }
-};
-
-const postDocumentRemove = (doc) => {
-  if (this.hooksPaused) return;
-
-  const logger = require("../../../logger");
-
-  logger.debug?.({ type: "mongoosastic", index: this.indexName }, `POST DOCUMENT REMOVE`);
-
-  if (doc) {
-    const _doc = new doc.constructor(doc);
-    return _doc.unIndex();
-  }
-};
-
-async function postQuerySave() {
-  if (this.hooksPaused) return;
-
-  const logger = require("../../../logger");
-
-  logger.debug?.({ type: "mongoosastic", index: this.indexName }, `POST QUERY SAVE`);
-
-  const doc = await this.model.findOne(this._conditions);
-
-  if (doc) {
-    doc.index();
-  }
-}
-
-async function postQuerySaveMany() {
-  if (this.hooksPaused) return;
-
-  const logger = require("../../../logger");
-
-  logger.debug?.({ type: "mongoosastic", index: this.indexName }, `POST QUERY SAVE MANY`);
-
-  for await (const doc of this.model.find(this._conditions)) {
-    await doc.index();
-  }
-}
-
-async function preQueryRemove() {
-  if (this.hooksPaused) return;
-
-  const logger = require("../../../logger");
-
-  logger.debug?.({ type: "mongoosastic", index: this.indexName }, `PRE QUERY REMOVE`);
-
-  const doc = await this.model.findOne(this._conditions);
-
-  if (doc) {
-    doc.unIndex();
-  }
-}
-
-async function preQueryRemoveMany() {
-  if (this.hooksPaused) return;
-
-  const logger = require("../../../logger");
-
-  logger.debug?.({ type: "mongoosastic", index: this.indexName }, `PRE QUERY REMOVE MANY`);
-
-  for await (const doc of this.model.find(this._conditions)) {
-    await doc.unIndex();
-  }
 }
 
 /**
@@ -235,6 +150,84 @@ async function preQueryRemoveMany() {
  *
  */
 function setUpMiddlewareHooks(schema) {
+  const postDocumentSave = (doc) => {
+    if (schema.statics.hooksPaused) return;
+
+    const logger = require("../../../logger");
+
+    logger.debug?.({ type: "mongoosastic", index: schema.statics.indexName }, `POST DOCUMENT SAVE`);
+
+    if (doc) {
+      const _doc = new doc.constructor(doc);
+      return _doc.index();
+    }
+  };
+
+  const postDocumentRemove = (doc) => {
+    if (schema.statics.hooksPaused) return;
+
+    const logger = require("../../../logger");
+
+    logger.debug?.({ type: "mongoosastic", index: schema.statics.indexName }, `POST DOCUMENT REMOVE`);
+
+    if (doc) {
+      const _doc = new doc.constructor(doc);
+      return _doc.unIndex();
+    }
+  };
+
+  async function postQuerySave() {
+    if (schema.statics.hooksPaused) return;
+
+    const logger = require("../../../logger");
+
+    logger.debug?.({ type: "mongoosastic", index: schema.statics.indexName }, `POST QUERY SAVE`);
+
+    const doc = await this.model.findOne(this._conditions);
+
+    if (doc) {
+      doc.index();
+    }
+  }
+
+  async function postQuerySaveMany() {
+    if (schema.statics.hooksPaused) return;
+
+    const logger = require("../../../logger");
+
+    logger.debug?.({ type: "mongoosastic", index: schema.statics.indexName }, `POST QUERY SAVE MANY`);
+
+    for await (const doc of this.model.find(this._conditions)) {
+      await doc.index();
+    }
+  }
+
+  async function preQueryRemove() {
+    if (schema.statics.hooksPaused) return;
+
+    const logger = require("../../../logger");
+
+    logger.debug?.({ type: "mongoosastic", index: schema.statics.indexName }, `PRE QUERY REMOVE`);
+
+    const doc = await this.model.findOne(this._conditions);
+
+    if (doc) {
+      doc.unIndex();
+    }
+  }
+
+  async function preQueryRemoveMany() {
+    if (schema.statics.hooksPaused) return;
+
+    const logger = require("../../../logger");
+
+    logger.debug?.({ type: "mongoosastic", index: schema.statics.indexName }, `PRE QUERY REMOVE MANY`);
+
+    for await (const doc of this.model.find(this._conditions)) {
+      await doc.unIndex();
+    }
+  }
+
   // Document middleware hooks
   schema.post(["save", "updateOne"], { document: true, query: false }, postDocumentSave);
   schema.post(["deleteOne"], { document: true, query: false }, postDocumentRemove);

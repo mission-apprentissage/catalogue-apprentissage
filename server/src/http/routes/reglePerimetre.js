@@ -16,7 +16,7 @@ module.exports = () => {
   const router = express.Router();
 
   router.get(
-    "/perimetre/niveau",
+    "/niveau",
     tryCatch(async (req, res) => {
       const sanitizedQuery = sanitize(req.query);
 
@@ -75,7 +75,7 @@ module.exports = () => {
   );
 
   router.get(
-    "/perimetre/regles",
+    "/regles",
     tryCatch(async (req, res) => {
       const sanitizedQuery = sanitize(req.query);
 
@@ -111,7 +111,7 @@ module.exports = () => {
   );
 
   router.get(
-    "/perimetre/regle/count",
+    "/regle/count",
     tryCatch(async (req, res) => {
       const sanitizedQuery = sanitize(req.query);
 
@@ -137,7 +137,7 @@ module.exports = () => {
   );
 
   router.get(
-    "/perimetre/regles/integration/count",
+    "/regles/integration/count",
     tryCatch(async (req, res) => {
       const sanitizedQuery = sanitize(req.query);
 
