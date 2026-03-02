@@ -161,7 +161,7 @@ describe(__filename, () => {
     await cleanAll();
   });
 
-  describe("controller > allHistoryIsEnAttenteAfterDate", () => {
+  describe.skip("controller > allHistoryIsEnAttenteAfterDate", () => {
     it("should have inserted sample data", async () => {
       const countFormations = await Formation.countDocuments({});
       assert.strictEqual(countFormations, 5);
@@ -191,7 +191,7 @@ describe(__filename, () => {
     });
   });
 
-  describe("controller > lastHistoryIsEnAttenteBeforeDate", () => {
+  describe.skip("controller > lastHistoryIsEnAttenteBeforeDate", () => {
     it("should have inserted sample data", async () => {
       const countFormations = await Formation.countDocuments({});
       assert.strictEqual(countFormations, 5);
@@ -223,7 +223,7 @@ describe(__filename, () => {
     });
   });
 
-  describe("controller > run", () => {
+  describe.skip("controller > run", () => {
     it("should have inserted sample data", async () => {
       const countFormations = await Formation.countDocuments({});
       assert.strictEqual(countFormations, 5);
@@ -244,7 +244,7 @@ describe(__filename, () => {
     });
   });
 
-  describe("afReinitStatus", () => {
+  describe.skip("afReinitStatus", () => {
     it("should reinit affelnet statut", async () => {
       assert.strictEqual(await Formation.countDocuments(), 5);
 

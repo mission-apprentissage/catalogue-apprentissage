@@ -154,7 +154,7 @@ describe(__filename, () => {
   });
 
   it("should filter only 6 formations", async () => {
-    let cursor = createCursor();
+    let cursor = await createCursor();
     let index = 0;
     for await (const item of cursor) {
       index += 1;
@@ -164,7 +164,7 @@ describe(__filename, () => {
   });
 
   it("should sort formations with errors at last", async () => {
-    let cursor = createCursor();
+    let cursor = await createCursor();
     let index = 0;
     for await (const formation of cursor) {
       if (index < 4) {
