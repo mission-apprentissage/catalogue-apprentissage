@@ -9,7 +9,7 @@ const logger = require("../../common/logger");
 const {
   afImportFormations,
   afImportCandidatureRelations,
-  afImportCandidatureFormations,
+  // afImportCandidatureFormations,
 } = require("../../jobs/affelnet/import");
 const { afCoverage } = require("../../jobs/affelnet/coverage");
 const { esSyncIndex } = require("../../jobs/elastic/esSyncIndex");
@@ -79,7 +79,7 @@ module.exports = () => {
     },
   });
 
-  const upload = multer({ storage: storage }).single("file");
+  const upload = multer({ storage }).single("file");
 
   router.post(
     "/",
