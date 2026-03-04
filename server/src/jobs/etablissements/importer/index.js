@@ -38,9 +38,14 @@ const importer = async (options) => {
 module.exports = { importer };
 
 if (process.env.standalone) {
-  runScript(async () => {
-    const args = process.argv.slice(2);
-    const noDownload = args.includes("--noDownload");
-    await importer({ noDownload });
-  });
+  runScript(
+    async () => {
+      const args = process.argv.slice(2);
+      const noDownload = args.includes("--noDownload");
+      await importer({ noDownload });
+    },
+    {
+      pauseHooks: "etablissements",
+    }
+  );
 }

@@ -10,7 +10,7 @@ const { DualControlFormation } = require("../../../common/models/index");
 const logger = require("../../../common/logger");
 
 const RCO_ZIP_URL = "https://mnadownloader.intercariforef.org/";
-const RCO_ZIP_PATH = "./assets/rco.zip";
+const RCO_ZIP_PATH = "./assets/rco-formations.zip";
 
 const downloadZip = async () => {
   // FIXME : Remove when ssl certificate for intercariforef.org is renewed

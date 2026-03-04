@@ -49,27 +49,26 @@ const importer = async (
 module.exports = { importer };
 
 if (process.env.standalone) {
-  runScript(async () => {
-    const args = process.argv.slice(2);
-    const noDownload = args.includes("--noDownload");
-    const useExistingArchive = args.includes("--useExistingArchive");
-    const forceRecompute = args.includes("--forceRecompute");
+  runScript(
+    async () => {
+      const args = process.argv.slice(2);
+      const noDownload = args.includes("--noDownload");
+      const useExistingArchive = args.includes("--useExistingArchive");
+      const forceRecompute = args.includes("--forceRecompute");
 
-    const skip = +(args.find((arg) => arg.startsWith("--skip"))?.split("=")?.[1] ?? 0);
-    const filter = JSON.parse(args.find((arg) => arg.startsWith("--filter"))?.split("=")?.[1] ?? "{}");
+      const skip = +(args.find((arg) => arg.startsWith("--skip"))?.split("=")?.[1] ?? 0);
+      const filter = JSON.parse(args.find((arg) => arg.startsWith("--filter"))?.split("=")?.[1] ?? "{}");
 
-    await importer({
-      noDownload,
-      useExistingArchive,
-      forceRecompute,
-      skip,
-      filter,
-      // filter: {
-      //   published: true,
-      //   // affelnet_statut: { $ne: "non publiable en l'état" },
-      //   // affelnet_mefs_10: { $in: [null, []] },
-      //   // bcn_mefs_10: { $ne: [] },
-      // },
-    });
-  });
+      await importer({
+        noDownload,
+        useExistingArchive,
+        forceRecompute,
+        skip,
+        filter,
+      });
+    },
+    {
+      pauseHooks: "formations",
+    }
+  );
 }

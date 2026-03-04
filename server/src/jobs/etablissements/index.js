@@ -26,7 +26,12 @@ const etablissementsJobs = async () => {
 module.exports = { etablissementsJobs };
 
 if (process.env.standaloneJobs) {
-  runScript(async () => {
-    await etablissementsJobs();
-  });
+  runScript(
+    async () => {
+      await etablissementsJobs();
+    },
+    {
+      pauseHooks: "etablissements",
+    }
+  );
 }
