@@ -3,7 +3,7 @@
 
 __metadata:
   version: 8
-  cacheKey: 10c0
+  cacheKey: 10
 
 "@apidevtools/json-schema-ref-parser@npm:^11.5.5":
   version: 11.9.3
@@ -6890,7 +6890,7 @@ __metadata:
     mquery: "npm:6.0.0"
     ms: "npm:2.1.3"
     sift: "npm:17.1.3"
-  checksum: 10c0/bdc594cc823e3480259c8666e4af896b862318d586bac7b9434ce52b1896020e9da099288c9567bc005ab7e3abc2d502e13d1230934e9888f2db6f09ff962c03
+  checksum: 10/4d37c944646db4086f5316d4308f6918068e9be60fa096e92d444cea912b84a44d59629aa194395afbd9f9fd7bc5f80c8e80c5405d98d102d44f91ca9f0f9cb1
   languageName: node
   linkType: hard
 
