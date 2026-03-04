@@ -1,7 +1,8 @@
 const assert = require("assert");
 const httpTests = require("../../utils/httpTests");
 const { createPasswordToken } = require("../../../src/common/utils/jwtUtils");
-const { setupBeforeAll } = require("../../helpers/setup");
+
+console.log("test");
 
 httpTests(__filename, ({ startServer }) => {
   it("Vérifie qu'un utilisateur peut faire une demande de réinitialisation de mot de passe", async () => {
