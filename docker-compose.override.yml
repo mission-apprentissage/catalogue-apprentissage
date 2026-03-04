@@ -33,6 +33,8 @@ services:
     environment:
       - CATALOGUE_APPRENTISSAGE_ENV=local
       - CATALOGUE_APPRENTISSAGE_LOG_LEVEL=debug
+      - CATALOGUE_APPRENTISSAGE_SMTP_HOST=smtp
+      - CATALOGUE_APPRENTISSAGE_SMTP_PORT=1025
       - TZ=Europe/Paris
     env_file: ./server/.env
 
@@ -69,6 +71,24 @@ services:
     environment:
       MB_SITE_URL: http://localhost/metabase
 
+  smtp:
+    restart: "no"
+    image: axllent/mailpit
+    container_name: catalogue_apprentissage_smtp
+    mem_limit: 128m
+    volumes:
+      - catalogue_apprentissage_data_smtp:/data
+    ports:
+      - 1025:1025
+      # - 8025:8025
+    networks:
+      - catalogue_apprentissage_network
+    environment:
+      - MP_WEBROOT=smtp
+      - MP_DATABASE=/data/mailpit.db
+      - TZ=Europe/Paris
+
+
 volumes:
   catalogue_apprentissage_data_elasticsearch:
     driver: local
@@ -85,3 +105,6 @@ volumes:
   catalogue_apprentissage_server_node_modules:
     driver: local
     name: catalogue_apprentissage_server_node_modules
+  catalogue_apprentissage_data_smtp:
+    driver: local
+    name: catalogue_apprentissage_data_smtp
