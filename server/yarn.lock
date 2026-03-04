@@ -3,7 +3,7 @@
 
 __metadata:
   version: 8
-  cacheKey: 10c0
+  cacheKey: 10
 
 "@apidevtools/json-schema-ref-parser@npm:^11.5.5":
   version: 11.9.3
@@ -225,7 +225,7 @@ __metadata:
 "@babel/runtime@npm:^7.28.4":
   version: 7.28.6
   resolution: "@babel/runtime@npm:7.28.6"
-  checksum: 10c0/358cf2429992ac1c466df1a21c1601d595c46930a13c1d4662fde908d44ee78ec3c183aaff513ecb01ef8c55c3624afe0309eeeb34715672dbfadb7feedb2c0d
+  checksum: 10/fbcd439cb74d4a681958eb064c509829e3f46d8a4bfaaf441baa81bb6733d1e680bccc676c813883d7741bcaada1d0d04b15aa320ef280b5734e2192b50decf9
   languageName: node
   linkType: hard
 
@@ -1726,7 +1726,7 @@ __metadata:
     follow-redirects: "npm:^1.15.11"
     form-data: "npm:^4.0.5"
     proxy-from-env: "npm:^1.1.0"
-  checksum: 10c0/abf468c34f2d145f3dc7dbc0f1be67e520630624307bda69a41bbe8d386bd672d87b4405c4ee77f9ff54b235ab02f96a9968fb00e75b13ce64706e352a3068fd
+  checksum: 10/db726d09902565ef9a0632893530028310e2ec2b95b727114eca1b101450b00014133dfc3871cffc87983fb922bca7e4874d7e2826d1550a377a157cdf3f05b6
   languageName: node
   linkType: hard
 
@@ -1791,7 +1791,7 @@ __metadata:
 "bn.js@npm:^4.0.0":
   version: 4.12.3
   resolution: "bn.js@npm:4.12.3"
-  checksum: 10c0/53b6a4db8a583abd2522eacd480fece26fe6c4d8d35d03e5e11e15cb0873a3044eb4e3d1f9fef56f47eb008219e99ba5b620c26f57db49a687c6ab2cf848d50b
+  checksum: 10/57ed5a055f946f3e009f1589c45a5242db07f3dddfc72e4506f0dd9d8b145f0dbee4edabc2499288f3fc338eb712fb96a1c623a2ed2bcd49781df1a64db64dd1
   languageName: node
   linkType: hard
 
@@ -2008,7 +2008,7 @@ __metadata:
   resolution: "busboy@npm:1.6.0"
   dependencies:
     streamsearch: "npm:^1.1.0"
-  checksum: 10c0/fa7e836a2b82699b6e074393428b91ae579d4f9e21f5ac468e1b459a244341d722d2d22d10920cdd849743dbece6dca11d72de939fb75a7448825cf2babfba1f
+  checksum: 10/bee10fa10ea58e7e3e7489ffe4bda6eacd540a17de9f9cd21cc37e297b2dd9fe52b2715a5841afaec82900750d810d01d7edb4b2d456427f449b92b417579763
   languageName: node
   linkType: hard
 
@@ -2598,7 +2598,7 @@ __metadata:
     inherits: "npm:^2.0.3"
     readable-stream: "npm:^3.0.2"
     typedarray: "npm:^0.0.6"
-  checksum: 10c0/29565dd9198fe1d8cf57f6cc71527dbc6ad67e12e4ac9401feb389c53042b2dceedf47034cbe702dfc4fd8df3ae7e6bfeeebe732cc4fa2674e484c13f04c219a
+  checksum: 10/250e576d0617e7c58e1c4b2dd6fe69560f316d2c962a409f9f3aac794018499ddb31948b1e4296f217008e124cd5d526432097745157fe504b5d9f3dc469eadb
   languageName: node
   linkType: hard
 
@@ -5674,7 +5674,7 @@ __metadata:
 "lodash@npm:4.17.23":
   version: 4.17.23
   resolution: "lodash@npm:4.17.23"
-  checksum: 10c0/1264a90469f5bb95d4739c43eb6277d15b6d9e186df4ac68c3620443160fc669e2f14c11e7d8b2ccf078b81d06147c01a8ccced9aab9f9f63d50dcf8cace6bf6
+  checksum: 10/82504c88250f58da7a5a4289f57a4f759c44946c005dd232821c7688b5fcfbf4a6268f6a6cdde4b792c91edd2f3b5398c1d2a0998274432cff76def48735e233
   languageName: node
   linkType: hard
 
@@ -6126,7 +6126,7 @@ __metadata:
     "@babel/runtime": "npm:^7.28.4"
     lodash: "npm:^4.17.21"
     mjml-core: "npm:4.18.0"
-  checksum: 10c0/a71797684c6d23495bcff99f804aff223c78341d92056ad468f2cd04daf663ba58ee9b3f8c8be387bb51db17699789fa3d7fb72ab174466435bb8a58ba0c247c
+  checksum: 10/94e548f63abab0574c4a9940959fc71732edfac7dc62aa3065ab87b8ec32b81f3b283cd3b1e17a191449d10600e7b87fc3f65aded4a4737113577e4f26740cf2
   languageName: node
   linkType: hard
 
@@ -6137,7 +6137,7 @@ __metadata:
     "@babel/runtime": "npm:^7.28.4"
     lodash: "npm:^4.17.21"
     mjml-core: "npm:4.18.0"
-  checksum: 10c0/b83ccfbd3957b72a022b47f53d02d42b88312a8cea63a3832681f426c5d4aef539f5138130ed4d256e3ca3d3a950ae80e44f2a2ffbfcd03ef806768bab241f38
+  checksum: 10/141d23937aceebeec89a13c3c59fa2ba1563ecaa071cc119204aee40f50502f382a2a49801a4aaf4acc430e7ebf2fcc69af4ae93a69730861f9a4c321f4efa9b
   languageName: node
   linkType: hard
 
@@ -6148,7 +6148,7 @@ __metadata:
     "@babel/runtime": "npm:^7.28.4"
     lodash: "npm:^4.17.21"
     mjml-core: "npm:4.18.0"
-  checksum: 10c0/6975b8bf95532bb09de0fd9c8310ec2218470eafe8590f670654ab6fc999dc0a6585dc2c75e76a6e7f2163e6356080e6c6c465af81f368dbe814084fb1f91660
+  checksum: 10/0fd36c33207d2c3e94b5ec2a5646abeae680db0521aed495c55859fe31cc8aaeca9524b0ef3630ee1ff2eb6ddcb135f1e5a38a2fdf27be94d2c0d7eae5069a42
   languageName: node
   linkType: hard
 
@@ -6159,7 +6159,7 @@ __metadata:
     "@babel/runtime": "npm:^7.28.4"
     lodash: "npm:^4.17.21"
     mjml-core: "npm:4.18.0"
-  checksum: 10c0/73df1f5de87285a2093ac960ffb16fea7161566b132fb7508e88e07de6b8b6540ffdfa7f0c4f59a6a21e1a733688e061e159e2733ca20c1b18e39008018e4099
+  checksum: 10/9347e7860cd7f5ad5969dded9aae3fe513865fb5ae2d3ee717a77989e622449394aa4e2f360ff148941f2f622c8caebdfceb86b5441c347ece06e6ec8cbabfa3
   languageName: node
   linkType: hard
 
@@ -6181,7 +6181,7 @@ __metadata:
     yargs: "npm:^17.7.2"
   bin:
     mjml-cli: bin/mjml
-  checksum: 10c0/2d5d24e55ede7d27bf4f09d5c83ec2f2d109eb1b8abd3f0dd96add876c2fb69baa55c7710e959de540d4065e3224cf291aa04932d4aaeccf03c3dc958cf4550a
+  checksum: 10/4f9029dc15debc32b71bb5b6195762a439acb4ac04d6ff36dab57a6c062ebfe91bc84c8bebd9b954be5d9469d60983f88156a7d653cf483876986dadf9644d18
   languageName: node
   linkType: hard
 
@@ -6192,7 +6192,7 @@ __metadata:
     "@babel/runtime": "npm:^7.28.4"
     lodash: "npm:^4.17.21"
     mjml-core: "npm:4.18.0"
-  checksum: 10c0/50070a99236d9bc3fe9d4f53999bf1c395c49461871401a2bd4f25b5af92304d3bb74b1bdeac6341c4ee406c6fae13d57d8f1229742a987a47c0faaf727be43c
+  checksum: 10/7e246b9890f9cd07a6c89ff202eb8e500186e74daf226e606a0fec01b8d6c7fcabf2ad0dfdfa8bd134accd2190ff190c2185281611a37519f193fd354b6e1873
   languageName: node
   linkType: hard
 
@@ -6210,7 +6210,7 @@ __metadata:
     mjml-migrate: "npm:4.18.0"
     mjml-parser-xml: "npm:4.18.0"
     mjml-validator: "npm:4.18.0"
-  checksum: 10c0/793824741a95a4bf174c189e9afbcac7b65a4ed5e801099a1f7c9ba7ea238d6259ea92c89ec62a7173b7aaa430281fe12328dbf05938db6dca32bfce0fcf3abb
+  checksum: 10/f0e848f00baeebf14e4a479d3aed942eb687ebacdbaf7b08e2b93e2367f2b1d2149224c9f0815d708f3597827fcb5fd35605b448a96ad176fd8d8ab1f982d60d
   languageName: node
   linkType: hard
 
@@ -6221,7 +6221,7 @@ __metadata:
     "@babel/runtime": "npm:^7.28.4"
     lodash: "npm:^4.17.21"
     mjml-core: "npm:4.18.0"
-  checksum: 10c0/89cb7e902d8cbec5082a0d65f9aaf621d97587909a642fcebf597aab1750d614ae951c006a268d5f8c451e2a01356029cdd43b3d28c6edb770185c5f16e271ab
+  checksum: 10/148d8cc56e8a980a66159cfcbe3c0364a2e3faf87060b37bd44867ffc32367f7286de84ce7edd315b9add53171414a0296456b3fc0088e01adc3decfeec69780
   languageName: node
   linkType: hard
 
@@ -6232,7 +6232,7 @@ __metadata:
     "@babel/runtime": "npm:^7.28.4"
     lodash: "npm:^4.17.21"
     mjml-core: "npm:4.18.0"
-  checksum: 10c0/bd2f7d348b3b69ef00a68a70ef9c0dd2e8793bd689bf9efdb659680d3f03cf3e52f2edbbc80ab3c290c738e0fe772cd90247490c9ac84a240e7168ef4a61f5d8
+  checksum: 10/5346ac84aa69b4232d278968db0a1e739c1b2c7d03e700db5e0d1a8130249ed343fa2c7db58798538082422324091c3d2aee738e923b82d8855c435d99814b81
   languageName: node
   linkType: hard
 
@@ -6243,7 +6243,7 @@ __metadata:
     "@babel/runtime": "npm:^7.28.4"
     lodash: "npm:^4.17.21"
     mjml-core: "npm:4.18.0"
-  checksum: 10c0/d9e7ca69a01140c6b0d0cd215c66ccd6d6a145150121d5f696df26df7677b9b2a9aaf9008d5c0feeaf03f78ea3c0dd7f2580a85629fe2ba2527d299abd150496
+  checksum: 10/b153bb54bc6499971849d26dc307dae09aa34e79db01f49e302158e31a6d841de195fdee6666de992e0b401b822291a552ea334cb5a3ca7824df68cb601acdb8
   languageName: node
   linkType: hard
 
@@ -6254,7 +6254,7 @@ __metadata:
     "@babel/runtime": "npm:^7.28.4"
     lodash: "npm:^4.17.21"
     mjml-core: "npm:4.18.0"
-  checksum: 10c0/a2dcfb620d12ec4bff019137546e42f69374b729e29d1f412c422f500b8955a15bb4c9b00f53641aef0c2a61464b7ca7a13fef03fc85f0dfd1dae26b52723a2d
+  checksum: 10/8831ddcffd9c3afba11709b9fe76581f42609d47f713b8008dde527ee3a8b2b2ce45d7848c56b1a2816f0df91b148d84a6ddb0eebd0113d2a4d1f71ade54c23e
   languageName: node
   linkType: hard
 
@@ -6265,7 +6265,7 @@ __metadata:
     "@babel/runtime": "npm:^7.28.4"
     lodash: "npm:^4.17.21"
     mjml-core: "npm:4.18.0"
-  checksum: 10c0/932c66f65122faab0b9736ef7e883c84aaf3dd636d320628bdec142048fa9a1271110a228cdd00a29e4549c6cf93ddd079377eb8f13ca7fef37732de7ad18cb2
+  checksum: 10/2435b44c803f357d144509e226fa71d8575e22d5307aff97459c9152b8be7b9989c8c6641200b32f7199c1b43dc982ef97972a8c05549d9b6b10091f54d7cb3b
   languageName: node
   linkType: hard
 
@@ -6276,7 +6276,7 @@ __metadata:
     "@babel/runtime": "npm:^7.28.4"
     lodash: "npm:^4.17.21"
     mjml-core: "npm:4.18.0"
-  checksum: 10c0/1f7da56c7c7e2aee9ff9e50e7f2b9a24c741c8cae89b0b8dd251449ab5302bb47cde58fbc22cec239b7c9e41bcc6a442aa5273e051ddc2be868e6bd28790413e
+  checksum: 10/4e18cc47c2af2b55b3d1d2a1826a13cc996b3c36bff8f34ba3f70bc4b31cfa90b77d2de89cf48f9073da1f7cd3a93b3b219516146b78badc43d1932f963b8cc0
   languageName: node
   linkType: hard
 
@@ -6287,7 +6287,7 @@ __metadata:
     "@babel/runtime": "npm:^7.28.4"
     lodash: "npm:^4.17.21"
     mjml-core: "npm:4.18.0"
-  checksum: 10c0/23fc72f3fd3afec6d74ee1a1c9126e4524b0084c67777de97775c68f6cd09f3cb5f68632236dacae08ec2b6369c121bb6a9f3254077323ad7762420093ab1e4c
+  checksum: 10/ba1dd6eefe79387acb1c33be5170dbd4a18a499d005bfa81565763153f8bcd23d361d61b221de8951f8408fc01ce9710a1211e090db1d6f18f8b9ac762f73873
   languageName: node
   linkType: hard
 
@@ -6298,7 +6298,7 @@ __metadata:
     "@babel/runtime": "npm:^7.28.4"
     lodash: "npm:^4.17.21"
     mjml-core: "npm:4.18.0"
-  checksum: 10c0/da3498381c7dac76f9f23089617571a0f5477e9a6c0d832bbd4ae4c90fb27dc24e301aa4dfe5d82b326d4278a3c12e11085d35b6b7d6d9ce85185b68c57ce5a8
+  checksum: 10/0a3807072e0c7a32db8372cfeb207d12213ac60e03fd9a569b3b08f5c2783b3c7d99671c4266a27a5146df05375213e1b2333ccae7833d5ff12afa8a9d2a88b6
   languageName: node
   linkType: hard
 
@@ -6309,7 +6309,7 @@ __metadata:
     "@babel/runtime": "npm:^7.28.4"
     lodash: "npm:^4.17.21"
     mjml-core: "npm:4.18.0"
-  checksum: 10c0/4d174de5c00d168272fa628e84ac1d0c8f9a9dcadc3ea7651a487068b111470c8ffac88745f93bd1f950163306787ff9cdc31b0e1c9bd77f7bb8cd4db2a06ec2
+  checksum: 10/a7ef5d0f444b14303f12d17af97282122917e62a260e01e6f3957dfef7de563cdd20b27bbbecee7f99de47ae109233f8c723db17043f1224c35e5a0326792cdc
   languageName: node
   linkType: hard
 
@@ -6320,7 +6320,7 @@ __metadata:
     "@babel/runtime": "npm:^7.28.4"
     lodash: "npm:^4.17.21"
     mjml-core: "npm:4.18.0"
-  checksum: 10c0/924c6880659ddd29df5ff080d397efe7bc8a0d4259176874b0d3d8fc141c8bb4215a1b70b065bc6cbfdb6b4ddd18825c93918d2b83bb1157aa61605f01da4f51
+  checksum: 10/16c56f89cc9b9dfc00c99a4cd7c1411ea9a4b869119ab7c4280e97a2df2aecb509d07a5c220e5f621cf8dd9935843222bb76bede9f636830a4a896ee3912ec1c
   languageName: node
   linkType: hard
 
@@ -6331,7 +6331,7 @@ __metadata:
     "@babel/runtime": "npm:^7.28.4"
     lodash: "npm:^4.17.21"
     mjml-core: "npm:4.18.0"
-  checksum: 10c0/ee5de40f5255beafae0f8cff3248008e3ca497b40c9ac2ab19449a568234e19b53f9cb193c648034ba45b13f52ccaac1f3fba1ea56488762737c55e51fb95b35
+  checksum: 10/70082908fb1c7d51a198b96532e92041d64dac50cf96c8aabe90c5f47cf9f211c3535e270f3d0693faeb49824bd413b422e321f0ac76e95db8966368cb0cf2dc
   languageName: node
   linkType: hard
 
@@ -6342,7 +6342,7 @@ __metadata:
     "@babel/runtime": "npm:^7.28.4"
     lodash: "npm:^4.17.21"
     mjml-core: "npm:4.18.0"
-  checksum: 10c0/0473d89415ed6f65a9b5642cf03a992e9bad935eeb45e5c5a65451b2a7e730dcf1e6c9c1210a6768f45c6735cf876bdf33331a7bc1c0df794132adee8ead0f96
+  checksum: 10/431454c2cababe5743475bd470367a9912366f5da6307efc871de14f0aea7f75829f6b0ee775664fedd4d3719c2698527cda0aacd9ede0c97737bceef8bd3349
   languageName: node
   linkType: hard
 
@@ -6358,7 +6358,7 @@ __metadata:
     yargs: "npm:^17.7.2"
   bin:
     migrate: lib/cli.js
-  checksum: 10c0/e15fc64e0f1f9cfa271430f587859fd54f39c41f63643ced524c79017d52d17afae7b11b40e8fc534a57c2f1194f175f7410a5521b648c3388c1250ee6d456bf
+  checksum: 10/7604317170d7e5f7dd59c2a33a969a21372abc532fa7a5f3c599cc1c729bda6f409cea343a1292fa288703f4386a221854127b9f6050ad25e5637e6484362167
   languageName: node
   linkType: hard
 
@@ -6369,7 +6369,7 @@ __metadata:
     "@babel/runtime": "npm:^7.28.4"
     lodash: "npm:^4.17.21"
     mjml-core: "npm:4.18.0"
-  checksum: 10c0/0c5e997b0a5db5beb5bf2dcb7fa1f2fb6fcebf2b2d1891c7a806507066ee8cc635db6662940ce391923a3c7ba2c3ed9898476da0fc991c2a0aba81f8ef23dd51
+  checksum: 10/26e0d84254ba80945973e55bf0172dac88841ac1e3e2ed5e05ef75e0a283ede219cab5b17668ecc28a7fbaa97e693f4cd9a756faeb720dae1f4472daaf54f682
   languageName: node
   linkType: hard
 
@@ -6381,7 +6381,7 @@ __metadata:
     detect-node: "npm:2.1.0"
     htmlparser2: "npm:^9.1.0"
     lodash: "npm:^4.17.21"
-  checksum: 10c0/7a939158d18b2245b43eaf5e6f84e09d5ac9406e3e26ff0ef2fadb274d19c731452cb25ad2802ca7b844e76722ea403e3badec922b12e369db91bb9f7a7d0e65
+  checksum: 10/1ef8041f66345532f0de326692b4d5869ffd16190bd156ac5d341452442c74b08e930e4aa050629a97c28e1354e55ec8def684f9cc818d30a612bf4e9a5b6e07
   languageName: node
   linkType: hard
 
@@ -6415,7 +6415,7 @@ __metadata:
     mjml-table: "npm:4.18.0"
     mjml-text: "npm:4.18.0"
     mjml-wrapper: "npm:4.18.0"
-  checksum: 10c0/0a80d1fbf194954e1b5f789312106b28372f918d4a06528155a0f175fd0081b7146d5fc05490977e443deb2d0f559146148dd602c25f65ea41b830227df08734
+  checksum: 10/84e996c6388707de581bdc63b881e9b1e3233c68ad7c172f5eed3f568663c7aa15a184f3ac6dd6f41f62d5b157846775a64ef48cdb4370f8f5f10216d2e40df7
   languageName: node
   linkType: hard
 
@@ -6426,7 +6426,7 @@ __metadata:
     "@babel/runtime": "npm:^7.28.4"
     lodash: "npm:^4.17.21"
     mjml-core: "npm:4.18.0"
-  checksum: 10c0/53b36ce1342ffe01847016a56fee984f77d4baec0e3ea6b024da84a0e40e1565a93f53c526d0269d23b77af4897584f512585abbd0e62c0b3e5b632df4edb75d
+  checksum: 10/b2b1d8db92a5a3c1336b5558d3876bafa0671fbc2ca6321c44b27bc280620f0140e95943f18f33a96ea5291738e26158339be7d68adaf4df15b5a7a86a73ff90
   languageName: node
   linkType: hard
 
@@ -6437,7 +6437,7 @@ __metadata:
     "@babel/runtime": "npm:^7.28.4"
     lodash: "npm:^4.17.21"
     mjml-core: "npm:4.18.0"
-  checksum: 10c0/84ec3b2077dc777f42263d2099a6168498dd706d21ce63f51148d8f7212ee82d8a0c22671a3597d45f49b90bdb05f6bf70776a539af84876b23af37ad17c4647
+  checksum: 10/3da4864a64e9e2dbc7737cbd26a012ef22ada309192915aeec6cf0ada41ee7a8749f73fccb79ec1e615a49104295340c43136d8f6817aa8187c263b86d6988d1
   languageName: node
   linkType: hard
 
@@ -6448,7 +6448,7 @@ __metadata:
     "@babel/runtime": "npm:^7.28.4"
     lodash: "npm:^4.17.21"
     mjml-core: "npm:4.18.0"
-  checksum: 10c0/2db171577b02c5f5e0c2504e667e3970c6b6793541809286b27999cb4c31bc576c5b5c0fdcf0dbf4f2dd8e58dbd867ddf24b6750a2fe8ff3ff0cb73264f9b76b
+  checksum: 10/f520f7a6a15da5649c6a42de1fe9b736ff057b03d16043c4b945b5f45ed506d1735642981868de0464c37b641df2b70dac51c8077af8e993ab3f26c56b69ac6e
   languageName: node
   linkType: hard
 
@@ -6459,7 +6459,7 @@ __metadata:
     "@babel/runtime": "npm:^7.28.4"
     lodash: "npm:^4.17.21"
     mjml-core: "npm:4.18.0"
-  checksum: 10c0/1b04a2687b5a6eaaa8c10e9d60dfdd9d5a3621f643b7e38a8f92c2f0c84c857af8e9f95161c431fcc5bd6942b85e8d1d5225487075b7b4f7653033501e7797d4
+  checksum: 10/4aa0766e78fc76be521d92bc5307d37c8c9518da06a515251bc2de4cc5742e53c16d913480d8339183f6d525d84ed0b9b28cd8a407eeda03614cb040269bc241
   languageName: node
   linkType: hard
 
@@ -6470,7 +6470,7 @@ __metadata:
     "@babel/runtime": "npm:^7.28.4"
     lodash: "npm:^4.17.21"
     mjml-core: "npm:4.18.0"
-  checksum: 10c0/b9b2c1034384a8b40d69d3ac91b21bb4bb2917e96ea921f031f9867e0d9befa052198880dd39d7a8804051611ecd82b54cb6f55097e2f2ad07eac098546dc346
+  checksum: 10/e242fbe7b4d17357ddc805baea135300928583bcdd57c9e5688fd2fd2b04c473f8f146ecea85a2e4e83efdfc157f4eba365f0cc992896211e0ec3c966fef5ee2
   languageName: node
   linkType: hard
 
@@ -6481,7 +6481,7 @@ __metadata:
     "@babel/runtime": "npm:^7.28.4"
     lodash: "npm:^4.17.21"
     mjml-core: "npm:4.18.0"
-  checksum: 10c0/60c49785985d379421d719745eac0b02ca5e61f534f68816c4b99f47a60ec733564c423ea6a02f1830f1bafed226feb0c747039e0d842d3ee5ea14411d27195a
+  checksum: 10/6b5d3232c54bb240fefbd7841ea625dccede2e2bf8c0c39a6d15445c06e8b116f744ece7da3fea8b1df68ae5959d3f7176d966e7a8df0b9e5bc254aa40c1f93d
   languageName: node
   linkType: hard
 
@@ -6490,7 +6490,7 @@ __metadata:
   resolution: "mjml-validator@npm:4.18.0"
   dependencies:
     "@babel/runtime": "npm:^7.28.4"
-  checksum: 10c0/b38f0bb1c203e632bd45a822e00342226a97d0e845db88916db093d25441c0ae4f3d266c69f0b0758b49a0b7f2982f865a60bd8b9965e8493268d01db6a9b5de
+  checksum: 10/ceffc44afd9510a59090ff02a216052559f71c046402737712d3f616d034f0edc713c48db88fc36c092e3bc4d8da42f284e823546eb1f464626be2d88933d99f
   languageName: node
   linkType: hard
 
@@ -6502,7 +6502,7 @@ __metadata:
     lodash: "npm:^4.17.21"
     mjml-core: "npm:4.18.0"
     mjml-section: "npm:4.18.0"
-  checksum: 10c0/094f9e3d9554c143bffc64020f6a4df33e52adfe408f743f47f9a60f85499629d97c587b161b8458732c7c4bb828c9a24c6953f0c7a899c074d3fc40203aeb6a
+  checksum: 10/6745b43a742a82bc2e25e06814be41788c5d0dfeb1e8d8bd216997ec67bbec1b4534c20c3d737ae48edfb4cf8b41348ff079b47028be572e78e3534053b89b39
   languageName: node
   linkType: hard
 
@@ -6518,7 +6518,7 @@ __metadata:
     mjml-validator: "npm:4.18.0"
   bin:
     mjml: bin/mjml
-  checksum: 10c0/fa9ef08a19ba68b4b89bb91d62318176213559b2d9854e37b7cdf0c0850b10b87e6e86b6e331220bdfb9c4a6f28235a0c3a52a6893c6cc71b4cddfa1b7eb1cc0
+  checksum: 10/2be22b2cfdf152b248d8509f09a1b71ec46e793511798badba979db9d4ac9ac9f98940a759f587412c0f9658fc0cb8908b18bb2c3a9e9fc74b783e0595725a0a
   languageName: node
   linkType: hard
 
@@ -6852,7 +6852,7 @@ __metadata:
     mquery: "npm:6.0.0"
     ms: "npm:2.1.3"
     sift: "npm:17.1.3"
-  checksum: 10c0/bdc594cc823e3480259c8666e4af896b862318d586bac7b9434ce52b1896020e9da099288c9567bc005ab7e3abc2d502e13d1230934e9888f2db6f09ff962c03
+  checksum: 10/4d37c944646db4086f5316d4308f6918068e9be60fa096e92d444cea912b84a44d59629aa194395afbd9f9fd7bc5f80c8e80c5405d98d102d44f91ca9f0f9cb1
   languageName: node
   linkType: hard
 
@@ -6899,7 +6899,7 @@ __metadata:
     busboy: "npm:^1.6.0"
     concat-stream: "npm:^2.0.0"
     type-is: "npm:^1.6.18"
-  checksum: 10c0/5b374b9a3dbdfe28bbcacbc070cfa8d81a94f74d2fbf979d96802750b7a463ea54c996faee9d25f323a0c67f55e4f82b2b5f034d91e174daf7bcfb7e0f52c165
+  checksum: 10/7677636ed84ebd12d67849887ab69c982a7043c1ed0d209e512500f8cff73474601fc0b6922ba07dfd872641822788d323ab795e53f6d0910a5f00b10e07b498
   languageName: node
   linkType: hard
 
@@ -7065,7 +7065,7 @@ __metadata:
 "nodemailer@npm:^7.0.11":
   version: 7.0.13
   resolution: "nodemailer@npm:7.0.13"
-  checksum: 10c0/b26aa5b9fa4a033bbc1e1c16ef75ee2a9c8641fd290c00a8361d6a251b3c1b8bad545a23efa627f59cb266340a448891ea8aa49d8a9307c767b8505219d95079
+  checksum: 10/4ae37bfb6896f1555de150c1098a7c1b28eb1da240a4c7adede81a8af0dcc184298cfbf804930599c076ea574428e0c18c6b28f0dc2072cebb30c1da5fd0b688
   languageName: node
   linkType: hard
 
@@ -8608,7 +8608,7 @@ __metadata:
 "streamsearch@npm:^1.1.0":
   version: 1.1.0
   resolution: "streamsearch@npm:1.1.0"
-  checksum: 10c0/fbd9aecc2621364384d157f7e59426f4bfd385e8b424b5aaa79c83a6f5a1c8fd2e4e3289e95de1eb3511cb96bb333d6281a9919fafce760e4edb35b2cd2facab
+  checksum: 10/612c2b2a7dbcc859f74597112f80a42cbe4d448d03da790d5b7b39673c1197dd3789e91cd67210353e58857395d32c1e955a9041c4e6d5bae723436b3ed9ed14
   languageName: node
   linkType: hard
 
@@ -8842,7 +8842,7 @@ __metadata:
     minipass: "npm:^7.1.2"
     minizlib: "npm:^3.1.0"
     yallist: "npm:^5.0.0"
-  checksum: 10c0/e870beb1b2477135ca2abe86b2d18f7b35d0a4e3a37bbc523d3b8f7adca268dfab543f26528a431d569897f8c53a7cac745cdfbc4411c2f89aeeacc652b81b0a
+  checksum: 10/1213cdde9c22d6acf8809ba5d2a025212ce3517bc99c4a4c6981b7dc0489bf3b164db9c826c9517680889194c9ba57448c8ff0da35eca9a60bb7689bf0b3897d
   languageName: node
   linkType: hard
 
@@ -9090,7 +9090,7 @@ __metadata:
 "undici@npm:^6.21.1":
   version: 6.23.0
   resolution: "undici@npm:6.23.0"
-  checksum: 10c0/d846b3fdfd05aa6081ba1eab5db6bbc21b283042c7a43722b86d1ee2bf749d7c990ceac0c809f9a07ffd88b1b0f4c0f548a8362c035088cb1997d63abdda499c
+  checksum: 10/56950995e7b628e62c996430445d17995ca9b70f6f2afe760a63da54205660d968bd08f0741b6f4fb008f40aa35c69cce979cd96ced399585d8c897a76a4f1d1
   languageName: node
   linkType: hard
 
