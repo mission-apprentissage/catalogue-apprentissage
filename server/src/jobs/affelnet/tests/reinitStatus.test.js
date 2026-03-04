@@ -8,6 +8,7 @@ const {
   lastHistoryIsEnAttenteBeforeDate,
 } = require("../reinitStatus/controller.js");
 const { AFFELNET_STATUS } = require("../../../constants/status.js");
+const { setupBeforeAll } = require("../../../../tests/helpers/setup.js");
 
 // TODO : Tests en échec car updated_at est géré automatiquement par timestamps: true sur le schéma updateHistory. (pas moyen de régler ça non complétion automatique)
 
@@ -21,6 +22,7 @@ describe(__filename, () => {
   };
 
   before(async () => {
+    setupBeforeAll();
     // Connection to test collection
     await connectToMongoForTests();
   });

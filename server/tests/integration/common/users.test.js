@@ -3,13 +3,15 @@ const integrationTests = require("../../utils/integrationTests");
 const users = require("../../../src/common/components/users");
 const { setupBeforeAll } = require("../../helpers/setup");
 const { User } = require("../../../src/common/models");
+const { connectToMongoForTests } = require("../../utils/testUtils");
 
 integrationTests(__filename, () => {
   before(async () => {
     setupBeforeAll();
+    await connectToMongoForTests();
   });
 
-  afterEach(async () => {
+  beforeEach(async () => {
     await User.deleteMany({});
   });
 

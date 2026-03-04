@@ -7,6 +7,10 @@ const { connectToMongoForTests } = require("../../utils/testUtils");
 httpTests(__filename, ({ startServer }) => {
   before(async () => {
     setupBeforeAll();
+    await connectToMongoForTests();
+  });
+
+  beforeEach(async () => {
     await Formation.deleteMany({});
     await User.deleteMany({});
   });

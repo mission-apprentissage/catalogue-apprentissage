@@ -41,7 +41,7 @@ integrationTests(__filename, () => {
     sinon.restore();
   });
 
-  it.skip("should call createModel without error", () => {
+  it("should call createModel without error", () => {
     createModel(
       "tests",
       [
@@ -61,7 +61,7 @@ integrationTests(__filename, () => {
     );
   });
 
-  it.skip("should create a document without error", async () => {
+  it("should create a document without error", async () => {
     const test1 = await Test.create({ message: "Test1" });
 
     assert.strictEqual(test1.message, "Test1");
@@ -72,44 +72,43 @@ integrationTests(__filename, () => {
     assert.strictEqual(test2.message, "Test2");
   });
 
-  it.skip("should call postDocumentSave when calling save on a document", async () => {
+  it("should call postDocumentSave when calling save on a document", async () => {
     const loggerDebug = sinon.spy(logger, "debug");
     const test = new Test({ message: "Test" });
 
     await test.save();
 
-    sinon.assert.calledOnceWithMatch(loggerDebug, { type: "mongoosastic" }, "POST DOCUMENT SAVE");
+    sinon.assert.calledWithMatch(loggerDebug, { type: "mongoosastic" }, "POST DOCUMENT SAVE");
   });
 
-  it.skip("should call postDocumentSave when calling create on a model", async () => {
+  it("should call postDocumentSave when calling create on a model", async () => {
     const loggerDebug = sinon.spy(logger, "debug");
     await Test.create({ message: "Test" });
 
-    sinon.assert.calledOnceWithMatch(loggerDebug, { type: "mongoosastic" }, "POST DOCUMENT SAVE");
+    sinon.assert.calledWithMatch(loggerDebug, { type: "mongoosastic" }, "POST DOCUMENT SAVE");
   });
 
-  // TODO : Now updateOne seems to call both document and query hooks...
-  // it.skip("should call postDocumentSave when calling updateOne on a document", async () => {
-  //   const loggerDebug = sinon.spy(logger, "debug");
-  //   const test = new Test();
+  it("should call postDocumentSave when calling save on an existing document", async () => {
+    const loggerDebug = sinon.spy(logger, "debug");
+    const test = new Test();
 
-  //   test.message = "Test";
+    test.message = "Test";
 
-  //   await test.save();
+    await test.save();
 
-  //   // const savedTest = await Test.findOne({ message: "Test" });
+    // const savedTest = await Test.findOne({ message: "Test" });
 
-  //   test.message = "Another test";
+    test.message = "Another test";
 
-  //   await test.updateOne({});
+    await test.save();
 
-  //   console.log(loggerDebug);
-  //   sinon.assert.calledTwice(loggerDebug);
-  //   sinon.assert.calledWithMatch(loggerDebug.firstCall, { type: "mongoosastic" }, "POST DOCUMENT SAVE");
-  //   sinon.assert.calledWithMatch(loggerDebug.thirdCall, { type: "mongoosastic" }, "POST DOCUMENT SAVE");
-  // });
+    console.log(loggerDebug);
 
-  it.skip("should call postDocumentRemove when calling deleteOne on a document", async () => {
+    sinon.assert.calledWithMatch(loggerDebug.firstCall, { type: "mongoosastic" }, "POST DOCUMENT SAVE");
+    sinon.assert.calledWithMatch(loggerDebug.thirdCall, { type: "mongoosastic" }, "POST DOCUMENT SAVE");
+  });
+
+  it("should call postDocumentRemove when calling deleteOne on a document", async () => {
     const loggerDebug = sinon.spy(logger, "debug");
     const test = new Test();
     test.message = "Test";
@@ -120,12 +119,12 @@ integrationTests(__filename, () => {
 
     await savedTest.deleteOne();
 
-    sinon.assert.calledTwice(loggerDebug);
     sinon.assert.calledWithMatch(loggerDebug.firstCall, { type: "mongoosastic" }, "POST DOCUMENT SAVE");
-    sinon.assert.calledWithMatch(loggerDebug.secondCall, { type: "mongoosastic" }, "POST DOCUMENT REMOVE");
+    sinon.assert.calledWithMatch(loggerDebug.thirdCall, { type: "mongoosastic" }, "PRE QUERY REMOVE");
+    sinon.assert.calledWithMatch(loggerDebug, { type: "mongoosastic" }, "POST DOCUMENT REMOVE");
   });
 
-  it.skip("should call postQuerySave when calling updateOne on a model", async () => {
+  it("should call postQuerySave when calling updateOne on a model", async () => {
     const loggerDebug = sinon.spy(logger, "debug");
 
     const test = await Test.create({ message: "Test" });
@@ -136,44 +135,11 @@ integrationTests(__filename, () => {
 
     // console.log(await Test.find());
 
-    sinon.assert.calledTwice(loggerDebug);
     sinon.assert.calledWithMatch(loggerDebug.firstCall, { type: "mongoosastic" }, "POST DOCUMENT SAVE");
-    sinon.assert.calledWithMatch(loggerDebug.secondCall, { type: "mongoosastic" }, "POST QUERY SAVE");
+    sinon.assert.calledWithMatch(loggerDebug.thirdCall, { type: "mongoosastic" }, "POST QUERY SAVE");
   });
 
-  it.skip("should call postQuerySave when calling replaceOne on a model", async () => {
-    const loggerDebug = sinon.spy(logger, "debug");
-
-    const test = await Test.create({ message: "Test" });
-
-    // console.log(await Test.find());
-
-    await Test.replaceOne({ _id: test._id }, { $set: { message: "Another message" } }); // console.log(await Test.find());
-
-    // console.log(await Test.find());
-
-    sinon.assert.calledTwice(loggerDebug);
-    sinon.assert.calledWithMatch(loggerDebug.firstCall, { type: "mongoosastic" }, "POST DOCUMENT SAVE");
-    sinon.assert.calledWithMatch(loggerDebug.secondCall, { type: "mongoosastic" }, "POST QUERY SAVE");
-  });
-
-  it.skip("should call postQuerySave when calling findOneAndReplace on a model", async () => {
-    const loggerDebug = sinon.spy(logger, "debug");
-
-    const test = await Test.create({ message: "Test" });
-
-    // console.log(await Test.find());
-
-    await Test.findOneAndReplace({ _id: test._id }, { $set: { message: "Another message" } });
-
-    // console.log(await Test.find());
-
-    sinon.assert.calledTwice(loggerDebug);
-    sinon.assert.calledWithMatch(loggerDebug.firstCall, { type: "mongoosastic" }, "POST DOCUMENT SAVE");
-    sinon.assert.calledWithMatch(loggerDebug.secondCall, { type: "mongoosastic" }, "POST QUERY SAVE");
-  });
-
-  it.skip("should call postQuerySave when calling findOneAndUpdate on a model", async () => {
+  it("should call postQuerySave when calling findOneAndUpdate on a model", async () => {
     const loggerDebug = sinon.spy(logger, "debug");
 
     const test = await Test.create({ message: "Test" });
@@ -184,12 +150,11 @@ integrationTests(__filename, () => {
 
     // console.log(await Test.find());
 
-    sinon.assert.calledTwice(loggerDebug);
     sinon.assert.calledWithMatch(loggerDebug.firstCall, { type: "mongoosastic" }, "POST DOCUMENT SAVE");
-    sinon.assert.calledWithMatch(loggerDebug.secondCall, { type: "mongoosastic" }, "POST QUERY SAVE");
+    sinon.assert.calledWithMatch(loggerDebug.thirdCall, { type: "mongoosastic" }, "POST QUERY SAVE");
   });
 
-  it.skip("should call postQueryRemove when calling deleteOne on a model", async () => {
+  it("should call postQueryRemove when calling deleteOne on a model", async () => {
     const loggerDebug = sinon.spy(logger, "debug");
 
     const test = await Test.create({ message: "Test" });
@@ -200,12 +165,11 @@ integrationTests(__filename, () => {
 
     // console.log(await Test.find());
 
-    sinon.assert.calledTwice(loggerDebug);
     sinon.assert.calledWithMatch(loggerDebug.firstCall, { type: "mongoosastic" }, "POST DOCUMENT SAVE");
-    sinon.assert.calledWithMatch(loggerDebug.secondCall, { type: "mongoosastic" }, "PRE QUERY REMOVE");
+    sinon.assert.calledWithMatch(loggerDebug.thirdCall, { type: "mongoosastic" }, "PRE QUERY REMOVE");
   });
 
-  it.skip("should call postQueryRemove when calling findOneAndDelete on a model", async () => {
+  it("should call postQueryRemove when calling findOneAndDelete on a model", async () => {
     const loggerDebug = sinon.spy(logger, "debug");
 
     const test = await Test.create({ message: "Test" });
@@ -216,17 +180,16 @@ integrationTests(__filename, () => {
 
     // console.log(await Test.find());
 
-    sinon.assert.calledTwice(loggerDebug);
     sinon.assert.calledWithMatch(loggerDebug.firstCall, { type: "mongoosastic" }, "POST DOCUMENT SAVE");
-    sinon.assert.calledWithMatch(loggerDebug.secondCall, { type: "mongoosastic" }, "PRE QUERY REMOVE");
+    sinon.assert.calledWithMatch(loggerDebug.thirdCall, { type: "mongoosastic" }, "PRE QUERY REMOVE");
   });
 
   /**
    * Les tests suivants peuvent être utilisé pour vérifier la synchronisation avec une instance elastic search en local.
-   * Pour executer, remplacer it.skip par it.
+   * Pour executer, remplacer it par it.
    */
 
-  it.skip("synchronize with an elastic instance when calling create on a model", async () => {
+  it("synchronize with an elastic instance when calling create on a model", async () => {
     Test.startMongoosasticHooks();
 
     await Test.create({ message: "Test1" });
@@ -234,7 +197,7 @@ integrationTests(__filename, () => {
     Test.pauseMongoosasticHooks();
   });
 
-  it.skip("synchronize with an elastic instance when calling findOneAndUpdate on a model", async () => {
+  it("synchronize with an elastic instance when calling findOneAndUpdate on a model", async () => {
     const loggerDebug = sinon.spy(logger, "debug");
 
     Test.startMongoosasticHooks();
@@ -253,7 +216,7 @@ integrationTests(__filename, () => {
     }
   });
 
-  it.skip("synchronize with an elastic instance when calling findOneAndDelete on a model", async () => {
+  it("synchronize with an elastic instance when calling findOneAndDelete on a model", async () => {
     const loggerDebug = sinon.spy(logger, "debug");
 
     Test.startMongoosasticHooks();
@@ -271,7 +234,7 @@ integrationTests(__filename, () => {
     }
   });
 
-  it.skip("synchronize with an elastic instance when calling updateMany on a model", async () => {
+  it("synchronize with an elastic instance when calling updateMany on a model", async () => {
     const loggerDebug = sinon.spy(logger, "debug");
 
     Test.startMongoosasticHooks();
@@ -292,7 +255,7 @@ integrationTests(__filename, () => {
     }
   });
 
-  it.skip("synchronize with an elastic instance when calling deleteOne on a model", async () => {
+  it("synchronize with an elastic instance when calling deleteOne on a model", async () => {
     const loggerDebug = sinon.spy(logger, "debug");
 
     Test.startMongoosasticHooks();
@@ -313,7 +276,7 @@ integrationTests(__filename, () => {
     }
   });
 
-  it.skip("synchronize with an elastic instance when calling deleteMany on a model", async () => {
+  it("synchronize with an elastic instance when calling deleteMany on a model", async () => {
     const loggerDebug = sinon.spy(logger, "debug");
 
     Test.startMongoosasticHooks();

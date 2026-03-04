@@ -5,10 +5,6 @@ const { hash } = require("../../../src/common/utils/sha512Utils");
 const { setupBeforeAll } = require("../../helpers/setup");
 
 httpTests(__filename, ({ startServer }) => {
-  before(async () => {
-    setupBeforeAll();
-  });
-
   it("Vérifie qu'on peut se connecter & que le mot de passe n'est pas rehashé si ok", async () => {
     const { httpClient, components } = await startServer();
     await components.users.createUser("user", "password", { hash: hash("password", 1001) });
