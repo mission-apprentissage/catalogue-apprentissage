@@ -3,7 +3,7 @@
 
 __metadata:
   version: 8
-  cacheKey: 10
+  cacheKey: 10c0
 
 "@apidevtools/json-schema-ref-parser@npm:^11.5.5":
   version: 11.9.3
@@ -3865,10 +3865,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"faker@npm:5.5.3":
-  version: 5.5.3
-  resolution: "faker@npm:5.5.3"
-  checksum: 10/fc46449712aa0971a106dc84ae988bd3f08ba0f0862ed107cd2e5dc2df39424efb0687634f5a6c2d8d24a9b59a5474b5b003b9bc142ecebcea2d42af116b3966
+"faker@npm:6.6.6":
+  version: 6.6.6
+  resolution: "faker@npm:6.6.6"
+  checksum: 10c0/21f6a57adc921ffb61e5ff767024a699a414047264ff4bbb080bd4994ec5a8061e1828aae9a4be812f6f356f1b6fd082bc2d54df7c37163b943a421a8f7f7079
   languageName: node
   linkType: hard
 
@@ -6619,7 +6619,7 @@ __metadata:
     express-mongo-sanitize: "npm:2.2.0"
     express-rate-limit: "npm:7.4.0"
     express-session: "npm:1.18.0"
-    faker: "npm:5.5.3"
+    faker: "npm:6.6.6"
     fs: "npm:0.0.1-security"
     fs-extra: "npm:11.1.0"
     full-icu: "npm:1.5.0"
