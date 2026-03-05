@@ -1,7 +1,6 @@
 const assert = require("assert");
 const httpTests = require("../../utils/httpTests");
 const config = require("config");
-const { setupBeforeAll } = require("../../helpers/setup");
 
 httpTests(__filename, ({ startServer }) => {
   it("Vérifie que le server fonctionne", async () => {

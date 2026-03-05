@@ -1,7 +1,6 @@
 const { ok, strictEqual, deepStrictEqual } = require("assert");
 const httpTests = require("../../utils/httpTests");
 const { insertEtablissement } = require("../../utils/fixtures");
-const { setupBeforeAll } = require("../../helpers/setup");
 
 httpTests(__filename, ({ startServer }) => {
   it("Should return a 401 if not logged in", async () => {
