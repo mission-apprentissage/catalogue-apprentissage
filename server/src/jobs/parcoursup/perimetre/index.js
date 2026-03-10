@@ -34,9 +34,6 @@ const psPerimetre = async () => {
     await session.run();
     await previousSession.run();
 
-    logger.info({ type: "job" }, "∙ Dépublication forcée des formations 100% à distance:");
-    await aDistance.run();
-
     logger.info({ type: "job" }, "∙ Compteurs après :");
     await counter.run();
 
