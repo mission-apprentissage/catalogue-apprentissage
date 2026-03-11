@@ -73,7 +73,7 @@ const extractFromZip = async () => {
 const downloader = async ({ useExistingArchive }) => {
   let error = null;
   try {
-    !useExistingArchive && (await downloadZip());
+    !useExistingArchive && (await downloadZip()); //TODO a commenter method downloadZip
     await DualControlFormation.deleteMany({});
     await extractFromZip();
   } catch (e) {

@@ -52,29 +52,29 @@ services:
     networks:
       - catalogue_apprentissage_network
 
-  elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:${DOCKER_ES_VERSION:-7.17.29}
-    container_name: catalogue_apprentissage_elasticsearch
-    tty: true
-    environment:
-      - ES_JAVA_OPTS=-Xmx1024m -Xms1024m -Dlog4j2.formatMsgNoLookups=true
-      - cluster.name=docker-cluster
-      - discovery.type=single-node
-      - discovery.zen.minimum_master_nodes=1
-      - network.host=0.0.0.0
-    mem_limit: 2g
-    networks:
-      - catalogue_apprentissage_network
+#  elasticsearch:
+#    image: elasticsearch:${DOCKER_ES_VERSION:-7.17.29}
+#    container_name: catalogue_apprentissage_elasticsearch
+#    tty: true
+#    environment:
+#      - ES_JAVA_OPTS=-Xmx1024m -Xms1024m -Dlog4j2.formatMsgNoLookups=true
+#      - cluster.name=docker-cluster
+#      - discovery.type=single-node
+#      - discovery.zen.minimum_master_nodes=1
+#      - network.host=0.0.0.0
+#    mem_limit: 2g
+#    networks:
+#      - catalogue_apprentissage_network
 
-  kibana:
-    image: docker.elastic.co/kibana/kibana:${DOCKER_ES_VERSION:-7.17.29}
-    container_name: catalogue_apprentissage_kibana
-    tty: true
-    depends_on:
-      - elasticsearch
-    networks:
-      - catalogue_apprentissage_network
-    mem_limit: 1g
+#  kibana:
+#    image: kibana:${DOCKER_ES_VERSION:-7.17.29}
+#    container_name: catalogue_apprentissage_kibana
+#    tty: true
+#    depends_on:
+#      - elasticsearch
+#    networks:
+#      - catalogue_apprentissage_network
+#    mem_limit: 1g
 
   metabase:
     image: metabase/metabase:v0.58.7

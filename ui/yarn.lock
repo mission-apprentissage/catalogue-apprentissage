@@ -18534,6 +18534,7 @@ __metadata:
     remark-normalize-headings: "npm:4.0.0"
     remark-toc: "npm:9.0.0"
     typescript: "npm:5.6.2"
+    webpack: "npm:5.105.4"
     yup: "npm:0.32.11"
   languageName: unknown
   linkType: soft
@@ -25144,7 +25145,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"webpack@npm:^5.64.4":
+"webpack@npm:5.105.4, webpack@npm:^5.64.4":
   version: 5.105.4
   resolution: "webpack@npm:5.105.4"
   dependencies:

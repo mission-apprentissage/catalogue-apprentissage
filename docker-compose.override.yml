@@ -46,20 +46,20 @@ services:
     volumes:
       - catalogue_apprentissage_mongodb_data:/data:z
 
-  elasticsearch:
-    restart: "no"
-    ports:
-      - "127.0.0.1:9200:9200"
-    mem_limit: 4g
-    volumes:
-      - catalogue_apprentissage_data_elasticsearch:/usr/share/elasticsearch/data:z
+#  elasticsearch:
+#    restart: "no"
+#    ports:
+#      - "127.0.0.1:9200:9200"
+#    mem_limit: 4g
+#    volumes:
+#      - catalogue_apprentissage_data_elasticsearch:/usr/share/elasticsearch/data:z
 
-  kibana:
-    restart: "no"
-    ports:
-      - "127.0.0.1:5601:5601"
-    volumes:
-      - ./elasticsearch/kibana.yml:/usr/share/kibana/config/kibana.yml:ro,z
+#  kibana:
+#    restart: "no"
+ #   ports:
+#      - "127.0.0.1:5601:5601"
+#    volumes:
+#      - ./elasticsearch/kibana.yml:/usr/share/kibana/config/kibana.yml:ro,z
 
   metabase:
     restart: "no"

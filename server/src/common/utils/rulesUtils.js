@@ -264,6 +264,8 @@ const getExpireRule = (currentDate = new Date()) => {
   return {
     $or: [
       {
+// TODO
+// reprendre conditionnelle
         CI_inscrit_rncp: {
           $eq: "3 - Inscrit de droit",
         },

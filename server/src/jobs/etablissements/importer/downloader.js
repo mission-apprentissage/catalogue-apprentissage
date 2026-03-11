@@ -69,7 +69,7 @@ const extractFromZip = async () => {
 const downloader = async () => {
   let error = null;
   try {
-    await downloadZip();
+    await downloadZip(); //TODO a commenter
     await DualControlEtablissement.deleteMany({});
     await extractFromZip();
   } catch (error) {
