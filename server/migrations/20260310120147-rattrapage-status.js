@@ -30,16 +30,16 @@ module.exports = {
     })) {
       console.log(item.cle_ministere_educatif, item.affelnet_statut);
 
-      // console.log(
-      //   await formations.updateOne(
-      //     { _id: item._id },
-      //     {
-      //       $set: {
-      //         affelnet_statut: "prêt pour intégration",
-      //       },
-      //     }
-      //   )
-      // );
+      console.log(
+        await formations.updateOne(
+          { _id: item._id },
+          {
+            $set: {
+              affelnet_statut: "prêt pour intégration",
+            },
+          }
+        )
+      );
     }
 
     console.log("PARCOURSUP ====================");
