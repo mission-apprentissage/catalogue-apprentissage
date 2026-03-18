@@ -1,0 +1,24 @@
+# Notes reprise
+
+## UI
+
+Monter composer up
+attendre génération (30m +)
+
+## BDD
+Restore sans table histo
+4Go zippée ou 40Go+ dézippée
+
+
+
+```
+docker compose up
+
+docker cp /opt/mongodb-2026-03-04_093723.gzip catalogue_apprentissage_mongodb:/opt/mongodb-2026-03-04_093723.gzip
+
+docker exec -it catalogue_apprentissage_mongodb bash
+
+mongorestore --drop --gzip --archive=/opt/mongodb-2026-03-04_093723.gzip --nsExclude="catalogue-apprentissage.histories"
+
+docker compose down
+```

@@ -56,20 +56,20 @@ services:
 
 #  kibana:
 #    restart: "no"
- #   ports:
+#    ports:
 #      - "127.0.0.1:5601:5601"
 #    volumes:
 #      - ./elasticsearch/kibana.yml:/usr/share/kibana/config/kibana.yml:ro,z
 
-  metabase:
-    restart: "no"
-    ports:
-      - "127.0.0.1:3000:3000"
-    volumes:
-      - ./metabase/data:/data/metabase
-      - ./metabase/backups:/data/backups
-    environment:
-      MB_SITE_URL: http://localhost/metabase
+#  metabase:
+#    restart: "no"
+#    ports:
+#      - "127.0.0.1:3000:3000"
+#    volumes:
+#      - ./metabase/data:/data/metabase
+#      - ./metabase/backups:/data/backups
+#    environment:
+#      MB_SITE_URL: http://localhost/metabase
 
   smtp:
     restart: "no"

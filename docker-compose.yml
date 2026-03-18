@@ -76,22 +76,22 @@ services:
 #      - catalogue_apprentissage_network
 #    mem_limit: 1g
 
-  metabase:
-    image: metabase/metabase:v0.58.7
-    container_name: catalogue_apprentissage_metabase
-    tty: true
-    mem_limit: 5g
-    depends_on:
-      - mongodb
-    networks:
-      - catalogue_apprentissage_network
-    environment:
-      MB_DB_FILE: /data/metabase/metabase.db
-      MB_SITE_LOCALE: fr
-      MB_DEFAULT_MAX_RESULTS_BARE_ROWS: 25000
-      MB_MAX_RESULTS: 500000
-      MB_AGGREGATED_QUERY_ROW_LIMIT: 500000
-      MB_UNAGGREGATED_QUERY_ROW_LIMIT: 500000
+#  metabase:
+#    image: metabase/metabase:v0.58.7
+#    container_name: catalogue_apprentissage_metabase
+#    tty: true
+#    mem_limit: 5g
+#    depends_on:
+#      - mongodb
+#    networks:
+#      - catalogue_apprentissage_network
+#    environment:
+#      MB_DB_FILE: /data/metabase/metabase.db
+#      MB_SITE_LOCALE: fr
+#      MB_DEFAULT_MAX_RESULTS_BARE_ROWS: 25000
+#      MB_MAX_RESULTS: 500000
+#      MB_AGGREGATED_QUERY_ROW_LIMIT: 500000
+#      MB_UNAGGREGATED_QUERY_ROW_LIMIT: 500000
 
 networks:
   catalogue_apprentissage_network:
