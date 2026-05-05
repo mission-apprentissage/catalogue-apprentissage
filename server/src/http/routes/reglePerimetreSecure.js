@@ -244,7 +244,10 @@ module.exports = () => {
       }
 
       if (
-        !(hasPerimeterPlateformeRight(user, rule.plateforme) && (user.isAdmin || hasAcademyRight(user, num_academie)))
+        !(
+          hasPerimeterPlateformeEditRight(user, rule.plateforme) &&
+          (user.isAdmin || hasAcademyRight(user, num_academie))
+        )
       ) {
         throw Boom.unauthorized();
       }
@@ -290,7 +293,10 @@ module.exports = () => {
       }
 
       if (
-        !(hasPerimeterPlateformeRight(user, rule.plateforme) && (user.isAdmin || hasAcademyRight(user, num_academie)))
+        !(
+          hasPerimeterPlateformeEditRight(user, rule.plateforme) &&
+          (user.isAdmin || hasAcademyRight(user, num_academie))
+        )
       ) {
         throw Boom.unauthorized();
       }
@@ -338,7 +344,7 @@ module.exports = () => {
         throw Boom.notFound();
       }
 
-      if (!hasPerimeterPlateformeRight(user, rule.plateforme) || !hasStatutAcademieRight(user, rule)) {
+      if (!hasPerimeterPlateformeEditRight(user, rule.plateforme) || !hasStatutAcademieRight(user, rule)) {
         throw Boom.unauthorized();
       }
 
